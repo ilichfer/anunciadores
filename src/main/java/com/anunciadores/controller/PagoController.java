@@ -61,7 +61,7 @@ public class PagoController {
 	}
 
 	@PostMapping("/savePago")
-	public String save(@ModelAttribute Pago pago) throws ParseException, com.sun.el.parser.ParseException {
+	public String save(@ModelAttribute Pago pago) throws ParseException{
 		String url = "redirect:/404.html";
 		if (pago != null) {
 			Pago pagoSave = pagoService.save(pago);
@@ -79,7 +79,7 @@ public class PagoController {
 
 	@PostMapping("/editarPago")
 	public String editarCursoById(@ModelAttribute CursoDto curso, HttpServletResponse response, Model model)
-			throws ParseException, com.sun.el.parser.ParseException {
+			throws ParseException {
 		Curso cursoMostrar = new Curso();
 //		pagoService.save(curso);
 		System.out.println("fechaInicio para modificacion " + curso.getFechaInicio());

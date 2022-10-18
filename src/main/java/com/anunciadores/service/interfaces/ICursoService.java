@@ -12,14 +12,14 @@ import com.anunciadores.model.Curso;
 public interface ICursoService {
 	public List<Curso> findAll();
 
-	public Curso save(CursoDto curso) throws ParseException, com.sun.el.parser.ParseException;
+	public Curso save(CursoDto curso) throws ParseException;
 
 	public Curso findProductoById(Integer id);
 	
 	public Curso delete(Curso curso);
 
-	Date ParseFecha(String fecha) throws ParseException, com.sun.el.parser.ParseException;
+	Date ParseFecha(String fecha) throws ParseException;
 
-	String formatFecha(String fecha) throws ParseException,  com.sun.el.parser.ParseException;
+	String formatFecha(String fecha) throws ParseException;
 	
 }

@@ -43,7 +43,7 @@ public class CursoController {
 	}
 
 	@PostMapping("/saveCurso")
-	public String save(@ModelAttribute CursoDto Curso) throws ParseException, com.sun.el.parser.ParseException {
+	public String save(@ModelAttribute CursoDto Curso) throws ParseException {
 //		Curso per = cursoService.findCursoByEmail(Curso.getEmail());
 		String url = "redirect:/404.html";
 		if (Curso != null) {
@@ -73,7 +73,7 @@ public class CursoController {
 	
 	@GetMapping("/editarCurso")
 	public String editarCursoById(@ModelAttribute CursoDto curso, HttpServletResponse response,
-			Model model) throws ParseException, com.sun.el.parser.ParseException {	
+			Model model) throws ParseException {	
 		Curso cursoMostrar = new Curso();
 //		cursoService.save(curso);
 		System.out.println("fechaInicio para modificacion " + curso.getFechaInicio());

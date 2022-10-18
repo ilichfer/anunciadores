@@ -14,7 +14,6 @@ import com.anunciadores.dto.CursoDto;
 import com.anunciadores.model.Curso;
 import com.anunciadores.repository.ICursoRepo;
 import com.anunciadores.service.interfaces.ICursoService;
-import com.sun.el.parser.ParseException;
 
 @Service
 public class CursoServiceImpl implements ICursoService {
@@ -32,7 +31,7 @@ public class CursoServiceImpl implements ICursoService {
 	}
 
 	@Override
-	public Curso save(CursoDto curso) throws java.text.ParseException, ParseException {
+	public Curso save(CursoDto curso) throws java.text.ParseException {
 		Curso cursoSave = new Curso();
 		
 		cursoSave.setFechaFin(curso.getFechaFin());
@@ -61,7 +60,7 @@ public class CursoServiceImpl implements ICursoService {
 	}
 	
 	@Override
-    public Date ParseFecha(String fecha) throws java.text.ParseException, ParseException
+    public Date ParseFecha(String fecha) throws java.text.ParseException
     {
     	fecha = fecha.replace("-", "/");
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
@@ -71,7 +70,7 @@ public class CursoServiceImpl implements ICursoService {
     }
 
 	@Override
-	public String formatFecha(String fecha) throws java.text.ParseException, ParseException {
+	public String formatFecha(String fecha) throws java.text.ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 //		fecha = fecha.replace("-", "/");
