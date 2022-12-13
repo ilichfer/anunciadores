@@ -44,8 +44,8 @@ public class Pago implements Serializable {
     @Column(name = "idpersona")
     private int idpersona;
 
-    @Column(name = "fechaPago")
-    private Date fechaPago;
+    @Column(name = "fecha_Pago")
+    private String fechaPago;
 
     @Column(name = "valor")
     private int valor;
@@ -69,11 +69,11 @@ public class Pago implements Serializable {
 		this.idpersona = idpersona;
 	}
 
-	public Date getFechaPago() {
+	public String getFechaPago() {
 		return fechaPago;
 	}
 
-	public void setFechaPago(Date fechaPago) {
+	public void setFechaPago(String fechaPago) {
 		this.fechaPago = fechaPago;
 	}
 
@@ -93,7 +93,7 @@ public class Pago implements Serializable {
 		this.id_curso = id_curso;
 	}
 
-	public Pago(int id, int idpersona, Date fechaPago, int valor, int id_curso) {
+	public Pago(int id, int idpersona, String fechaPago, int valor, int id_curso) {
 		super();
 		this.id = id;
 		this.idpersona = idpersona;

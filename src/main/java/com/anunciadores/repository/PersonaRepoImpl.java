@@ -1,6 +1,5 @@
 package com.anunciadores.repository;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
+import com.anunciadores.model.InscripcionActividad;
 import com.anunciadores.model.Inscripciones;
 import com.anunciadores.model.Persona;
 
@@ -30,6 +30,9 @@ public class PersonaRepoImpl{
 	@Autowired
 	private InscripcionRepo inscripcionesRepository;
 	
+	@Autowired
+	private InscripcionActividadRepo inscripcionActividadRepository;
+	
 	public Persona buscarEmail(String email) {
 				
 		StringBuilder sql = new StringBuilder();
@@ -44,7 +47,33 @@ public class PersonaRepoImpl{
 
 					while (rs.next())
 						return new Persona(rs.getInt("id"), rs.getString("nombre"), rs.getString("apellido"),
-								rs.getInt("documento"), rs.getInt("telefono"), rs.getString("fechanacimiento"),
+								rs.getInt("documento"), rs.getString("telefono"), rs.getString("fechanacimiento"),
+								rs.getString("tipodocumento"), rs.getString("email"), rs.getString("password"));
+
+					return null;
+				}
+			});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retorno;
+	}
+	
+	public Persona buscarByDocumento(Integer doc) {
+		
+		StringBuilder sql = new StringBuilder();
+		Persona retorno = new Persona();
+		try {
+			sql.append("select * from persona where documento= '" + doc+"'" );
+
+					retorno = jdbcTemplate.query(sql.toString(), new ResultSetExtractor<Persona>() {
+				@Override
+				public Persona extractData(ResultSet rs) throws SQLException, DataAccessException {
+
+					while (rs.next())
+						return new Persona(rs.getInt("id"), rs.getString("nombre"), rs.getString("apellido"),
+								rs.getInt("documento"), rs.getString("telefono"), rs.getString("fechanacimiento"),
 								rs.getString("tipodocumento"), rs.getString("email"), rs.getString("password"));
 
 					return null;
@@ -75,7 +104,7 @@ public class PersonaRepoImpl{
 
 					while (rs.next())
 						personaList.add(new Persona(rs.getInt("id"), rs.getString("nombre"), rs.getString("apellido"),
-								rs.getInt("documento"), rs.getInt("telefono"), rs.getString("fechanacimiento"),
+								rs.getInt("documento"), rs.getString("telefono"), rs.getString("fechanacimiento"),
 								rs.getString("tipodocumento"), rs.getString("email"), rs.getString("password")));
 
 					return null;
@@ -99,7 +128,8 @@ public class PersonaRepoImpl{
 					+ "select i.id_persona from inscripciones i " + 
 					"join curso c on i.id_curso = c.id " + 
 					"where i.id_curso =" + idcurso
-					+ ")");
+					+ ")"
+					+ "and p.id in( select pr.id_persona from persona_rol pr)");
 
 			retorno = jdbcTemplate.query(sql.toString(), new ResultSetExtractor<Persona>() {
 				@Override
@@ -107,7 +137,7 @@ public class PersonaRepoImpl{
 
 					while (rs.next())
 						personaList.add(new Persona(rs.getInt("id"), rs.getString("nombre"), rs.getString("apellido"),
-								rs.getInt("documento"), rs.getInt("telefono"), rs.getString("fechanacimiento"),
+								rs.getInt("documento"), rs.getString("telefono"), rs.getString("fechanacimiento"),
 								rs.getString("tipodocumento"), rs.getString("email"), rs.getString("password")));
 
 					return null;
@@ -150,6 +180,77 @@ public class PersonaRepoImpl{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void agregarPersonaActividad(Integer idPersona, int idActividad) {
+
+		try {
+						
+			InscripcionActividad inscripcion = new InscripcionActividad();
+			inscripcion.setIdActividad(idActividad);
+			inscripcion.setIdPersona(idPersona);
+			
+			inscripcionActividadRepository.save(inscripcion);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public List<Persona> buscarAsistentes() {
+		StringBuilder sql = new StringBuilder();
+		Persona retorno = new Persona();
+		List<Persona> personaList = new ArrayList<Persona>();
+		try {
+			sql.append("select * from persona p "
+						+ "WHERE p.id not in( "					
+						+ "select pr.id_persona from persona_rol pr) " );
+			System.out.println("asistentes === >"+sql.toString());
+			retorno = jdbcTemplate.query(sql.toString(), new ResultSetExtractor<Persona>() {
+				@Override
+				public Persona extractData(ResultSet rs) throws SQLException, DataAccessException {
+
+					while (rs.next())
+						personaList.add(new Persona(rs.getInt("id"), rs.getString("nombre"), rs.getString("apellido"),
+								rs.getInt("documento"), rs.getString("telefono"), rs.getString("fechanacimiento"),
+								rs.getString("tipodocumento"), rs.getString("email"), rs.getString("password")));
+
+					return null;
+				}
+			});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return personaList;
+	}
+	
+	public List<Persona> buscarUsuarios() {
+		StringBuilder sql = new StringBuilder();
+		Persona retorno = new Persona();
+		List<Persona> personaList = new ArrayList<Persona>();
+		try {
+			sql.append("select * from persona p "
+						+ "WHERE p.id  in( "					
+						+ "select pr.id_persona from persona_rol pr) " );
+			System.out.println("asistentes === >"+sql.toString());
+			retorno = jdbcTemplate.query(sql.toString(), new ResultSetExtractor<Persona>() {
+				@Override
+				public Persona extractData(ResultSet rs) throws SQLException, DataAccessException {
+
+					while (rs.next())
+						personaList.add(new Persona(rs.getInt("id"), rs.getString("nombre"), rs.getString("apellido"),
+								rs.getInt("documento"), rs.getString("telefono"), rs.getString("fechanacimiento"),
+								rs.getString("tipodocumento"), rs.getString("email"), rs.getString("password")));
+
+					return null;
+				}
+			});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return personaList;
 	}
 
 

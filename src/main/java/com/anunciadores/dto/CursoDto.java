@@ -5,6 +5,8 @@ package com.anunciadores.dto;
  * and open the template in the editor.
  */
 
+import com.anunciadores.model.Persona;
+
 /**
  *
  * @author valbuena
@@ -26,6 +28,10 @@ public class CursoDto {
     private String fechaFin;
         
     private int valorTotal;  
+    
+    private Boolean check;
+    
+    private PersonaDto personaAConsolidar;
     
       public CursoDto() {
     }
@@ -86,5 +92,20 @@ public class CursoDto {
 	public void setValorTotal(int valorTotal) {
 		this.valorTotal = valorTotal;
 	}
-            
+
+	public Boolean getCheck() {
+		return check;
+	}
+
+	public void setCheck(Boolean check) {
+		this.check = check;
+	}
+
+	public PersonaDto getPersonaAConsolidar() {
+		return personaAConsolidar;
+	}
+
+	public void setPersonaAConsolidar(PersonaDto personaAConsolidar) {
+		this.personaAConsolidar = personaAConsolidar;
+	}
 }

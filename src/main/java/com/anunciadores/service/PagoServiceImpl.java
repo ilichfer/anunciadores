@@ -1,12 +1,13 @@
 package com.anunciadores.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.anunciadores.dto.PagoDto;
+import com.anunciadores.dto.ReportePagoDto;
 import com.anunciadores.model.Pago;
 import com.anunciadores.repository.IPagoRepo;
 import com.anunciadores.repository.PagoRepoImpl;
@@ -15,14 +16,12 @@ import com.anunciadores.service.interfaces.IPagoService;
 @Service
 public class PagoServiceImpl implements IPagoService {
 
-	@Autowired
-	JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private IPagoRepo PagoRepository;
 	
 	@Autowired
-	private PagoRepoImpl pagoRepo;
+	private PagoRepoImpl pagoDao;
 
 	@Override
 	public List<Pago> findAll() {
@@ -37,7 +36,7 @@ public class PagoServiceImpl implements IPagoService {
 
 	@Override
 	public List<Pago> findPagosByIdCurso(int idpersona,int idcurso) {
-		List<Pago> ListaPago = pagoRepo.findPagosByIdCurso(idpersona,idcurso);
+		List<Pago> ListaPago = pagoDao.findPagosByIdCurso(idpersona,idcurso);
 		return ListaPago;
 	}
 
@@ -45,6 +44,17 @@ public class PagoServiceImpl implements IPagoService {
 	public Pago delete(Pago Pago) {
 		PagoRepository.deleteById(Pago.getId());
 		return Pago;
+	}
+
+	@Override
+	public List<PagoDto> reportePagosCursos(int idCurso) {
+		return pagoDao.reportePagosCursos(idCurso);
+	}
+
+	@Override
+	public List<ReportePagoDto> reportePagos() {
+		return pagoDao.reportePagos();
+		
 	}
 
 }

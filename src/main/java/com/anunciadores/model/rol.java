@@ -28,7 +28,7 @@ import com.sun.istack.NotNull;
 @Entity
 @Table(name = "rol")
 
-public class rol implements Serializable {
+public class Rol implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -59,5 +59,17 @@ public class rol implements Serializable {
 		this.descripcion = descripcion;
 	}
 
+	public Rol(int id, String descripcion) {
+		super();
+		this.id = id;
+		this.descripcion = descripcion;
+	}
+
+	public Rol() {
+		super();
+	}
+
+	
+	
 	
 }

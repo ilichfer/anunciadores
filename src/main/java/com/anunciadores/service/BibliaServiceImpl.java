@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,10 +15,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.anunciadores.client.BibliaFeingClient;
 import com.anunciadores.dto.BibliaDto;
 import com.anunciadores.dto.CapituloDto;
+import com.anunciadores.dto.CapitulosDto;
 import com.anunciadores.dto.LibroDto;
+import com.anunciadores.dto.LibrosDto;
 import com.anunciadores.dto.VersiculoDto;
+import com.anunciadores.dto.VersiculoResponseDto;
+import com.anunciadores.dto.VersiculosDto;
+import com.anunciadores.dto.VersionBiblesDto;
 import com.anunciadores.service.interfaces.IBibliaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -27,14 +35,17 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @Service
 public class BibliaServiceImpl implements IBibliaService {
 
-	private static String url = "https://api.scripture.api.bible/v1/bibles";
-	private static String token = "1f9d97c52fb351d56a1bc7ffe1140e58";
+	@Value("${token}")
+	private String token;
+
+	@Autowired
+	BibliaFeingClient bibliaFeingClient;
 
 	@Override
 	public BibliaDto findBible(String idioma) throws JsonMappingException, JsonProcessingException {
 		BibliaDto biblia = new BibliaDto();
 		StringBuilder request = new StringBuilder();
-		request.append(url);
+		request.append("");
 		request.append("?language=" + idioma);
 		ResponseEntity<String> respuesta = consumirUrl(request.toString());
 
@@ -53,109 +64,32 @@ public class BibliaServiceImpl implements IBibliaService {
 	}
 
 	@Override
-	public List<LibroDto> findBook(String idBible) throws JsonMappingException, JsonProcessingException {
-		List<LibroDto> libros = new ArrayList<LibroDto>();
-		StringBuilder request = new StringBuilder();
-		request.append(url);
-		request.append("/" + idBible + "/books");
-
-		ResponseEntity<String> respuesta = consumirUrl(request.toString());
-
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root = mapper.readTree(respuesta.getBody());
-		JsonNode data = root.path("data");
-		System.out.println(data.size());
-		for (int i = 0; i < data.size(); i++) {
-			LibroDto libro = new LibroDto();
-			JsonNode bible = data.path(i);
-			libro.setName(bible.path("name").asText());
-			libro.setBibleId(bible.path("bibleId").asText());
-			libro.setAbbreviation(bible.path("abbreviation").asText());
-			libro.setNameLong(bible.path("nameLong").asText());
-			libro.setId(bible.path("id").asText());
-
-			libros.add(libro);
-		}
-
-		return libros;
+	public LibrosDto findBook(String idBible) throws JsonMappingException, JsonProcessingException {
+		LibrosDto librosDto = bibliaFeingClient.buscarLibro(idBible, token);
+		return librosDto;
 	}
 
 	@Override
-	public List<CapituloDto> findChapters(String idBible, String idBook)
+	public CapitulosDto findChapters(String idBible, String idBook)
 			throws JsonMappingException, JsonProcessingException {
-		StringBuilder request = new StringBuilder();
-		request.append(url);
-		request.append("/" + idBible + "/books/" + idBook + "/chapters");
-		ResponseEntity<String> respuesta = consumirUrl(request.toString());
-		List<CapituloDto> capitulos = new ArrayList<CapituloDto>();
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root = mapper.readTree(respuesta.getBody());
-		JsonNode data = root.path("data");
-
-		for (int i = 0; i < data.size(); i++) {
-			CapituloDto capitulo = new CapituloDto();
-			JsonNode bible = data.path(i);
-			capitulo.setId(bible.path("id").asText());
-			capitulo.setBibleId(bible.path("bibleId").asText());
-			capitulo.setBookId(bible.path("bookId").asText());
-			capitulo.setNumber(bible.path("number").asText());
-			capitulo.setReference(bible.path("reference").asText());
-
-			capitulos.add(capitulo);
-		}
-		
+		CapitulosDto capitulos = bibliaFeingClient.buscarCapitulos(idBible, idBook, token);
 		return capitulos;
 	}
 
 	@Override
-	public List<VersiculoDto> findIdVerses(String idBible, String idChapter)
+	public VersiculosDto findIdVerses(String idBible, String idChapter)
 			throws JsonMappingException, JsonProcessingException {
-		
-		StringBuilder request = new StringBuilder();
-		request.append(url);
-		request.append("/" + idBible + "/chapters/" + idChapter + "/verses");
-		ResponseEntity<String> respuesta = consumirUrl(request.toString());
-		List<VersiculoDto> versiculos = new ArrayList<VersiculoDto>();
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root = mapper.readTree(respuesta.getBody());
-		JsonNode data = root.path("data");
 
-		for (int i = 0; i < data.size(); i++) {
-			VersiculoDto versiculo = new VersiculoDto();
-			JsonNode bible = data.path(i);
-			versiculo.setId(bible.path("id").asText());
-			versiculo.setOrgId(bible.path("orgId").asText());
-			versiculo.setBibleId(bible.path("bibleId").asText());
-			versiculo.setBookId(bible.path("bookId").asText());
-			versiculo.setChapterId(bible.path("chapterId").asText());
-			versiculos.add(versiculo);
-		}
+		VersiculosDto versiculos = bibliaFeingClient.buscarVersiculos(idBible, idChapter, token);
 		return versiculos;
-		
+
 	}
 
 	@Override
-	public VersiculoDto findVerse(String idBible, String idVerse)
+	public VersiculoResponseDto findVerse(String idBible, String idVerse)
 			throws JsonMappingException, JsonProcessingException {
-		
-		StringBuilder request = new StringBuilder();
-		request.append(url);
-		request.append("/" + idBible + "/verses/"+idVerse+"?content-type=text");
-		ResponseEntity<String> respuesta = consumirUrl(request.toString());
-		List<VersiculoDto> versiculos = new ArrayList<VersiculoDto>();
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode root = mapper.readTree(respuesta.getBody());
-		JsonNode pasaje = root.path("data");
 
-		VersiculoDto versiculo = new VersiculoDto();
-		versiculo.setId(pasaje.path("id").asText());
-		versiculo.setOrgId(pasaje.path("orgId").asText());
-		versiculo.setBibleId(pasaje.path("bibleId").asText());
-		versiculo.setBookId(pasaje.path("bookId").asText());
-		versiculo.setChapterId(pasaje.path("chapterId").asText());
-		versiculo.setContent(pasaje.path("content").asText());
-		versiculo.setReference(pasaje.path("reference").asText());
-		
+		VersiculoResponseDto versiculo = bibliaFeingClient.buscarVersiculo(idBible, idVerse, token);
 		return versiculo;
 	}
 
@@ -172,24 +106,28 @@ public class BibliaServiceImpl implements IBibliaService {
 
 	@Override
 	public VersiculoDto findVerseDay() throws JsonMappingException, JsonProcessingException {
+		try {
 
-		BibliaDto biblia = findBible("spa");
-		List<LibroDto> libros = findBook(biblia.getId());
-		
-		int lib = libRamdom();
-		LibroDto libro = libros.get(lib);
+			VersionBiblesDto versionesbiblia = bibliaFeingClient.buscarBiblia(token);
+			LibrosDto librosDto = findBook(versionesbiblia.getData().get(0).getId());
 
-		List<CapituloDto> capitulos = findChapters(biblia.getId(), libro.getId());
-		
-		int cap = Ramdom(capitulos.size());
-		CapituloDto capitulo = capitulos.get(cap);
-		List<VersiculoDto> versiculos = findIdVerses(biblia.getId(), capitulo.getId());
+			int lib = libRamdom();
+			LibroDto libro = librosDto.getData().get(lib);
+			CapitulosDto capitulos = findChapters(versionesbiblia.getData().get(0).getId(), libro.getId());
 
-		int ver = Ramdom(versiculos.size());
-		VersiculoDto Versiculo = versiculos.get(ver);
-		
-		VersiculoDto pasaje = findVerse(biblia.getId(), Versiculo.getId());
-		return pasaje;
+			int cap = Ramdom(capitulos.getData().size());
+			CapituloDto capitulo = capitulos.getData().get(cap);
+			VersiculosDto versiculos = findIdVerses(versionesbiblia.getData().get(0).getId(), capitulo.getId());
+
+			int ver = Ramdom(versiculos.getData().size());
+			VersiculoDto Versiculo = versiculos.getData().get(ver);
+
+			VersiculoResponseDto pasaje = findVerse(versionesbiblia.getData().get(0).getId(), Versiculo.getId());
+			return pasaje.getData();
+		} catch (Exception e) {
+			System.out.println("error de servicio de biblia");
+		}
+		return new VersiculoDto();
 	}
 
 	public int libRamdom() {
@@ -202,7 +140,7 @@ public class BibliaServiceImpl implements IBibliaService {
 		return value;
 
 	}
-	
+
 	public int Ramdom(int max) {
 		int min = 1;
 
@@ -211,6 +149,11 @@ public class BibliaServiceImpl implements IBibliaService {
 		int value = random.nextInt(max + min) + min;
 		return value;
 
+	}
+
+	public VersiculoDto constuirVersiculo() {
+
+		return null;
 	}
 
 }

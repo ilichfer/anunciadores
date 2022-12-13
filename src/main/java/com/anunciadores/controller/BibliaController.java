@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anunciadores.dto.BibliaDto;
 import com.anunciadores.dto.LibroDto;
+import com.anunciadores.dto.LibrosDto;
 import com.anunciadores.dto.VersiculoDto;
 import com.anunciadores.service.interfaces.IBibliaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,8 +28,6 @@ public class BibliaController {
 	@Autowired
 	private IBibliaService bibliaService;
 
-
-
 	@GetMapping("/biblia/{idioma}")
 	public String biblia(HttpServletResponse response,@PathVariable String idioma, Model model) throws JsonMappingException, JsonProcessingException {
 		
@@ -40,7 +39,7 @@ public class BibliaController {
 	@GetMapping("/libros/{lib}")
 	public String libros(HttpServletResponse response,@PathVariable String lib, Model model) throws JsonMappingException, JsonProcessingException {
 		
-		List<LibroDto> libros = bibliaService.findBook(lib);
+		LibrosDto libros = bibliaService.findBook(lib);
 		model.addAttribute("libros", libros);
 		return "personas";
 	}
@@ -48,8 +47,8 @@ public class BibliaController {
 	@GetMapping("/capitulos/{cap}")
 	public String capitulos(HttpServletResponse response,@PathVariable String lib, Model model) throws JsonMappingException, JsonProcessingException {
 		
-		List<LibroDto> capitulos = bibliaService.findBook(lib);
-		model.addAttribute("capitulos", capitulos);
+		LibrosDto capitulos = bibliaService.findBook(lib);
+		model.addAttribute("capitulos", capitulos.getData());
 		return "personas";
 	}
 	

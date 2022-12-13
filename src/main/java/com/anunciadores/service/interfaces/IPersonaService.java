@@ -3,20 +3,24 @@ package com.anunciadores.service.interfaces;
 import java.util.List;
 import java.util.Optional;
 
+import com.anunciadores.dto.PersonaDto;
 import com.anunciadores.model.Persona;
 
 
 public interface IPersonaService {
-	public List<Persona> findAll();
+	public List<Persona> findAllUsuarios();
 
 	public Persona save(Persona persona);
-
-	public Optional<Persona> findProductoById(Integer id);
 	
-	public Persona delete(Persona persona);
+	public Persona saveAsistente(Persona persona);
 
+	public Persona findPersonaById(Integer id);
 	
-	public Persona buscarEmail(String email);
+	public String delete(Persona persona);
+
+	public PersonaDto buscarByDocumento(Integer doc);
+	
+	public PersonaDto buscarEmail(String email);
 
 	public List<Persona> findAllByCurso(int idCurso);
 
@@ -25,4 +29,9 @@ public interface IPersonaService {
 	void agregarPersonaCurso(int idPersona, int idCurso);
 
 	void eliminarPersonaCurso(int idPersona, int idCurso);
+	
+	void agregarPersonaActividad(int idPersona, int idActividad);
+	
+	public List<PersonaDto> buscarConsolidacion(List<Persona> listaPersonas);
+	
 }

@@ -53,7 +53,10 @@ public class Curso implements Serializable {
     private String fechaFin;
         
     @Column(name = "valortotal")
-    private int valorTotal;  
+    private int valorTotal; 
+    
+    @Column(name = "comentario")
+    private boolean comentario;
     
       public Curso() {
     }
@@ -106,5 +109,25 @@ public class Curso implements Serializable {
 	public void setFechaFin(String fechaFin) {
 		this.fechaFin = fechaFin;
 	}
-            
+
+	public boolean isComentario() {
+		return comentario;
+	}
+
+	public void setComentario(boolean comentario) {
+		this.comentario = comentario;
+	}
+
+	public Curso(int id, int idPago, String nombreCurso, String fechaInicio, String fechaFin, int valorTotal,
+			boolean comentario) {
+		super();
+		this.id = id;
+		this.idPago = idPago;
+		this.nombreCurso = nombreCurso;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.valorTotal = valorTotal;
+		this.comentario = comentario;
+	}
+
 }

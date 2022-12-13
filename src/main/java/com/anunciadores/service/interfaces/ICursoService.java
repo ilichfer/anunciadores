@@ -14,7 +14,10 @@ public interface ICursoService {
 
 	public Curso save(CursoDto curso) throws ParseException;
 
-	public Curso findProductoById(Integer id);
+	public Curso findCursoById(Integer id);
+	
+	public List<CursoDto> findCursosDtoByIdPersona(Integer id);
+	public List<Curso> findCursosByIdPersona(Integer id);
 	
 	public Curso delete(Curso curso);
 

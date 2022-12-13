@@ -49,7 +49,7 @@ public class Persona implements Serializable {
     private Integer documento;
     
     @Column(name = "telefono")
-    private Integer telefono;
+    private String telefono;
     
     @Column(name = "fechanacimiento")
     private String fechanacimiento;
@@ -98,11 +98,11 @@ public class Persona implements Serializable {
 		this.documento = documento;
 	}
 
-	public Integer getTelefono() {
+	public String getTelefono() {
 		return telefono;
 	}
 
-	public void setTelefono(Integer telefono) {
+	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 
@@ -138,7 +138,7 @@ public class Persona implements Serializable {
 		this.password = password;
 	}
 
-	public Persona(int id, String nombre, String apellido, int documento, int telefono, String fechanacimiento,
+	public Persona(int id, String nombre, String apellido, int documento, String telefono, String fechanacimiento,
 			String tipodocumento, String email, String password) {
 		super();
 		this.id = id;

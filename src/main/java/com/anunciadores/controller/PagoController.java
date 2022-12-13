@@ -2,6 +2,8 @@ package com.anunciadores.controller;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.anunciadores.dto.CursoDto;
+import com.anunciadores.dto.PagoDto;
+import com.anunciadores.dto.ReportePagoDto;
 import com.anunciadores.model.Curso;
 import com.anunciadores.model.Pago;
 import com.anunciadores.service.interfaces.ICursoService;
@@ -42,38 +46,42 @@ public class PagoController {
 	@GetMapping("/buscarPagosCurso")
 	public String buscarPagosCurso(@RequestParam int idPersona, @RequestParam int idCurso, Model model) {
 
-		Curso curso = cursoService.findProductoById(idCurso);
+		Curso curso = cursoService.findCursoById(idCurso);
 		pagoList = pagoService.findPagosByIdCurso(idPersona, idCurso);
 		int pagoTotal = 0;
-		BigDecimal big = new BigDecimal(0);
-		if (big.compareTo(BigDecimal.ZERO) == 1) {
-			System.out.println("==================== entro a metodo zero");
-		}
+		int adeuda = 0;
 		
 		for (Pago pago : pagoList) {
 			pagoTotal = pagoTotal +pago.getValor();
 		}
+		adeuda =curso.getValorTotal() -pagoTotal;
 		model.addAttribute("pagos", pagoList);
 		model.addAttribute("curso", curso);
 		model.addAttribute("pagoTotal", pagoTotal);
+		model.addAttribute("adeuda", adeuda);
 		return "pagos";
 
 	}
 
 	@PostMapping("/savePago")
-	public String save(@ModelAttribute Pago pago) throws ParseException{
+	public String save(@ModelAttribute Pago pago, Model model) throws ParseException{
 		String url = "redirect:/404.html";
 		if (pago != null) {
+			
+			Date myDate = new Date();
+			pago.setFechaPago(new SimpleDateFormat("dd-MM-yyyy").format(myDate));
 			Pago pagoSave = pagoService.save(pago);
-			url = "redirect:/index2.html";
+			List<Curso> CursosList = cursoService.findAll();
+			model.addAttribute("cursos", CursosList);
+			url = "cursos";
 		}
 		return url;
 	}
 
-	@PostMapping("/eliminarPago")
+	@GetMapping("/eliminarPago")
 	public String deleteProductoById(@ModelAttribute Pago pago, HttpServletResponse response, Model model) {
 		pagoService.delete(pago);
-		return "redirect:/listar";
+		return "redirect:/listarCursos";
 
 	}
 
@@ -96,6 +104,25 @@ public class PagoController {
 
 		return "edit-curso";
 
+	}
+	
+	
+	@GetMapping("/reportePagosCursos")
+	public String reportePagosCursos(@RequestParam int idCurso, Model model) {
+
+ 		List<PagoDto> pagoList = pagoService.reportePagosCursos(idCurso);
+		int pagoTotal = 0;
+		model.addAttribute("pagos", pagoList);
+		model.addAttribute("pagoTotal", pagoTotal);
+		return "pagos";
+
+	}
+	
+	@GetMapping("/reportePagos")
+	public String reportePagos(HttpServletResponse response, Model model) {
+		List<ReportePagoDto> pagosList = pagoService.reportePagos();
+		model.addAttribute("pagos", pagosList);
+		return "reportePagos";
 	}
 
 }

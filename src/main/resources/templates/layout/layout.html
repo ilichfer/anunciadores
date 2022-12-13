@@ -1,9 +1,10 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:se="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head">
 <meta charset="utf-8">
-<title>Anuncia 2 layout</title>
+<title>Anuncia 2</title>
 
 
 </head>
@@ -11,10 +12,11 @@
 
 <header th:fragment="header">
 <!-- Sidebar -->
+<div id="admin">
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="redirectDashboard">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -26,16 +28,17 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="redirectDashboard">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Inicio</span></a>
             </li>
+            
 
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading" >
                 Administrar
             </div>
 
@@ -50,7 +53,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestionar Cursos:</h6>
                         <a class="collapse-item" th:href="@{/listarCursos}" >Listar cursos</a>
-                        <a class="collapse-item" href="register-curso.html">crear Curso</a>
+                        <a class="collapse-item" href="redirectCurso">crear Curso</a>
+                         <a class="collapse-item" href="reportePagos">reporte pagos Cursos</a>
                     </div>
                 </div>
             </li>
@@ -82,20 +86,38 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestionar Actividades:</h6>
-                        <a class="collapse-item" href="#">Listar Actividades</a>
+                        <a class="collapse-item" th:href="@{/listarActividades}">Listar Actividades</a>
                     </div>
                 </div>
             </li>
+            
+            <!-- Nav Item - seccion Asistentes Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAsistentes"
+                    aria-expanded="true" aria-controls="collapseAsistentes">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Asistentes</span>
+                </a>
+                <div id="collapseAsistentes" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Asistentes:</h6>
+                        <a class="collapse-item" th:href="@{/listarAsistentes}" >Listar Asistentes</a>
+                    </div>
+                </div>
+            </li>
+            
+            
                         
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
+            <!-- Heading 
             <div class="sidebar-heading">
                 Addons
-            </div>
+            </div>-->
 
-            <!-- Nav Item - Pages Collapse Menu -->
+            <!-- Nav Item - Pages Collapse Menu 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
@@ -106,8 +128,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
                         <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                        <a class="collapse-item" href="registrarPersona.html">Registrese</a>
+                        <a class="collapse-item" href="forgot-password.html">olvido su contraseña?</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
                         <a class="collapse-item" href="404.html">404 Page</a>
@@ -121,16 +143,16 @@
 
                     </div>
                 </div>
-            </li>
+            </li>-->
 
-            <!-- Nav Item - Charts -->
+            <!-- Nav Item - Charts
             <li class="nav-item">
                 <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Charts</span></a>
-            </li>
+            </li> -->
 
-            <!-- Nav Item - Tables -->
+            <!-- Nav Item - Tables 
             <li class="nav-item active">
                 <form action="listar" method="GET">
                         <input type="submit" value="Usuarios" class="btn nav-link">
@@ -141,18 +163,109 @@
                 <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Charts</span></a>
-            </li>
+            </li>-->
 
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            <!-- Divider 
+            <hr class="sidebar-divider d-none d-md-block">-->
 
-            <!-- Sidebar Toggler (Sidebar) -->
+            <!-- Sidebar Toggler (Sidebar) 
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
+            </div>-->
 
         </ul>
-</header>
+        </div>
+        
+        <!-- Sidebar -->
+        <div  id="user">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" >
 
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="redirectDashboard">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Anuncia <sup>2</sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="redirectDashboard">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Inicio</span></a>
+            </li>
+            
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading" >
+                Usuario
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+           
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Cursos</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Cursos activos:</h6>
+                        <form method="POST" th:action="@{/buscarCursosByPersona}">
+                        	<input class="form-control" type="text" name="id" id="id">                        	
+                        	<input type="submit" value="ver cursos" class="btn collapse-item">
+                        </form>
+                    </div>
+                </div>
+            </li>
+
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseActividades"
+                    aria-expanded="true" aria-controls="collapseActividades">
+                    <i class="fas fa-clipboard"></i>
+                    <span>Actividades</span>
+                </a>
+                <div id="collapseActividades" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Actividades:</h6>
+<!--                         <a class="collapse-item" th:href="@{/listarActividades}">Listar Actividades</a> -->
+                    </div>
+                </div>
+            </li>
+            
+             <!-- Nav Item - seccion Asistentes Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAsistentes"
+                    aria-expanded="true" aria-controls="collapseAsistentes">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Asistentes</span>
+                </a>
+                <div id="collapseAsistentes" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Asistentes:</h6>
+                        <a class="collapse-item" th:href="@{/listarAsistentesByUsuario}" >Listar Asistentes</a>
+                    </div>
+                </div>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            
+
+        </ul>
+        </div>
+</header>
+ <script src="js/cargarData.js"></script>
 </body>
 </html>

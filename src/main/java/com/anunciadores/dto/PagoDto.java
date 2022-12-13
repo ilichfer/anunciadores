@@ -14,21 +14,34 @@ import java.util.Date;
 
 
 public class PagoDto {
-    
-    private int id;
-    
+ 
     private int idPersona; 
-    private Date fechaPago;
-    private String valor;
+    private int idCurso;
+    private int valorTotal;
+    private int valorPagado;
 
-    private int id_curso;
-
-	public int getId() {
-		return id;
+	public int getIdCurso() {
+		return idCurso;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setIdCurso(int idCurso) {
+		this.idCurso = idCurso;
+	}
+
+	public int getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(int valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
+	public int getValorPagado() {
+		return valorPagado;
+	}
+
+	public void setValorPagado(int valorPagado) {
+		this.valorPagado = valorPagado;
 	}
 
 	public int getIdPersona() {
@@ -39,28 +52,14 @@ public class PagoDto {
 		this.idPersona = idPersona;
 	}
 
-	public Date getFechaPago() {
-		return fechaPago;
+	public PagoDto(int idPersona, int idCurso, int valorTotal, int valorPagado) {
+		super();
+		this.idPersona = idPersona;
+		this.idCurso = idCurso;
+		this.valorTotal = valorTotal;
+		this.valorPagado = valorPagado;
 	}
 
-	public void setFechaPago(Date fechaPago) {
-		this.fechaPago = fechaPago;
-	}
-
-	public String getValor() {
-		return valor;
-	}
-
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
-
-	public int getId_curso() {
-		return id_curso;
-	}
-
-	public void setId_curso(int id_curso) {
-		this.id_curso = id_curso;
-	}
+	
             
 }
