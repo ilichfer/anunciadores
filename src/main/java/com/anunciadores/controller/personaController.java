@@ -224,10 +224,9 @@ public class personaController {
 //		model.addAttribute("user", per.isUser());
 		model.addAttribute("dia", dia);
 		model.addAttribute("msj", " el usuario o contraseña es incorrecto");
-		
 		String url = "login";
 		if (per != null
-				&& (persona.getEmail().equals(per.getEmail()) && persona.getPassword().equals(per.getPassword()))) {
+				&& (persona.getEmail().equals(per.getEmail()) && personaService.encriptar(persona.getPassword()).equals(per.getPassword()))) {
 			url = "index";
 		}
 		return url;

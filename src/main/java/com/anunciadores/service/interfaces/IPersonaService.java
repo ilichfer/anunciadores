@@ -34,4 +34,6 @@ public interface IPersonaService {
 	
 	public List<PersonaDto> buscarConsolidacion(List<Persona> listaPersonas);
 	
+	public String encriptar(String Pass);
+	
 }

@@ -1,5 +1,8 @@
 package com.anunciadores.service;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,10 +33,10 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private IPersonaRepo personaRepository;
-	
+
 	@Autowired
 	private RolesRepoImpl rolesDao;
-	
+
 	@Autowired
 	private IRolesPersonaRepo rolesPersonaRepository;
 
@@ -42,7 +45,7 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private InscripcionRepo inscripcionesRepository;
-	
+
 	@Autowired
 	private ConsolidacionRepoImpl consolidacionDao;
 
@@ -54,14 +57,14 @@ public class PersonaServiceImpl implements IPersonaService {
 	@Override
 	public Persona save(Persona persona) {
 		RolPersona rolPersona = new RolPersona();
-		persona.setPassword(encriptPass(persona.getPassword()));		
-		Persona personaSave=  personaRepository.save(persona);
-		
+		persona.setPassword(encriptar(persona.getPassword()));
+		Persona personaSave = personaRepository.save(persona);
+
 		rolPersona.setIdPersona(personaSave.getId());
 		rolPersona.setIdRol(2);
 		rolesPersonaRepository.save(rolPersona);
-		
-		 return personaSave;
+
+		return personaSave;
 	}
 
 	@Override
@@ -75,12 +78,12 @@ public class PersonaServiceImpl implements IPersonaService {
 		List<RolPersona> listaRolPersona = rolesDao.buscarRolesPersona(persona.getId());
 		if (listaRolPersona != null) {
 			for (RolPersona rol : listaRolPersona) {
-				
+
 				rolesPersonaRepository.delete(rol);
 				personaRepository.deleteById(persona.getId());
 				return "usuario";
 			}
-			
+
 		}
 		personaRepository.deleteById(persona.getId());
 		return "asistente";
@@ -91,8 +94,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		Persona per = new Persona();
 		PersonaDto personadto = new PersonaDto();
 		try {
-			
-			
+
 			per = daoPersona.buscarEmail(email);
 			personadto.setNombre(per.getNombre());
 			personadto.setApellido(per.getApellido());
@@ -105,28 +107,25 @@ public class PersonaServiceImpl implements IPersonaService {
 			personadto.setPassword(per.getPassword());
 			personadto.setRoles(new ArrayList<Rol>());
 			List<Rol> roles = rolesDao.buscarRoles(personadto.getId());
-			
+
 			for (Rol rol : roles) {
 				if (rol.getDescripcion().equalsIgnoreCase("ROLE_ADMIN")) {
 					personadto.getRoles().add(rol);
 					personadto.setAdmin(true);
 					personadto.setUser(false);
-				}else {
+				} else {
 					personadto.setAdmin(false);
 					personadto.setUser(true);
 				}
-				
+
 			}
 //			personadto.setRoles(rolesDao.buscarRoles(personadto.getId()));
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return personadto;
 	}
-	
-	
 
 	@Override
 	public List<Persona> findAllByCurso(int idCurso) {
@@ -139,7 +138,7 @@ public class PersonaServiceImpl implements IPersonaService {
 //		List<PersonaDto> listaPersonasConsolidacion = new ArrayList<>();
 //		listaPersonas.forEach(p -> listaPersonasConsolidacion.add(agregarConsolidacion(p)));
 //		return listaPersonasConsolidacion;
-		
+
 		return daoPersona.buscarPersonaSinCurso(idCurso);
 	}
 
@@ -158,13 +157,22 @@ public class PersonaServiceImpl implements IPersonaService {
 		}
 
 	}
-	
-	
-	private String encriptPass(String password) {
-		return null;
-		
-		
-	}
+
+//	public String encriptPass(String password) {
+//		try {
+//			MessageDigest md = MessageDigest.getInstance("MD5");
+//			byte[] messageDigest = md.digest(password.getBytes());
+//			BigInteger number = new BigInteger(1, messageDigest);
+//			String hashtext = number.toString(16);
+//
+//			while (hashtext.length() < 32) {
+//				hashtext = "0" + hashtext;
+//			}
+//			return hashtext;
+//		} catch (NoSuchAlgorithmException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 	@Override
 	public void agregarPersonaActividad(int idPersona, int idActividad) {
@@ -174,7 +182,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
@@ -182,7 +190,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		Persona per = new Persona();
 		PersonaDto personadto = new PersonaDto();
 		try {
-			
+
 			per = daoPersona.buscarByDocumento(doc);
 			personadto.setNombre(per.getNombre());
 			personadto.setApellido(per.getApellido());
@@ -192,8 +200,8 @@ public class PersonaServiceImpl implements IPersonaService {
 			personadto.setId(per.getId());
 			personadto.setFechanacimiento(per.getFechanacimiento());
 			personadto.setTelefono(per.getTelefono());
-			personadto.setPassword(per.getPassword() !=null ? per.getPassword() : "");
-			
+			personadto.setPassword(per.getPassword() != null ? per.getPassword() : "");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -212,28 +220,44 @@ public class PersonaServiceImpl implements IPersonaService {
 		listaPersonas.forEach(p -> listaPersonasConsolidacion.add(agregarConsolidacion(p)));
 		return listaPersonasConsolidacion;
 	}
-	
+
 	public PersonaDto agregarConsolidacion(Persona persona) {
 		PersonaDto perConsolidacion = new PersonaDto();
 		perConsolidacion.setNombre(persona.getNombre());
-		perConsolidacion.setApellido( persona.getApellido());
-		perConsolidacion.setDocumento( persona.getDocumento());
-		perConsolidacion.setEmail( persona.getEmail());
+		perConsolidacion.setApellido(persona.getApellido());
+		perConsolidacion.setDocumento(persona.getDocumento());
+		perConsolidacion.setEmail(persona.getEmail());
 		perConsolidacion.setFechanacimiento(persona.getFechanacimiento());
 		perConsolidacion.setId(persona.getId());
 		perConsolidacion.setTelefono(persona.getTelefono());
 		perConsolidacion.setTipodocumento(persona.getTipodocumento());
-		
+
 		Consolidacion consolidacion = consolidacionDao.listarConsolidacionByPersona(persona.getId());
 		if (consolidacion != null) {
 			perConsolidacion.setConsolidacion(true);
-		}else{
-		perConsolidacion.setConsolidacion(false);
+		} else {
+			perConsolidacion.setConsolidacion(false);
 		}
 //		cosolidacionRepository.save(consolidacion);
-		
+
 		return perConsolidacion;
 	}
-	
+
+	@Override
+	public String encriptar(String Pass) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] messageDigest = md.digest(Pass.getBytes());
+			BigInteger number = new BigInteger(1, messageDigest);
+			String hashtext = number.toString(16);
+
+			while (hashtext.length() < 32) {
+				hashtext = "0" + hashtext;
+			}
+			return hashtext;
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }
