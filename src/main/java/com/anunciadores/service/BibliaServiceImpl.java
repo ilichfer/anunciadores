@@ -123,11 +123,15 @@ public class BibliaServiceImpl implements IBibliaService {
 			VersiculoDto Versiculo = versiculos.getData().get(ver);
 
 			VersiculoResponseDto pasaje = findVerse(versionesbiblia.getData().get(0).getId(), Versiculo.getId());
+			
 			return pasaje.getData();
 		} catch (Exception e) {
 			System.out.println("error de servicio de biblia");
+			VersiculoDto pasajeError = new VersiculoDto();
+			pasajeError.setContent("[27] Yo soy el Señor, Dios de toda la humanidad. ¿Hay algo imposible para mí?");
+			pasajeError.setReference("Jeremías 32:27");
+			return pasajeError;
 		}
-		return new VersiculoDto();
 	}
 
 	public int libRamdom() {

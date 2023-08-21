@@ -117,5 +117,16 @@ public class direccionesController {
 		return "registrarPago";
 	}
 	
+	@GetMapping("/recuperarPass")
+	public String recuperarPass(@RequestParam(value = "action", required = false) String action,
+			Model model) {
+		return "recoverPass";
+	}
+	
+	@GetMapping("/redirectTDC")
+	public String redirectTDC(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+			Model model) {
+		return "registerTDC";
+	}
 
 }

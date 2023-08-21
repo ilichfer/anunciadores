@@ -10,8 +10,9 @@
       
     
   
-  const response = await fetch("http://localhost:8080/consutarEmail?email=fricar18@hotmail.com");
-  //const response = await fetch("http://44.211.227.165:8080/consutarEmail?email="+email);
+  //const response = await fetch("http://localhost:8080/consutarEmail?email=fricar18@hotmail.com");
+  const response = await fetch("http://localhost:8080/consutarEmail?email="+email);
+  //const response = await fetch("http://52.87.237.29/:80/consutarEmail?email="+email);
   const datos = await response.json();
   
   // Fuerzo artificialmente a que dure más para que se pueda observar el Spinner

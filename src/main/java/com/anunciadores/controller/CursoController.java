@@ -64,9 +64,10 @@ public class CursoController {
 	}
 
 	@GetMapping("/eliminarCurso")
-	public String deleteProductoById(@ModelAttribute Curso curso, HttpServletResponse response,
-			Model model) {	
-		cursoService.delete(curso);
+	public String deleteProductoById(@ModelAttribute Curso curso, HttpServletResponse response, Model model)
+			throws ParseException {
+
+		cursoService.desactivarCurso(curso);
 		CursosList = cursoService.findAll();
 		model.addAttribute("cursos", CursosList);
 		return "cursos";

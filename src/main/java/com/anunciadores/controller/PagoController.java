@@ -50,15 +50,23 @@ public class PagoController {
 		pagoList = pagoService.findPagosByIdCurso(idPersona, idCurso);
 		int pagoTotal = 0;
 		int adeuda = 0;
+		boolean  validarPago=false;
 		
 		for (Pago pago : pagoList) {
 			pagoTotal = pagoTotal +pago.getValor();
 		}
+		
 		adeuda =curso.getValorTotal() -pagoTotal;
+		if (adeuda > 0) {
+			validarPago=true;
+		}
 		model.addAttribute("pagos", pagoList);
 		model.addAttribute("curso", curso);
 		model.addAttribute("pagoTotal", pagoTotal);
 		model.addAttribute("adeuda", adeuda);
+		model.addAttribute("validarPago", validarPago);
+		model.addAttribute("idPersona", idPersona);
+		model.addAttribute("idCurso", idCurso);
 		return "pagos";
 
 	}
@@ -108,9 +116,9 @@ public class PagoController {
 	
 	
 	@GetMapping("/reportePagosCursos")
-	public String reportePagosCursos(@RequestParam int idCurso, Model model) {
+	public String reportePagosCursos(Model model) {
 
- 		List<PagoDto> pagoList = pagoService.reportePagosCursos(idCurso);
+ 		List<PagoDto> pagoList = pagoService.reportePagosCursos(1);
 		int pagoTotal = 0;
 		model.addAttribute("pagos", pagoList);
 		model.addAttribute("pagoTotal", pagoTotal);

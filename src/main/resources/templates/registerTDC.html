@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Anuncia2 - Registro</title>
+    <title>Anuncia2 - Registro de tiempo con Dios</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -19,7 +19,6 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/stylesPersonal.css">
 
 </head>
 
@@ -35,39 +34,35 @@
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Crea un Curso!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">Registra tu tiempo con Dios!</h1>
                             </div>
-                            <form class="user" method="POST" action="saveCurso">
+                            <form class="user" method="POST" action="saveActividad">
                                 <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" name="nombreCurso" id="nombreCurso"
-                                        placeholder="nombre Curso">
-                                </div>
-                                    
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <label for="fechaInicio">fecha Inicio</label>
-                                        <input type="date" class="form-control form-control-user" name="fechaInicio"
-                                            id="fechaInicio" placeholder="fecha Inicio">
-                                    </div>
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <label for="fechaInicio">fecha Fin</label>
-                                        <input type="date" class="form-control form-control-user" name="fechaFin"
-                                            id="fechaFin" placeholder="fecha fin">
-                                    </div>
+                                    <input type="text" class="form-control form-control-user" name="dios" id="dios"
+                                        placeholder="quien es Dios">
                                 </div>
                                 <div class="form-group">
-                                    <input type="number" class="form-control form-control-user" name="valor" id="valor"
-                                        placeholder="Valor">
+                                    <input type="text" class="form-control form-control-user" name="mandato" id="mandato"
+                                        placeholder="mandato de Dios para mi vida">
                                 </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" name="promesa" id="promesa"
+                                        placeholder="promesa de Dios para mi vida">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" name="mensaje" id="mensaje"
+                                        placeholder="mensaje de Dios para mi vida">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" name="aplicacion" id="aplicacion"
+                                        placeholder="aplicacion de la palabra">
+                                </div>
+                                
 
-                                <input type="submit" value="Guardar" class="btn btn-primary container">
+                                <input type="submit" value="Guardar TDC" class="btn btn-primary container">
                                 <hr>
                             </form>
                         </div>
-                        <div align="center" class="center-block">
-								<a class="btn btn-warning container" th:href="@{/listarCursos}" type="submit" data-toggle="tooltip" data-placement="right"
-									title="Regresar a Login"> Regresar </a>
-							</div>
                     </div>
                 </div>
             </div>

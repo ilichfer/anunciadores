@@ -80,13 +80,13 @@
                                             <td th:text="${curso.nombreCurso}">nombreCurso</td>
                                             <td th:text="${curso.fechaInicio}">fechaInicio</td>
                                             <td th:text="${curso.fechaFin}">fechaFin</td>
-                                            <td th:text="${curso.valorTotal}">valor</td>
+                                            <td th:text="'$ '+${curso.valorTotal}">valor</td>
 
                                             <td >
                                             <a class="btn btn-danger btn-circle btn-sm" th:href="@{/eliminarCurso(id=${curso.id})}" type="submit"  data-toggle="tooltip" data-placement="right" title="Eliminar Curso"> 
 												<i class="fas fa-trash"></i>
 											</a>
-											<a th:href="@{/personasCurso(idCurso=${curso.id},nombreCurso=${curso.nombreCurso} )}" 
+											<a th:href="@{/personasCurso(idCurso=${curso.id},nombreCurso=${curso.nombreCurso},valorCurso=${curso.valorTotal} )}" 
 												class="btn btn-primary btn-circle btn-sm" type="submit"  data-toggle="tooltip" data-placement="right" title="Inscritos al Curso"> 
 												<i class="fas fa-eye"></i>
 											</a>

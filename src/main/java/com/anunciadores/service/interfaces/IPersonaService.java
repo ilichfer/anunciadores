@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.anunciadores.dto.PersonaDto;
+import com.anunciadores.model.Pago;
 import com.anunciadores.model.Persona;
 
 
@@ -32,8 +33,14 @@ public interface IPersonaService {
 	
 	void agregarPersonaActividad(int idPersona, int idActividad);
 	
-	public List<PersonaDto> buscarConsolidacion(List<Persona> listaPersonas);
+	public List<PersonaDto> buscarConsolidacion(List<Persona> listaPersonas,int idCUerso);
 	
 	public String encriptar(String Pass);
+
+	public Persona personaDtoToEntity(PersonaDto dto);
+
+	public Persona savePassword(Persona persona);
+
+	//List<PersonaDto> findCursoValorByPersona(List<Persona> personas);
 	
 }

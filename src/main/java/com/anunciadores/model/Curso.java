@@ -58,6 +58,9 @@ public class Curso implements Serializable {
     @Column(name = "comentario")
     private boolean comentario;
     
+    @Column(name = "activo")
+    private boolean activo;
+    
       public Curso() {
     }
 
@@ -118,8 +121,16 @@ public class Curso implements Serializable {
 		this.comentario = comentario;
 	}
 
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+
 	public Curso(int id, int idPago, String nombreCurso, String fechaInicio, String fechaFin, int valorTotal,
-			boolean comentario) {
+			boolean comentario, boolean activo) {
 		super();
 		this.id = id;
 		this.idPago = idPago;
@@ -128,6 +139,7 @@ public class Curso implements Serializable {
 		this.fechaFin = fechaFin;
 		this.valorTotal = valorTotal;
 		this.comentario = comentario;
+		this.activo = activo;
 	}
 
 }

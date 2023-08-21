@@ -45,7 +45,7 @@ xmlns:th="http://www.thymeleaf.org">
 					<form method="POST" th:action="@{/login2}">
                   <div class="form-group">
                      <input class="form-control" type="email" name="email" id="txtEmail"
-                      aria-describedby="emailHelp" placeholder="Usuario">
+                      aria-describedby="emailHelp" placeholder="Email">
                   </div>
                   <div class="form-group">
                     <input type="password" class="form-control form-control-user" id="password" name="password"
@@ -66,10 +66,15 @@ xmlns:th="http://www.thymeleaf.org">
               </div>
                
               
-              <div class="text-center">
-              	<a class="small" href="redirectPersonaOut">¿Posee una cuenta? Registrese Aqui!</a>
+              
+				<div class="text-center">
+					<a class="small" href="recuperarPass">¿Ha olvidado su contraseña?</a>
+				</div>
+				<br>
+				<div class="text-center">
+              	<a class="small" href="redirectPersonaOut"> Registrese Aqui!</a>
               </div>
-             </div>
+			</div>
             </div>
           </div>
         </div>

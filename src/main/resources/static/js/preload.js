@@ -22,7 +22,7 @@ const cargarDatos = async () => {
          var nombre = datos.nombre;
          localStorage.setItem("email",JSON.stringify(datos));
             alert(JSON.stringify(datos));
-            /*fetch('http://3.86.179.20:8080/redirectDashboard' + email)*/
+            /*fetch('http://52.90.194.79:8080/redirectDashboard' + email)*/
 
             fetch('http://localhost:8080/redirectDashboard', {
             credentials: 'include'

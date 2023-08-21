@@ -38,7 +38,7 @@ public class CursosRepoImpl{
 				public Curso extractData(ResultSet rs) throws SQLException, DataAccessException {
 
 					while (rs.next())
-						cuersosList.add(new Curso(rs.getInt("id"), rs.getInt("idPago"), rs.getString("nombreCurso"), rs.getString("fechaInicio"), rs.getString("fechaFin"), rs.getInt("valorTotal"), rs.getBoolean("comentario")));
+						cuersosList.add(new Curso(rs.getInt("id"), rs.getInt("idPago"), rs.getString("nombreCurso"), rs.getString("fechaInicio"), rs.getString("fechaFin"), rs.getInt("valorTotal"), rs.getBoolean("comentario"), rs.getBoolean("activo")));
 
 					return null;
 				}

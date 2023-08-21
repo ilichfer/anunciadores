@@ -54,7 +54,8 @@
                         <h6 class="collapse-header">Gestionar Cursos:</h6>
                         <a class="collapse-item" th:href="@{/listarCursos}" >Listar cursos</a>
                         <a class="collapse-item" href="redirectCurso">crear Curso</a>
-                         <a class="collapse-item" href="reportePagos">reporte pagos Cursos</a>
+                         <a class="collapse-item" th:href="@{/reportePagos}">reporte pagos Cursos</a>
+                         
                     </div>
                 </div>
             </li>
@@ -103,6 +104,40 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestionar Asistentes:</h6>
                         <a class="collapse-item" th:href="@{/listarAsistentes}" >Listar Asistentes</a>
+                    </div>
+                </div>
+            </li>
+            
+            <!-- Nav Item - seccion TDC Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTDC"
+                    aria-expanded="true" aria-controls="collapseTDC">
+                    <i class="fa-solid fa-hands-praying"></i>
+                    <span>TDC</span>
+                </a>
+                <div id="collapseTDC" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar TDC:</h6>
+                        <a class="collapse-item" th:href="@{/redirectTDC}"  >Registrar TDC</a>
+                        <a class="collapse-item" >reporte TCD</a>
+                    </div>
+                </div>
+            </li>
+            
+             <!-- Nav Item - seccion servicio Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseServicio"
+                    aria-expanded="true" aria-controls="collapseServicio">
+                    <i class="fa-solid fa-hands-praying"></i>
+                    <span>Servicio</span>
+                </a>
+                <div id="collapseServicio" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Servicio:</h6>
+                        <a class="collapse-item" >Asignar Servidores</a>
+                        <a class="collapse-item" >Programacion Servicio</a>
                     </div>
                 </div>
             </li>

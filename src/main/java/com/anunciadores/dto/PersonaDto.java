@@ -46,6 +46,7 @@ public class PersonaDto implements Serializable {
     private List<Rol> roles;
     private boolean admin;
     private boolean user;
+    private boolean validarPago;
 
       public PersonaDto() {
     }
@@ -125,7 +126,7 @@ public class PersonaDto implements Serializable {
 	
 
 	public PersonaDto(int id, String nombre, String apellido, Integer documento, String telefono,
-			String fechanacimiento, String tipodocumento, String email, String password, List<Rol> roles) {
+			String fechanacimiento, String tipodocumento, String email, String password, List<Rol> roles, boolean validarPago) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -137,6 +138,7 @@ public class PersonaDto implements Serializable {
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
+		this.validarPago = validarPago;
 	}
 
 	public List<Rol> getRoles() {
@@ -169,6 +171,14 @@ public class PersonaDto implements Serializable {
 
 	public void setConsolidacion(boolean consolidacion) {
 		this.consolidacion = consolidacion;
+	}
+
+	public boolean isValidarPago() {
+		return validarPago;
+	}
+
+	public void setValidarPago(boolean validarPago) {
+		this.validarPago = validarPago;
 	}
 	
 }

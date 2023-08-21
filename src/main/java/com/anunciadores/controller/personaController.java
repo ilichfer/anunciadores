@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.anunciadores.dto.PersonaDto;
 import com.anunciadores.dto.VersiculoDto;
 import com.anunciadores.model.Curso;
+import com.anunciadores.model.Pago;
 import com.anunciadores.model.Persona;
 import com.anunciadores.repository.ConsolidacionRepoImpl;
 import com.anunciadores.repository.PersonaRepoImpl;
 import com.anunciadores.service.UsuarioService;
 import com.anunciadores.service.interfaces.IBibliaService;
 import com.anunciadores.service.interfaces.ICursoService;
+import com.anunciadores.service.interfaces.IPagoService;
 import com.anunciadores.service.interfaces.IPersonaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -55,7 +57,11 @@ public class personaController {
 	@Autowired
 	private ConsolidacionRepoImpl consolidacionDao;
 
+	@Autowired
+	private IPagoService pagoService;
+
 	List<Persona> personasList;
+	List<PersonaDto> personasListDto;
 
 	@GetMapping("/listar")
 	public String personas(HttpServletResponse response, Model model) {
@@ -214,7 +220,7 @@ public class personaController {
 	
 	@PostMapping("/login2")
 	public String login2(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
-		
+		System.out.println("================Login 2=================");	
 //		usuarioService.loadUserByUsername(persona.getEmail());
 		PersonaDto per = personaService.buscarEmail(persona.getEmail());
 //		User user = new User(persona.getNombre(), persona.getPassword(), authorities)
@@ -233,9 +239,9 @@ public class personaController {
 	}
 
 	@GetMapping("/personasCurso")
-	public String personasCurso(@RequestParam int idCurso, @RequestParam String nombreCurso, Model model) {
+	public String personasCurso(@RequestParam int idCurso, @RequestParam String nombreCurso, @RequestParam Integer valorCurso, Model model) {
 		personasList = personaService.findAllByCurso(idCurso);
-		List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList);
+		List<PersonaDto> listPersonasConsolidacion = personaService.buscarConsolidacion(personasList, idCurso);	
 		Curso cursoMostrar = new Curso();
 		cursoMostrar = cursoService.findCursoById(idCurso);
 		boolean consolidacion =false;
@@ -274,7 +280,7 @@ public class personaController {
 			@RequestParam String nombreCurso, Model model) {
 		personaService.eliminarPersonaCurso(idPersona, idCurso);
 		personasList = personaService.findAllByCurso(idCurso);
-		List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList);
+		List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList,0);
 		model.addAttribute("personas", listPersonasConsolidacion);
 		model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
 		model.addAttribute("titulo", "Lista de Personas inscritas");
@@ -290,7 +296,7 @@ public class personaController {
 			@RequestParam String nombreCurso, Model model) {
 		personaService.agregarPersonaCurso(idPersona, idCurso);
 		personasList = personaService.findAllByCurso(idCurso);
-		List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList);
+		List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList,0);
 		model.addAttribute("personas", listPersonasConsolidacion);
 		model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
 		model.addAttribute("titulo", "Lista de Personas inscritas");
@@ -326,6 +332,25 @@ public class personaController {
 		model.addAttribute("nombre", persona.getNombre());
 	    model.addAttribute("asistentes", personasList);
 		return "asignarPadres";
+	}
+	
+	@PostMapping("/updatePass")
+	public String updatePass(@ModelAttribute Persona persona, HttpServletResponse response, Model model)
+			throws JsonMappingException, JsonProcessingException {
+		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
+		String url = "recoverPass";
+		if (per.getEmail() != null) {
+			per.setPassword(persona.getPassword());
+			persona = personaService.personaDtoToEntity(per);
+			Persona personaSave = personaService.savePassword(persona);
+			model.addAttribute("persona", persona);
+			model.addAttribute("msjOk", " Su contraseña ha sido actualizada correctamente");
+			model.addAttribute("msjError", null);
+		}else {
+		model.addAttribute("msjOk", null);
+		model.addAttribute("msjError", " el usuario no se encuentra registrado");
+		}
+		return url;
 	}
 
 }

@@ -51,7 +51,7 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">reporte de Pagos y deudas</h1>
-                    <p class="mb-4">Tabla de Pagos y deudas de los cursos registradas en el sistema.</p>
+                    <p class="mb-4">Tabla de Pagos y deudas de los cursos registrados en el sistema.</p>
 
 <!-- 						<div class="col-xl-3 col-md-6 mb-4"> -->
 <!--                             <div class="card border-left-success shadow h-100 py-2"> -->
@@ -82,11 +82,11 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>ombre del curso</th>
-                                            <th>valor total</th>
+                                            <th>nombre del curso</th>
+                                            <th>valor total curso</th>
                                             <th>persona</th>
-                                            <th>valor pagado</th>
-                                            <th>deuda</th>
+                                            <th>valor abonado</th>
+                                            <th>deuda pendiente</th>
                                         </tr>
                                     </thead>
 
@@ -96,37 +96,12 @@
                                             <td th:text="${pago.valorTotal}">valor</td>
                                             <td th:text="${pago.persona}">valor</td>
                                             <td th:text="${pago.pago}">valor</td>
-                                            <td th:text="${pago.deuda}">valor</td>
-
-                                    <!-- Circle Buttons (Small) -->
-
-<!-- 									<td><a class="btn btn-primary btn-circle btn-sm" th:href="@{/eliminarPago(id=${pago.id})}">  -->
-<!-- 											<i class="fas fa-trash"></i> -->
-<!-- 										</a> -->
-<!-- 										<a href="#" class="btn btn-success btn-circle btn-sm">  -->
-<!-- 											<i class="fas fa-check"></i> -->
-<!-- 										</a> -->
-<!-- 										<a href="#" class="btn btn-info btn-circle btn-sm">  -->
-<!-- 											<i class="fas fa-info-circle"></i> -->
-<!-- 										</a> -->
-<!-- 									</td> -->
+                                            <td th:text="${pago.deuda}" class="deudaPendiente"  th:if="${pago.deuda > 0}">valor</td>
+                                            <td th:text="${pago.deuda}" class="deudaOk" th:if="${pago.deuda <= 0}">valor</td>
 
 										</tr>
                                     </tbody>
-<!-- 									<tfoot> -->
-<!-- 										<tr> -->
-<!-- 											<td colspan="2"> -->
-<!-- 												<h6 class="m-0 font-weight-bold text-primary">Total Pagado</h6> -->
-<!-- 											</td> -->
-<!-- 											<td class="m-0 font-weight-bold text-success" th:text="'$ '+ ${pagoTotal}">valor</td> -->
-<!-- 										</tr> -->
-<!-- 										<tr> -->
-<!-- 											<td colspan="2"> -->
-<!-- 												<h6 class="m-0 font-weight-bold text-primary">Adueda</h6> -->
-<!-- 											</td> -->
-<!-- 											<td class="m-0 font-weight-bold text-danger" th:text="'$ '+ ${adeuda}">adeuda</td> -->
-<!-- 										</tr> -->
-<!-- 									</tfoot> -->
+<!-- 									
 								</table>
                             </div>
                         </div>
@@ -171,6 +146,21 @@
 
                 <!-- Page level custom scripts 
     <script src="js/demo/datatables-demo.js"></script>-->
+    
+    <style>
+
+
+.deudaPendiente {
+  border: 1px solid;
+  color: red;
+}
+
+.deudaOk {
+  border: 1px solid;
+  color: #58D68D ;
+}
+</style>
+
 
 </body>
 

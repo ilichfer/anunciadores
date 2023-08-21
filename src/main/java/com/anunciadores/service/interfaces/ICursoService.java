@@ -13,6 +13,7 @@ public interface ICursoService {
 	public List<Curso> findAll();
 
 	public Curso save(CursoDto curso) throws ParseException;
+	public Curso desactivarCurso(Curso curso) throws ParseException;
 
 	public Curso findCursoById(Integer id);
 	

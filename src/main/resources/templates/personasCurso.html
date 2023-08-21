@@ -69,8 +69,7 @@
                                             <th>Telefono</th>
                                             <th>Fecha Nacimiento</th>
                                             <th>Acciones</th>
-                                            <th th:if="${pago != false}">Pagar</th>
-                                            <th th:if="${pago != false}">Ver Pagos</th>
+                                            <th th:if="${pago != false}">Historial de Pagos</th>
                                         </tr>
                                     </thead>
 
@@ -85,7 +84,7 @@
                                             <td >
                                             
                                             <a class="btn btn-danger btn-circle btn-sm" th:href="@{/eliminarPersonasCurso(idPersona=${persona.id},idCurso=${idCurso},nombreCurso=${nombreCurso})}" th:if="${delete != false}" 
-                                              type="submit"  data-toggle="tooltip" data-placement="right" title="Eliminar del Curso"> 
+                                              type="submit"  data-toggle="tooltip" data-placement="right" title="Eliminar estudiante del Curso"> 
 												<i class="fas fa-trash"></i>
 											</a>
 											<a class="btn btn-primary btn-circle btn-sm" th:href="@{/agregarPersonasCurso(idPersona=${persona.id},idCurso=${idCurso},nombreCurso=${nombreCurso})}" th:if="${add != false}"
@@ -97,12 +96,7 @@
 												<i class="fas fa-phone-volume"></i>
 											</a>
 											</td> 
-											<td> 
-											<a class="btn btn-success btn-circle btn-sm" th:href="@{/redirectPago(idPersona=${persona.id},idCurso=${idCurso})}"
-											type="submit"  data-toggle="tooltip" data-placement="right" title="ver pagos" > 
-												<i class="fas fa-donate"></i>
-											</a>
-											</td> 
+											 
 											<td> 
 											<a class="btn btn-success btn-circle btn-sm" th:href="@{/buscarPagosCurso(idPersona=${persona.id},idCurso=${idCurso})}"
 											type="submit"  data-toggle="tooltip" data-placement="right" title="ver pagos" > 

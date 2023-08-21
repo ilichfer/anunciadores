@@ -13,16 +13,19 @@ import org.springframework.stereotype.Service;
 
 import com.anunciadores.dto.PersonaDto;
 import com.anunciadores.model.Consolidacion;
+import com.anunciadores.model.Curso;
+import com.anunciadores.model.Pago;
 import com.anunciadores.model.Persona;
 import com.anunciadores.model.Rol;
 import com.anunciadores.model.RolPersona;
 import com.anunciadores.repository.ConsolidacionRepoImpl;
-import com.anunciadores.repository.IConsolidacionRepo;
 import com.anunciadores.repository.IPersonaRepo;
 import com.anunciadores.repository.IRolesPersonaRepo;
 import com.anunciadores.repository.InscripcionRepo;
 import com.anunciadores.repository.PersonaRepoImpl;
 import com.anunciadores.repository.RolesRepoImpl;
+import com.anunciadores.service.interfaces.ICursoService;
+import com.anunciadores.service.interfaces.IPagoService;
 import com.anunciadores.service.interfaces.IPersonaService;
 
 @Service
@@ -48,6 +51,14 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private ConsolidacionRepoImpl consolidacionDao;
+	
+	@Autowired
+	private IPagoService pagoService;
+	@Autowired
+	private ICursoService cursoService;
+	
+	List<Persona> listPersonas;
+	List<PersonaDto> listPersonasDto;
 
 	@Override
 	public List<Persona> findAllUsuarios() {
@@ -129,9 +140,10 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Override
 	public List<Persona> findAllByCurso(int idCurso) {
-		return daoPersona.buscarPersonaByCurso(idCurso);
+		listPersonas= daoPersona.buscarPersonaByCurso(idCurso);
+		return listPersonas;
 	}
-
+	
 	@Override
 	public List<Persona> buscarTodosSinCurso(int idCurso) {
 //		List<Persona> listaPersonas=  daoPersona.buscarPersonaSinCurso(idCurso);
@@ -192,6 +204,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		try {
 
 			per = daoPersona.buscarByDocumento(doc);
+			if (per.getDocumento() != null) {							
 			personadto.setNombre(per.getNombre());
 			personadto.setApellido(per.getApellido());
 			personadto.setDocumento(per.getDocumento());
@@ -201,6 +214,9 @@ public class PersonaServiceImpl implements IPersonaService {
 			personadto.setFechanacimiento(per.getFechanacimiento());
 			personadto.setTelefono(per.getTelefono());
 			personadto.setPassword(per.getPassword() != null ? per.getPassword() : "");
+			}else {
+				personadto = new PersonaDto();
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -215,13 +231,13 @@ public class PersonaServiceImpl implements IPersonaService {
 	}
 
 	@Override
-	public List<PersonaDto> buscarConsolidacion(List<Persona> listaPersonas) {
+	public List<PersonaDto> buscarConsolidacion(List<Persona> listaPersonas, int idCurso) {
 		List<PersonaDto> listaPersonasConsolidacion = new ArrayList<>();
-		listaPersonas.forEach(p -> listaPersonasConsolidacion.add(agregarConsolidacion(p)));
+		listaPersonas.forEach(p -> listaPersonasConsolidacion.add(agregarConsolidacion(p,idCurso)));
 		return listaPersonasConsolidacion;
 	}
 
-	public PersonaDto agregarConsolidacion(Persona persona) {
+	public PersonaDto agregarConsolidacion(Persona persona, int idCurso) {
 		PersonaDto perConsolidacion = new PersonaDto();
 		perConsolidacion.setNombre(persona.getNombre());
 		perConsolidacion.setApellido(persona.getApellido());
@@ -238,6 +254,21 @@ public class PersonaServiceImpl implements IPersonaService {
 		} else {
 			perConsolidacion.setConsolidacion(false);
 		}
+		if (idCurso != 0) {
+			List<Pago> pagoList = pagoService.findPagosByIdCurso(persona.getId(), idCurso);
+			Curso curso = new Curso();
+			curso = cursoService.findCursoById(idCurso);
+			int pagoTotal = 0;
+			int adeuda = 0;
+			
+			for (Pago pago : pagoList) {
+				pagoTotal = pagoTotal +pago.getValor();
+			}
+			if (pagoTotal >= curso.getValorTotal()) {
+				perConsolidacion.setValidarPago(true);
+			};
+		}
+		
 //		cosolidacionRepository.save(consolidacion);
 
 		return perConsolidacion;
@@ -259,5 +290,32 @@ public class PersonaServiceImpl implements IPersonaService {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	@Override
+	public Persona personaDtoToEntity(PersonaDto dto) {
+		Persona per = new Persona();
+		try {
+			per.setNombre(dto.getNombre());
+			per.setApellido(dto.getApellido());
+			per.setDocumento(dto.getDocumento());
+			per.setTipodocumento(dto.getTipodocumento());
+			per.setEmail(dto.getEmail());
+			per.setId(dto.getId());
+			per.setFechanacimiento(dto.getFechanacimiento());
+			per.setTelefono(dto.getTelefono());
+			per.setPassword(dto.getPassword());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return per;
+	}
+	
+	@Override
+	public Persona savePassword(Persona persona) {
+		persona.setPassword(encriptar(persona.getPassword()));
+		return personaRepository.save(persona);
+	}
+	
+	
 
 }

@@ -1,6 +1,7 @@
 package com.anunciadores.service;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,8 +36,17 @@ public class CursoServiceImpl implements ICursoService {
 
 	@Override
 	public List<Curso> findAll() {
+		List<Curso> listaCursosActivos = new ArrayList<>();
 
-		return cursoRepository.findAll();
+		listaCursos = cursoRepository.findAll();
+
+		for (Curso curso : listaCursos) {
+			if (curso.isActivo()) {
+				listaCursosActivos.add(curso);
+			}
+		}
+
+		return listaCursosActivos;
 
 	}
 
@@ -50,7 +60,7 @@ public class CursoServiceImpl implements ICursoService {
 		cursoSave.setNombreCurso(curso.getNombreCurso());
 		cursoSave.setValorTotal(curso.getValorTotal());
 		cursoSave.setComentario(curso.getCheck() !=null? true: false);
-		
+		cursoSave.setActivo(true);
 		return cursoRepository.save(cursoSave);
 	}
 
@@ -131,6 +141,14 @@ public class CursoServiceImpl implements ICursoService {
 		personaDto.setNombre(persona.getNombre());
 		personaDto.setApellido(persona.getApellido());
 		return personaDto;
+	}
+
+	@Override
+	public Curso desactivarCurso(Curso curso) throws ParseException {
+		
+		curso = cursoRepository.findById(curso.getId()).get();
+		curso.setActivo(false);
+		return cursoRepository.save(curso);
 	}
 
 }

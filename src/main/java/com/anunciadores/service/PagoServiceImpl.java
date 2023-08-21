@@ -30,7 +30,6 @@ public class PagoServiceImpl implements IPagoService {
 
 	@Override
 	public Pago save(Pago pago) {
-		
 		return PagoRepository.save(pago);
 	}
 
