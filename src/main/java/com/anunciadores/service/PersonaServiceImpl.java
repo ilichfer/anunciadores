@@ -16,7 +16,7 @@ import com.anunciadores.model.Consolidacion;
 import com.anunciadores.model.Curso;
 import com.anunciadores.model.Pago;
 import com.anunciadores.model.Persona;
-import com.anunciadores.model.Rol;
+import com.anunciadores.model.rol;
 import com.anunciadores.model.RolPersona;
 import com.anunciadores.repository.ConsolidacionRepoImpl;
 import com.anunciadores.repository.IPersonaRepo;
@@ -116,10 +116,10 @@ public class PersonaServiceImpl implements IPersonaService {
 			personadto.setFechanacimiento(per.getFechanacimiento());
 			personadto.setTelefono(per.getTelefono());
 			personadto.setPassword(per.getPassword());
-			personadto.setRoles(new ArrayList<Rol>());
-			List<Rol> roles = rolesDao.buscarRoles(personadto.getId());
+			personadto.setRoles(new ArrayList<rol>());
+			List<rol> roles = rolesDao.buscarRoles(personadto.getId());
 
-			for (Rol rol : roles) {
+			for (com.anunciadores.model.rol rol : roles) {
 				if (rol.getDescripcion().equalsIgnoreCase("ROLE_ADMIN")) {
 					personadto.getRoles().add(rol);
 					personadto.setAdmin(true);

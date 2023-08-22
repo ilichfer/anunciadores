@@ -11,8 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
-import com.anunciadores.model.Persona;
-import com.anunciadores.model.Rol;
+import com.anunciadores.model.rol;
 import com.anunciadores.model.RolPersona;
 
 
@@ -33,22 +32,22 @@ public class RolesRepoImpl{
 	
 
 
-	public List<Rol> buscarRoles(Integer idPersona) {
+	public List<rol> buscarRoles(Integer idPersona) {
 		StringBuilder sql = new StringBuilder();
-		Rol retorno = new Rol();
-		List<Rol> rolesList = new ArrayList<Rol>();
+		rol retorno = new rol();
+		List<rol> rolesList = new ArrayList<rol>();
 		try {
 			sql.append("SELECT r.* FROM persona_rol pr  " 
 					+ "join rol r on  pr.id_rol = r.id" + 
 					" where pr.id_persona = " + idPersona
 					+ "");
 
-			retorno = jdbcTemplate.query(sql.toString(), new ResultSetExtractor<Rol>() {
+			retorno = jdbcTemplate.query(sql.toString(), new ResultSetExtractor<rol>() {
 				@Override
-				public Rol extractData(ResultSet rs) throws SQLException, DataAccessException {
+				public rol extractData(ResultSet rs) throws SQLException, DataAccessException {
 
 					while (rs.next())
-						rolesList.add(new Rol(rs.getInt("id"), rs.getString("descripcion_rol")));
+						rolesList.add(new rol(rs.getInt("id"), rs.getString("descripcion_rol")));
 
 					return null;
 				}

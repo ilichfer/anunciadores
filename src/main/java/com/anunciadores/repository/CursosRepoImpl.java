@@ -12,9 +12,6 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
 import com.anunciadores.model.Curso;
-import com.anunciadores.model.Persona;
-import com.anunciadores.model.Rol;
-import com.anunciadores.model.RolPersona;
 
 
 @Service

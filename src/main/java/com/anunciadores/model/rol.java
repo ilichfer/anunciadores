@@ -11,10 +11,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.sun.istack.NotNull;
@@ -28,7 +25,7 @@ import com.sun.istack.NotNull;
 @Entity
 @Table(name = "rol")
 
-public class Rol implements Serializable {
+public class rol implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -57,13 +54,13 @@ public class Rol implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	public Rol(int id, String descripcion) {
+	public rol(int id, String descripcion) {
 		super();
 		this.id = id;
 		this.descripcion = descripcion;
 	}
 
-	public Rol() {
+	public rol() {
 		super();
 	}
 
