@@ -34,8 +34,6 @@ public class Rol implements Serializable {
     @Id
 	@Basic(optional = false)
 	@NotNull
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sec_curso")
-	@SequenceGenerator(name = "sec_curso", sequenceName = "sec_curso", allocationSize = 1)
     
     @Column(name = "id")
     private int id;
