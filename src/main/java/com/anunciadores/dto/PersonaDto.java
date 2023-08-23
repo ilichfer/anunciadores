@@ -6,12 +6,10 @@ package com.anunciadores.dto;
  */
 
 
+import com.anunciadores.model.Rol;
+
 import java.io.Serializable;
 import java.util.List;
-
-import com.anunciadores.model.rol;
-
-
 
 
 /**
@@ -43,7 +41,7 @@ public class PersonaDto implements Serializable {
     
     private boolean consolidacion;
     
-    private List<rol> roles;
+    private List<Rol> roles;
     private boolean admin;
     private boolean user;
     private boolean validarPago;
@@ -126,7 +124,7 @@ public class PersonaDto implements Serializable {
 	
 
 	public PersonaDto(int id, String nombre, String apellido, Integer documento, String telefono,
-                      String fechanacimiento, String tipodocumento, String email, String password, List<rol> roles, boolean validarPago) {
+                      String fechanacimiento, String tipodocumento, String email, String password, List<Rol> roles, boolean validarPago) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -141,11 +139,11 @@ public class PersonaDto implements Serializable {
 		this.validarPago = validarPago;
 	}
 
-	public List<rol> getRoles() {
+	public List<Rol> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<rol> roles) {
+	public void setRoles(List<Rol> roles) {
 		this.roles = roles;
 	}
 

@@ -5,13 +5,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anunciadores.model.Rol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
-import com.anunciadores.model.rol;
 import com.anunciadores.model.RolPersona;
 
 
@@ -32,22 +32,22 @@ public class RolesRepoImpl{
 	
 
 
-	public List<rol> buscarRoles(Integer idPersona) {
+	public List<Rol> buscarRoles(Integer idPersona) {
 		StringBuilder sql = new StringBuilder();
-		rol retorno = new rol();
-		List<rol> rolesList = new ArrayList<rol>();
+		Rol retorno = new Rol();
+		List<Rol> rolesList = new ArrayList<Rol>();
 		try {
 			sql.append("SELECT r.* FROM persona_rol pr  " 
 					+ "join rol r on  pr.id_rol = r.id" + 
 					" where pr.id_persona = " + idPersona
 					+ "");
 
-			retorno = jdbcTemplate.query(sql.toString(), new ResultSetExtractor<rol>() {
+			retorno = jdbcTemplate.query(sql.toString(), new ResultSetExtractor<Rol>() {
 				@Override
-				public rol extractData(ResultSet rs) throws SQLException, DataAccessException {
+				public Rol extractData(ResultSet rs) throws SQLException, DataAccessException {
 
 					while (rs.next())
-						rolesList.add(new rol(rs.getInt("id"), rs.getString("descripcion_rol")));
+						rolesList.add(new Rol(rs.getInt("id"), rs.getString("descripcion_rol")));
 
 					return null;
 				}

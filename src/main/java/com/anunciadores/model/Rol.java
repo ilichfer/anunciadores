@@ -6,15 +6,10 @@ package com.anunciadores.model;
  */
 
 
-import java.io.Serializable;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.sun.istack.NotNull;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 
 /**
@@ -25,18 +20,18 @@ import com.sun.istack.NotNull;
 @Entity
 @Table(name = "rol")
 
-public class rol implements Serializable {
+public class Rol implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     @Id
 	@Basic(optional = false)
 	@NotNull
-    
+
     @Column(name = "id")
     private int id;
-    
-    @Column(name = "descripcion_rol")
-    private String descripcion;
+
+	@Column(name = "descripcion_rol")
+	private String descripcion;
 
 	public int getId() {
 		return id;
@@ -54,17 +49,15 @@ public class rol implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	public rol(int id, String descripcion) {
-		super();
+	public Rol(int id, String descripcion) {
 		this.id = id;
 		this.descripcion = descripcion;
 	}
 
-	public rol() {
+	public Rol() {
 		super();
 	}
 
 	
-	
-	
+    
 }

@@ -7,17 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.anunciadores.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.anunciadores.dto.PersonaDto;
-import com.anunciadores.model.Consolidacion;
-import com.anunciadores.model.Curso;
-import com.anunciadores.model.Pago;
-import com.anunciadores.model.Persona;
-import com.anunciadores.model.rol;
-import com.anunciadores.model.RolPersona;
 import com.anunciadores.repository.ConsolidacionRepoImpl;
 import com.anunciadores.repository.IPersonaRepo;
 import com.anunciadores.repository.IRolesPersonaRepo;
@@ -116,10 +111,10 @@ public class PersonaServiceImpl implements IPersonaService {
 			personadto.setFechanacimiento(per.getFechanacimiento());
 			personadto.setTelefono(per.getTelefono());
 			personadto.setPassword(per.getPassword());
-			personadto.setRoles(new ArrayList<rol>());
-			List<rol> roles = rolesDao.buscarRoles(personadto.getId());
+			personadto.setRoles(new ArrayList<Rol>());
+			List<Rol> roles = rolesDao.buscarRoles(personadto.getId());
 
-			for (com.anunciadores.model.rol rol : roles) {
+			for (com.anunciadores.model.Rol rol : roles) {
 				if (rol.getDescripcion().equalsIgnoreCase("ROLE_ADMIN")) {
 					personadto.getRoles().add(rol);
 					personadto.setAdmin(true);
