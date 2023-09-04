@@ -98,7 +98,7 @@ public class personaController {
 	@GetMapping("/buscar/{id}")
 	public ResponseEntity<Object> getProductoById(@PathVariable Integer id) {
 
-		return ResponseEntity.ok(personaService.findPersonaById                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               (id));
+		return ResponseEntity.ok(personaService.findPersonaById(id));
 
 	}
 
@@ -351,6 +351,13 @@ public class personaController {
 		model.addAttribute("msjError", " el usuario no se encuentra registrado");
 		}
 		return url;
+	}
+
+	@GetMapping("/listarRoles")
+	public String rolesPersonas(HttpServletResponse response, Model model) {
+		personasListDto = personaService.findAllUsuariosRol();
+		model.addAttribute("personas", personasListDto);
+		return "permisos";
 	}
 
 }

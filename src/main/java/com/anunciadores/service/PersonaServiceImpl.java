@@ -8,17 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.anunciadores.model.*;
+import com.anunciadores.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.anunciadores.dto.PersonaDto;
-import com.anunciadores.repository.ConsolidacionRepoImpl;
-import com.anunciadores.repository.IPersonaRepo;
-import com.anunciadores.repository.IRolesPersonaRepo;
-import com.anunciadores.repository.InscripcionRepo;
-import com.anunciadores.repository.PersonaRepoImpl;
-import com.anunciadores.repository.RolesRepoImpl;
 import com.anunciadores.service.interfaces.ICursoService;
 import com.anunciadores.service.interfaces.IPagoService;
 import com.anunciadores.service.interfaces.IPersonaService;
@@ -34,6 +29,9 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private RolesRepoImpl rolesDao;
+
+	@Autowired
+	private IRolesRepo rolesRepo;
 
 	@Autowired
 	private IRolesPersonaRepo rolesPersonaRepository;
@@ -102,28 +100,31 @@ public class PersonaServiceImpl implements IPersonaService {
 		try {
 
 			per = daoPersona.buscarEmail(email);
-			personadto.setNombre(per.getNombre());
-			personadto.setApellido(per.getApellido());
-			personadto.setDocumento(per.getDocumento());
-			personadto.setTipodocumento(per.getTipodocumento());
-			personadto.setEmail(per.getEmail());
-			personadto.setId(per.getId());
-			personadto.setFechanacimiento(per.getFechanacimiento());
-			personadto.setTelefono(per.getTelefono());
-			personadto.setPassword(per.getPassword());
-			personadto.setRoles(new ArrayList<Rol>());
-			List<Rol> roles = rolesDao.buscarRoles(personadto.getId());
+			if (per != null) {
+				personadto.setNombre(per.getNombre());
+				personadto.setApellido(per.getApellido());
+				personadto.setDocumento(per.getDocumento());
+				personadto.setTipodocumento(per.getTipodocumento());
+				personadto.setEmail(per.getEmail());
+				personadto.setId(per.getId());
+				personadto.setFechanacimiento(per.getFechanacimiento());
+				personadto.setTelefono(per.getTelefono());
+				personadto.setPassword(per.getPassword());
+				personadto.setRoles(new ArrayList<Rol>());
 
-			for (com.anunciadores.model.Rol rol : roles) {
-				if (rol.getDescripcion().equalsIgnoreCase("ROLE_ADMIN")) {
-					personadto.getRoles().add(rol);
-					personadto.setAdmin(true);
-					personadto.setUser(false);
-				} else {
-					personadto.setAdmin(false);
-					personadto.setUser(true);
+				List<Rol> roles = rolesDao.buscarRoles(personadto.getId());
+
+				for (com.anunciadores.model.Rol rol : roles) {
+					if (rol.getDescripcion().equalsIgnoreCase("ADMINISTRADOR")) {
+						personadto.getRoles().add(rol);
+						personadto.setAdmin(true);
+						personadto.setUser(false);
+					} else {
+						personadto.setAdmin(false);
+						personadto.setUser(true);
+					}
+
 				}
-
 			}
 //			personadto.setRoles(rolesDao.buscarRoles(personadto.getId()));
 
@@ -310,7 +311,35 @@ public class PersonaServiceImpl implements IPersonaService {
 		persona.setPassword(encriptar(persona.getPassword()));
 		return personaRepository.save(persona);
 	}
-	
-	
+
+	@Override
+	public List<PersonaDto> findAllUsuariosRol() {
+		List<PersonaDto> listDto = new ArrayList<>();
+		List<Persona> personas = daoPersona.buscarUsuarios();
+		personas.forEach(p -> listDto.add(mapPersonaDto(p)));
+		return listDto;
+	}
+
+	private PersonaDto mapPersonaDto(Persona persona){
+		PersonaDto dto = new PersonaDto();
+		try {
+			dto.setNombre(persona.getNombre());
+			dto.setApellido(persona.getApellido());
+			dto.setDocumento(persona.getDocumento());
+			dto.setTipodocumento(persona.getTipodocumento());
+			dto.setEmail(persona.getEmail());
+			dto.setId(persona.getId());
+			dto.setFechanacimiento(persona.getFechanacimiento());
+			dto.setTelefono(persona.getTelefono());
+			dto.setPassword(persona.getPassword());
+			List<Rol> roles = rolesDao.buscarRoles(persona.getId());
+			roles.forEach(r -> dto.setRolUnico(r) );
+			dto.setRoles(roles);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
 
 }

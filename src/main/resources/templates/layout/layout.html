@@ -119,8 +119,23 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestionar TDC:</h6>
-                        <a class="collapse-item" th:href="@{/redirectTDC}"  >Registrar TDC</a>
-                        <a class="collapse-item" >reporte TCD</a>
+                        <a class="collapse-item" th:href="@{/redirectTDC}">Registrar TDC</a>
+                        <a class="collapse-item" th:href="@{/listarTdc}">buscar TCD</a>
+                        <a class="collapse-item" th:href="@{/redirectReporteTDC}">reporte TCD</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRol"
+                   aria-expanded="true" aria-controls="collapseRol">
+                    <i class="fa-solid fa-hands-praying"></i>
+                    <span>Administracion</span>
+                </a>
+                <div id="collapseRol" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Permisos:</h6>
+                        <a class="collapse-item" th:href="@{/listarRoles}">Administrar roles</a>
                     </div>
                 </div>
             </li>

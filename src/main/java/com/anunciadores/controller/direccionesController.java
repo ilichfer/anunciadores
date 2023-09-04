@@ -1,10 +1,14 @@
 package com.anunciadores.controller;
 
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.anunciadores.dto.TdcDto;
+import com.anunciadores.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.anunciadores.dto.VersiculoDto;
 import com.anunciadores.model.Curso;
 import com.anunciadores.model.Persona;
-import com.anunciadores.service.interfaces.IBibliaService;
-import com.anunciadores.service.interfaces.ICursoService;
-import com.anunciadores.service.interfaces.IPagoService;
-import com.anunciadores.service.interfaces.IPersonaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -42,6 +42,9 @@ public class direccionesController {
 	
 	@Autowired
 	private ICursoService cursoService;
+
+	@Autowired
+	private ITdcService tdcService;
 	
 	List<Persona> personasList;
 
@@ -129,4 +132,15 @@ public class direccionesController {
 		return "registerTDC";
 	}
 
+	@GetMapping("/redirectReporteTDC")
+	public String redirectReporteTDC(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+							  Model model) {
+		return "reporteTdc";
+	}
+
+	@GetMapping("/redirectRoles")
+	public String redirectRoles(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+									 Model model) {
+		return "permisos";
+	}
 }

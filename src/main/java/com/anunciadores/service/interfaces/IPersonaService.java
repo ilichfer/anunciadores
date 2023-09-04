@@ -42,5 +42,7 @@ public interface IPersonaService {
 	public Persona savePassword(Persona persona);
 
 	//List<PersonaDto> findCursoValorByPersona(List<Persona> personas);
+
+	public List<PersonaDto> findAllUsuariosRol();
 	
 }

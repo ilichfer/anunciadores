@@ -42,6 +42,8 @@ public class PersonaDto implements Serializable {
     private boolean consolidacion;
     
     private List<Rol> roles;
+
+	private Rol rolUnico;
     private boolean admin;
     private boolean user;
     private boolean validarPago;
@@ -178,5 +180,12 @@ public class PersonaDto implements Serializable {
 	public void setValidarPago(boolean validarPago) {
 		this.validarPago = validarPago;
 	}
-	
+
+	public Rol getRolUnico() {
+		return rolUnico;
+	}
+
+	public void setRolUnico(Rol rolUnico) {
+		this.rolUnico = rolUnico;
+	}
 }

@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Anuncia 2- Cursos</title>
+    <title>Anuncia 2- visualizar TDC</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -49,23 +49,20 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">TDC</h1>
-                    <p class="mb-4">cargar Imagen de tu Tiempo con Dios para el dia [DD/MM/AAAA].</p>
-
-                    <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary">
+                    <h1 class="h3 mb-2 text-gray-800">Visualizar TDC</h1>
+                    <p class="mb-4">Tiempo con Dios del dia [DD/MM/AAAA].</p>
 
 						<div class="card-body">
 							<h4 class="card-title" >
-                                <form method="post" th:action="@{/upload}" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <input type="file" name="image" accept="image/*" class="form-control-file">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">cargar tiempo con Dios</button>
-                                </form>
-                                <span th:if="${msg != null}" th:text="${msg}"></span>
+                                <img  th:src="@{'data:image/jpeg;base64,'+${image}}" />
 							</h4>
 						</div>
 
+                </div>
+
+                <div align="center" class="center-block">
+                    <a class="btn btn-warning container" th:href="@{/listarTdc}" type="submit" data-toggle="tooltip" data-placement="right"
+                       title="Regresar"> Regresar </a>
                 </div>
 
 

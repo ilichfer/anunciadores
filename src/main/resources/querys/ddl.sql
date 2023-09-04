@@ -104,7 +104,8 @@ CREATE TABLE `parametrica` (
 -- u217299043_desarrollo.persona definition
 
 CREATE TABLE `persona` (
-  `id` int(11) NOT NULL,
+
+  `id` int auto_increment NOT NULL,
   `apellido` varchar(255) DEFAULT NULL,
   `documento` int(11) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,

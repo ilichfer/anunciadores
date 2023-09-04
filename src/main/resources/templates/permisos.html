@@ -8,17 +8,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
+
+    <!-- Custom styles for this template -->
     <meta name="author" content="">
 
-    <title>Anuncia 2- Cursos</title>
+    <title>Anuncia 2- Permisos</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
 
-    <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
     <!-- Custom styles for this page -->
@@ -49,22 +49,45 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">TDC</h1>
-                    <p class="mb-4">cargar Imagen de tu Tiempo con Dios para el dia [DD/MM/AAAA].</p>
+                    <h1 class="h3 mb-2 text-gray-800">Administrar roles</h1>
+                    <p class="mb-4">Tabla de usuarios.</p>
 
-                    <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary">
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Lista de usuarios</h6>
+                        </div>
 
-						<div class="card-body">
-							<h4 class="card-title" >
-                                <form method="post" th:action="@{/upload}" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <input type="file" name="image" accept="image/*" class="form-control-file">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">cargar tiempo con Dios</button>
-                                </form>
-                                <span th:if="${msg != null}" th:text="${msg}"></span>
-							</h4>
-						</div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+
+
+                                        <th>Nombre</th>
+                                        <th>Rol</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr th:each="persona, itemStat : ${personas}">
+                                        <td th:text="${persona.nombre}">nombre</td>
+                                        <td th:text="${persona.rolUnico.descripcion}">rol</td>
+                                        <td >
+                                            <a class="btn btn-info btn-circle btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 

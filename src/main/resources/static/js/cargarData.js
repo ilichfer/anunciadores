@@ -10,9 +10,9 @@
       
     
   
-  //const response = await fetch("http://localhost:8080/consutarEmail?email=fricar18@hotmail.com");
-  const response = await fetch("http://localhost:8080/consutarEmail?email="+email);
-  //const response = await fetch("http://52.87.237.29/:80/consutarEmail?email="+email);
+  //const response = await fetch("http://anunciados-aws-env.eba-sdf4vzvf.us-east-1.elasticbeanstalk.com/consutarEmail?email=fricar18@hotmail.com");
+  const response = await fetch("http://localhost:5000/consutarEmail?email="+email);
+  //const response = await fetch("http://anunciados-aws-env.eba-sdf4vzvf.us-east-1.elasticbeanstalk.com/consutarEmail?email="+email);
   const datos = await response.json();
   
   // Fuerzo artificialmente a que dure más para que se pueda observar el Spinner
@@ -82,8 +82,8 @@ if (s.style.display === "none") {
 const cargarDatos = async () => {
   document.getElementById('wrapper').style.display= "none";
   document.getElementById("spinner").style.display="block";
-  const response = await fetch("http://localhost:8080/consutarEmail?email=fricar18@hotmail.com");
-  /*const response = await fetch("http://3.86.179.20:8080/consutarEmail?email=fricar18@hotmail.com");*/
+  const response = await fetch("http://localhost:5000/consutarEmail?email=fricar18@hotmail.com");
+  /*const response = await fetch("http://anunciados-aws-env.eba-sdf4vzvf.us-east-1.elasticbeanstalk.com/consutarEmail?email=fricar18@hotmail.com");*/
   const datos = await response.json();
   
   // Fuerzo artificialmente a que dure más para que se pueda observar el Spinner
