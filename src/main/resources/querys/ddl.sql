@@ -202,6 +202,45 @@ CREATE TABLE `TDC` (
 );
 
 
+CREATE TABLE anunciadores.ministerios (
+	id INT NULL,
+	nombre varchar(100) NULL
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE anunciadores.persona_ministerio (
+	id_persona INT NULL,
+	id_ministerio INT NULL
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_a
+
+
+CREATE TABLE anunciadores.posiciones_ministerios (
+	id INT auto_increment NOT NULL,
+	id_ministerio INT NOT NULL,
+	nombre_posicion varchar(100) NULL,
+    PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE anunciadores.servicio (
+	id INT auto_increment NOT NULL,
+	id_persona INT NOT NULL,
+	id_posicion INT NOT NULL,
+	fecha_servicio DATE NOT NULL,
+	id_ministerios INT NOT NULL,
+    PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 

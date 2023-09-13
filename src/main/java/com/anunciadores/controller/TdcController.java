@@ -103,9 +103,18 @@ public class TdcController {
 	}
 
 	@PostMapping("/buscarTdcByRangoFecha") public String buscarTdcByRangoFecha(@RequestParam Date fechaInicio,@RequestParam Date fechaFin, Model model) {
+		if (fechaInicio != null && fechaFin !=null){
 		List<TdcReporteDto> listaTdc =	tdcService.findAllBetweenDates(fechaInicio,fechaFin);
-		model.addAttribute("listaTdc", listaTdc);
+		model.addAttribute("listaTdc", listaTdc);}
 		return "reporteTdc";
+	}
+
+	@PostMapping("/datalleTdcByPersona") public String datalleTdcByPersona(@RequestParam int idPersona, @RequestParam Date fechaInicio,@RequestParam Date fechaFin, Model model) {
+		if(fechaInicio != null && fechaFin  != null && idPersona != 0){
+		List<TdcDto> listaTdc =	tdcService.findAllBetweenDatesByPersona(fechaInicio,fechaFin,idPersona);
+		model.addAttribute("listaTdc", listaTdc);
+		model.addAttribute("idPersona", 1);}
+		return "reporteTdcPersona";
 	}
 
 

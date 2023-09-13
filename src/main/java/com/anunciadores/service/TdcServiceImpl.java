@@ -4,14 +4,11 @@ import com.anunciadores.dto.TdcDto;
 import com.anunciadores.dto.TdcReporteDto;
 import com.anunciadores.model.*;
 import com.anunciadores.repository.*;
-import com.anunciadores.service.interfaces.IMesasService;
 import com.anunciadores.service.interfaces.ITdcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Blob;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -87,6 +84,7 @@ public class TdcServiceImpl implements ITdcService {
 			TdcReporteDto dto = new TdcReporteDto();
 			dto.setNombre(object[0].toString());
 			dto.setCantidadEntregados( Integer.parseInt( object[1].toString()));
+			dto.setIdPersona( Integer.parseInt( object[2].toString()));
 			listareporte.add(dto);
 		}
 
@@ -103,6 +101,16 @@ public class TdcServiceImpl implements ITdcService {
 		dto.setPersona(personaRepository.findById(tdc.getIdPersona()).get());
 
 		return dto;
+	}
+
+	@Override
+	public List<TdcDto> findAllBetweenDatesByPersona(Date fechaStart, Date fechaEnd, int idPersona) {
+		List<TdcDto> listaDto = new ArrayList<>();
+
+
+		List<Tdc> listaTdcPersona = TdcRepository.findAllBetweenDatesByPersona(fechaStart,fechaEnd,1);
+		listaTdcPersona.forEach(tdc -> listaDto.add(mapTdcDto(tdc)));
+		return listaDto;
 	}
 
 }

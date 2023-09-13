@@ -78,7 +78,6 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>id</th>
                                             <th>nombre</th>
                                             <th>fecha registrada</th>
                                             <th>responsable</th>
@@ -90,9 +89,6 @@
 
                                     <tbody>
                                         <tr th:each="tdc, itemStat : ${listaTdc}">
-                                            <td th:text="${tdc.id}">id</td>
-
-
                                             <td th:text="${tdc.nombredocumento}">nombre</td>
                                             <td th:text="${tdc.fechaCreacion}">fecha</td>
                                             <td th:text="${tdc.persona.nombre}">persona</td>

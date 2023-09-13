@@ -22,4 +22,6 @@ public interface ITdcService {
 	public boolean getTdcByFechaAndPersona(Date fecha, int idPersona);
 
 	public List<TdcReporteDto> findAllBetweenDates(Date fechaStart, Date fechaEnd);
+
+	List<TdcDto> findAllBetweenDatesByPersona(Date fechaStart, Date fechaEnd, int idPersona);
 }

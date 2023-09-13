@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Anuncia 2- visualizar TDC</title>
+    <title>Anuncia 2- asignar servidores</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -49,26 +49,47 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Visualizar TDC</h1>
-                    <p class="mb-4">Tiempo con Dios del dia [DD/MM/AAAA].</p>
+                    <h1 class="h3 mb-2 text-gray-800">Crear programacion</h1>
+                    <p class="mb-4">lista de Ministerios  <span th:text="${fecha}"></span>.</p>
 
-                    <div class="card-body">
-                        <h4 class="card-title" >
-                            <embed  th:src="@{'data:image/jpeg;base64,'+${image}}" />
-                        </h4>
-                    </div>
+                    <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary">
 
 						<div class="card-body">
 							<h4 class="card-title" >
-                                <img  th:src="@{'data:image/jpeg;base64,'+${image}}" />
-							</h4>
+
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                <tr>
+                                                    <th>ministerio</th>
+                                                    <th>Acciones</th>
+
+
+                                                    <!--                                              <th th:if="${admin != false}">Pagos</th> -->
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                <tr th:each="ministerio, itemStat : ${ministerios}">
+                                                    <td th:text="${ministerio.nombre}">nombre</td>
+
+                                                    <td >
+                                                        <a th:href="@{/listarPosiciones(idMinisterio=${ministerio.id})}"
+                                                           class="btn btn-primary btn-circle btn-sm" type="submit"  data-toggle="tooltip" data-placement="right" title="visualizar">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    </td>
+
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                <span th:if="${msg != null}" th:text="${msg}"></span>
+
 						</div>
 
-                </div>
-
-                <div align="center" class="center-block">
-                    <a class="btn btn-warning container" th:href="@{/listarTdc}" type="submit" data-toggle="tooltip" data-placement="right"
-                       title="Regresar"> Regresar </a>
                 </div>
 
 

@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Anuncia 2- Cursos</title>
+    <title>Anuncia 2- asignar servidores</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -49,18 +49,50 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">TDC</h1>
-                    <p class="mb-4">cargar Imagen de tu Tiempo con Dios para el dia  <span th:text="${fecha}"></span>.</p>
+                    <h1 class="h3 mb-2 text-gray-800">Crear programacion</h1>
+                    <p class="mb-4">asignacion de servidores para el minsiterio de <span th:text="${nombreMinisterio}"></span>.</p>
 
                     <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary">
 
 						<div class="card-body">
 							<h4 class="card-title" >
                                 <form method="post" th:action="@{/upload}" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <input type="file" name="image" accept="image/*" class="form-control-file">
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <label for="fechaServicio"> fecha del servicio</label>
+                                            <input type="date" class="form-control form-control-user" name="fechaServicio"
+                                                   id="fechaServicio" >
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">cargar tiempo con Dios</button>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                <tr>
+                                                    <th>posicion</th>
+                                                    <th>responsable</th>
+
+
+                                                    <!--                                              <th th:if="${admin != false}">Pagos</th> -->
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                <tr th:each="ministerio, itemStat : ${posiciones}">
+                                                    <td th:text="${ministerio.posicion}">posicion</td>
+                                                    <td ></td>
+                                                    <td >
+                                                        <a
+                                                           class="btn btn-primary btn-circle btn-sm" type="submit"  data-toggle="tooltip" data-placement="right" title="visualizar">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    </td>
+
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
                                 </form>
                                 <span th:if="${msg != null}" th:text="${msg}"></span>
 							</h4>

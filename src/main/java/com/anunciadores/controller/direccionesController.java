@@ -129,6 +129,7 @@ public class direccionesController {
 	@GetMapping("/redirectTDC")
 	public String redirectTDC(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
 			Model model) {
+		model.addAttribute("fecha", Date.valueOf(LocalDate.now()));
 		return "registerTDC";
 	}
 
@@ -138,9 +139,11 @@ public class direccionesController {
 		return "reporteTdc";
 	}
 
-	@GetMapping("/redirectRoles")
-	public String redirectRoles(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+	@GetMapping("/redirectReporteTdcPersona")
+	public String reporteTdcPersona(@RequestParam int idPersona,@RequestParam(name = "name", required = false, defaultValue = "World") String name,
 									 Model model) {
-		return "permisos";
+		model.addAttribute("idPersona", idPersona);
+		return "reporteTdcPersona";
 	}
+
 }

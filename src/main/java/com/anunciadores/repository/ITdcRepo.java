@@ -22,10 +22,17 @@ public interface ITdcRepo extends JpaRepository<Tdc, Integer>{
     public List<Tdc> findAllByDateAndPersona(@Param("date") Date date, @Param("idPersona") int idPersona);
 
     @Modifying
-    @Query("select p.nombre , COUNT(t.idPersona) from Tdc t " +
+    @Query("select p.nombre , COUNT(t.idPersona), t.idPersona from Tdc t " +
             "join Persona p on t.idPersona  = p.id " +
             "where t.fechaCreacion BETWEEN :dateStart and :dateEnd " +
             "GROUP BY t.idPersona")
     public List<Object> findAllBetweenDates(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd);
+
+    @Modifying
+    @Query("select t from Tdc t " +
+            "join Persona p on t.idPersona  = p.id " +
+            "where t.fechaCreacion BETWEEN :dateStart and :dateEnd " +
+            "and p.id = :idPersona ")
+    public List<Tdc> findAllBetweenDatesByPersona(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd,@Param("idPersona") int idPersona);
 
 }

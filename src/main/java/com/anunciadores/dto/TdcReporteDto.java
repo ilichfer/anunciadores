@@ -20,6 +20,7 @@ import java.sql.Date;
 public class TdcReporteDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private int idPersona;
 	private int cantidadEntregados;
 	private String nombre;
 
@@ -39,5 +40,12 @@ public class TdcReporteDto implements Serializable {
 		this.nombre = nombre;
 	}
 
+	public int getIdPersona() {
+		return idPersona;
+	}
+
+	public void setIdPersona(int idPersona) {
+		this.idPersona = idPersona;
+	}
 }
 
