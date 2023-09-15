@@ -1,10 +1,8 @@
 package com.anunciadores.service;
 
-import com.anunciadores.dto.MinisterioDto;
-import com.anunciadores.dto.PosicionDto;
-import com.anunciadores.dto.TdcDto;
-import com.anunciadores.dto.TdcReporteDto;
+import com.anunciadores.dto.*;
 import com.anunciadores.model.Ministerio;
+import com.anunciadores.model.Persona;
 import com.anunciadores.model.PosicionesMinisterio;
 import com.anunciadores.model.Tdc;
 import com.anunciadores.repository.IMinisterioRepo;
@@ -36,6 +34,19 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
+	public Ministerio findByidMnisterio(int idMinisterio) {
+		return ministerioRepository.findById(idMinisterio).get();
+	}
+
+	@Override
+	public List<PersonaDto> findPersonaByidMnisterio(int idMinisterio) {
+		List<PersonaDto> listaDto = new ArrayList<>();
+		List<Persona> listaEntity= ministerioRepository.findPersonasByIdMinisterio(idMinisterio);
+		listaEntity.forEach(p -> listaDto.add(mapPersonaToDto(p)));
+		return listaDto;
+	}
+
+	@Override
 	public List<MinisterioDto> getPositionByidMinisterio(int idMinisterio) {
 		List<PosicionesMinisterio> listaPosiciones = new ArrayList<>();
 		List<MinisterioDto> listaPosicionesDto = new ArrayList<>();
@@ -55,5 +66,17 @@ public class ServicioServiceImpl implements IServicioService {
 		return dto;
 	}
 
-
+	private PersonaDto mapPersonaToDto(Persona per){
+		PersonaDto personadto = new PersonaDto();
+		personadto.setNombre(per.getNombre());
+		personadto.setApellido(per.getApellido());
+		personadto.setDocumento(per.getDocumento());
+		personadto.setTipodocumento(per.getTipodocumento());
+		personadto.setEmail(per.getEmail());
+		personadto.setId(per.getId());
+		personadto.setFechanacimiento(per.getFechanacimiento());
+		personadto.setTelefono(per.getTelefono());
+		personadto.setPassword(per.getPassword());
+		return  personadto;
+	}
 }
