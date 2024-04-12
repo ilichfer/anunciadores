@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Anuncia 2 - Registro consolidadcion</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block ">
+                        <img height="70%" width="100%" alt="logo" src="img/logo.jpeg"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Registro de Consolidacion</h1>
+                            </div>
+                            <form method="POST" th:action="@{/saveAsistenteConsolidacion}">
+                                <div class="text-center" th:if="${msj != null}">
+                                    <label class="alert alert-danger" th:text="${msj}"></label>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" name="nombre"
+                                            id="nombre" placeholder="nombre" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" name="apellido"
+                                            id="apellido" placeholder="apellido" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="number" class="form-control form-control-user" name="documento"
+                                            id="documento" placeholder="documento" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" name="tipodocumento"
+                                            id="tipodocumento" >
+                                            <option value="CC">CC</option>
+                                            <option value="TI">TI</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="date" class="form-control form-control-user" name="fechanacimiento"
+                                            id="fechanacimiento" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="number" class="form-control form-control-user" name="telefono"
+                                            id="telefono" placeholder="telefono">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                   <!-- <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="consolidacion">¿Le gustaria seguir aprendiendo mas de la palabra de Dios con nosotros?</label>
+                                        <select class="form-control" name="consolidacion"
+                                                id="consolidacion" >
+                                            <option value="true">Si</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                    </div>-->
+                                    <div class="col-sm-6" >
+                                        <label for="aceptaConsolidacion">¿Le gustaria seguir aprendiendo mas de la palabra de Dios con nosotros?</label>
+                                        <br>
+                                        <div style="text-align:center;">
+                                            <input type="checkbox"  name="aceptaConsolidacion" id="aceptaConsolidacion"  />
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-6 mb-3 mb-sm-0" >
+                                        <label for="horarioConsolidacionSugerido">tenemos los siguientes horarios</label>
+                                        <select class="form-control" name="horarioConsolidacionSugerido"
+                                                id="horarioConsolidacionSugerido" >
+                                            <option value="Domingo-9AM">Domingo - 9AM</option>
+                                            <option value="Sabado-6PM">Sabado - 6PM</option>
+                                            <option value="no puedo en estos horarios">no puedo en estos horarios</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="horarioConsolidacionPersona">horario sugerido por la persona</label>
+                                        <input type="text" class="form-control form-control-user" name="horarioConsolidacionPersona"
+                                               id="horarioConsolidacionPersona">
+
+                                    </div>
+                                </div>
+
+
+                                <input type="submit" value="Registrar" class="btn btn-primary container">
+                                <hr>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+    <!-- Cargar local Storage-->
+    <script src="js/storage.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Registro</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image">
+                        <img height="100%" width="120%" alt="logo" src="img/logo.jpeg"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Registro de datos para inscripcionConsolidacion</h1>
+                            </div>
+                            <form method="POST" th:action="@{/saveAsistente}">
+                                <div class="text-center" th:if="${msj != null}">
+                                    <label class="alert alert-danger" th:text="${msj}"></label>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" name="nombre"
+                                            id="nombre" placeholder="nombre" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" name="apellido"
+                                            id="apellido" placeholder="apellido" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <input type="number" class="form-control form-control-user" name="documento"
+                                            id="documento" placeholder="documento" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" name="tipodocumento"
+                                            id="tipodocumento" >
+                                            <option value="CC">CC</option>
+                                            <option value="TI">TI</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="date" class="form-control form-control-user" name="fechanacimiento"
+                                            id="fechanacimiento" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="number" class="form-control form-control-user" name="telefono"
+                                            id="telefono" placeholder="telefono">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="genero">Genero</label>
+                                        <select class="form-control" name="genero"
+                                                id="genero" >
+                                            <option value="hombre">hombre</option>
+                                            <option value="mujer">mujer</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="estadoCivil">estado Civil</label>
+                                        <select class="form-control" name="estadoCivil"
+                                                id="estadoCivil" >
+                                            <option value="soltero">soltero</option>
+                                            <option value="casado">casado</option>
+                                            <option value="viud@">viud@</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" name="paisNacimiento"
+                                               id="paisNacimiento" placeholder="pais de Nacimiento" >
+
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" name="ciudad"
+                                               id="ciudad" placeholder="ciudad" >
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-5 mb-3 mb-sm-0" style="margin-left:25px">
+                                        <input type="checkbox" class="form-check-input" name="discapacidad"
+                                               id="discapacidad"  />
+                                        <label lass="form-check-input" for="discapacidad">posee una discapacidad?</label>
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" name="descDiscapacidad"
+                                               id="descDiscapacidad" placeholder="descripcion Discapacidad">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-5 mb-3 mb-sm-0" style="margin-left:25px">
+                                        <input type="checkbox" class="form-check-input" name="perteneceMinoria"
+                                               id="perteneceMinoria"  />
+                                        <label lass="form-check-input" for="perteneceMinoria">pertenece a una Minoria?</label>
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+
+                                        <input type="text" class="form-control form-control-user" name="descMinoria"
+                                               id="descMinoria" placeholder="descripcion Minoria">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+
+                                        <input type="text" class="form-control form-control-user" name="direccion"
+                                               id="direccion" placeholder="direccion">
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+
+                                        <input type="text" class="form-control form-control-user" name="ciudadDeptoDireccion"
+                                               id="ciudadDeptoDireccion" placeholder="ciudad">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+
+                                        <input type="text" class="form-control form-control-user" name="celular"
+                                               id="celular" placeholder="No celular">
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+
+                                        <input type="text" class="form-control form-control-user" name="ocupacion"
+                                               id="ocupacion" placeholder="ocupacion">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+
+                                        <label for="escolaridad">escolaridad</label>
+                                        <select class="form-control" name="escolaridad"
+                                                id="escolaridad" >
+                                            <option value="primaria">primaria</option>
+                                            <option value="bachillerato">bachillerato</option>
+                                            <option value="profesional@">profesional</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="escolaridad">fecha de conversion a cristo</label>
+                                        <input type="date" class="form-control form-control-user" name="fechaConvercionCristo"
+                                               id="fechaConvercionCristo" >
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="escolaridad">fecha llegada a ADC</label>
+                                        <input type="date" class="form-control form-control-user" name="fechaLlegadaAdc"
+                                               id="fechaLlegadaAdc" >
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="escolaridad">fecha de bautizo en agua</label>
+                                        <input type="date" class="form-control form-control-user" name="fechaBautizo"
+                                               id="fechaBautizo" >
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="escolaridad">fecha de Bautizo en el espiritu</label>
+                                        <input type="date" class="form-control form-control-user" name="fechaBautizoEspiritu"
+                                               id="fechaBautizoEspiritu" >
+                                    </div>
+                                </div>
+
+                                <input type="submit" value="Registrar" class="btn btn-primary container">
+                                <hr>
+                            </form>
+
+                            <div align="center" class="center-block" >
+                                <a class="mb-2 btn btn-warning container" href="redirectDashboard"
+                                   type="submit" data-toggle="tooltip" data-placement="right"
+                                   title="Regresar" style="width:70%"> Regresar </a>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+    <!-- Cargar local Storage-->
+    <script src="js/storage.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,431 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:se="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="head">
+<meta charset="utf-8">
+<title>Anuncia 2</title>
+
+
+</head>
+<body>
+
+<header th:fragment="header">
+<!-- Sidebar -->
+<div id="admin">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="redirectDashboard">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Anuncia <sup>2</sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="redirectDashboard">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Inicio</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading" >
+                Perfil
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePerfil"
+                   aria-expanded="true" aria-controls="collapsePerfil">
+                    <i class="fas fa fa-book"></i>
+                    <span>Perfil</span>
+                </a>
+                <div id="collapsePerfil" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Perfil:</h6>
+                        <form method="POST" th:action="@{/perfil}">
+                            <input class="form-control" type="text" name="id" id="id">
+                            <input type="submit" value="gestionar Perfil" class="collapse-item" style="border-style: hidden">
+                        </form>
+                        <!--<a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>-->
+                    </div>
+                </div>
+            </li>
+
+            <hr class="sidebar-divider">
+
+                    <!-- Heading -->
+            <div class="sidebar-heading" >
+                Administrar
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Cursos</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Cursos:</h6>
+                        <a class="collapse-item" th:href="@{/listarCursos}" >Listar cursos</a>
+                        <a class="collapse-item" href="redirectCurso">crear Curso</a>
+                         <a class="collapse-item" th:href="@{/reportePagos}">reporte pagos Cursos</a>
+                         
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsuarios"
+                    aria-expanded="true" aria-controls="collapseUsuarios">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Usuarios</span>
+                </a>
+                <div id="collapseUsuarios" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Usuarios:</h6>
+                        <a class="collapse-item" th:href="@{/listar}" >Listar Usuarios</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseActividades"
+                    aria-expanded="true" aria-controls="collapseActividades">
+                    <i class="fas fa-clipboard"></i>
+                    <span>Actividades</span>
+                </a>
+                <div id="collapseActividades" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Actividades:</h6>
+                        <a class="collapse-item" th:href="@{/listarActividades}">Listar Actividades</a>
+                    </div>
+                </div>
+            </li>
+            
+            <!-- Nav Item - seccion Asistentes Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAsistentes"
+                    aria-expanded="true" aria-controls="collapseAsistentes">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Asistentes</span>
+                </a>
+                <div id="collapseAsistentes" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Asistentes:</h6>
+                        <a class="collapse-item" th:href="@{/listarAsistentes}" >Listar Asistentes</a>
+                        <a class="collapse-item" href="redirectAsistente" >crear Asistentes</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - seccion servicio Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseServicio"
+                   aria-expanded="true" aria-controls="collapseServicio">
+                    <i class="fas fa fa-pencil"></i>
+                    <span>Servicio</span>
+                </a>
+                <div id="collapseServicio" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Servicio:</h6>
+                        <a class="collapse-item" th:href="@{/gestionarMinisterios}">Gestionar Ministerios</a>
+                        <a class="collapse-item" th:href="@{/listarMinisterios}">Crear Programacion</a>
+                        <a class="collapse-item" th:href="@{/consultarProgramacion}">Consultar Programacion</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRol"
+                   aria-expanded="true" aria-controls="collapseRol">
+                    <i class="fa-solid fa-hands-praying"></i>
+                    <span>Administracion</span>
+                </a>
+                <div id="collapseRol" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Permisos:</h6>
+                        <a class="collapse-item" th:href="@{/listarRoles}">Administrar roles</a>
+                    </div>
+                </div>
+            </li>
+            
+            <!-- Nav Item - seccion TDC Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTDC"
+                    aria-expanded="true" aria-controls="collapseTDC">
+                    <i class="fas fa fa-book"></i>
+                    <span>TCD</span>
+                </a>
+                <div id="collapseTDC" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar TCD:</h6>
+                        <form method="POST" th:action="@{/redirectTDC}">
+                            <input class="form-control" type="text" name="idPersonaTCD" id="idPersonaTCD" style="display:none">
+                            <input type="submit" value="Registrar TCD" class="collapse-item" style="border-style: hidden">
+                        </form>
+
+                        <a class="collapse-item" th:href="@{/listarTdc}">buscar TCD</a>
+                        <a class="collapse-item" th:href="@{/redirectReporteTDC}">reporte TCD</a>
+                    </div>
+                </div>
+            </li>
+            <!-- Nav Item - seccion TDC Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsolidacion"
+                   aria-expanded="true" aria-controls="collapseConsolidacion">
+                    <i class="fas fa fa-book"></i>
+                    <span>Consolidacion</span>
+                </a>
+                <div id="collapseConsolidacion" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Consolidacion:</h6>
+                        <!--<form method="POST" th:action="@{/redirectTDC}">
+                            <input class="form-control" type="text" name="id" id="id" style="display: none">
+                            <input type="submit" value="Registrar Consolidacion" class="collapse-item" style="border-style: hidden">
+                        </form>-->
+                        <a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading 
+            <div class="sidebar-heading">
+                Addons
+            </div>-->
+
+            <!-- Nav Item - Pages Collapse Menu 
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Pages</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Login Screens:</h6>
+                        <a class="collapse-item" href="login.html">Login</a>
+                        <a class="collapse-item" href="registrarPersona.html">Registrese</a>
+                        <a class="collapse-item" href="forgot-password.html">olvido su contraseña?</a>
+                        <div class="collapse-divider"></div>
+                        <h6 class="collapse-header">Other Pages:</h6>
+                        <a class="collapse-item" href="404.html">404 Page</a>
+                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <a class="collapse-item" href="register-curso.html">crear Curso</a>
+                        <form action="listarCursos" method="GET">
+                            <input type="submit" value="ver cursos" class="btn collapse-item">
+                        </form>
+
+                        <a class="collapse-item" th:href="@{/listarCursos}" >Listar cursos</a>
+
+                    </div>
+                </div>
+            </li>-->
+
+            <!-- Nav Item - Charts
+            <li class="nav-item">
+                <a class="nav-link" href="charts.html">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Charts</span></a>
+            </li> -->
+
+            <!-- Nav Item - Tables 
+            <li class="nav-item active">
+                <form action="listar" method="GET">
+                        <input type="submit" value="Usuarios" class="btn nav-link">
+                </form>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="charts.html">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Charts</span></a>
+            </li>-->
+
+            <!-- Divider 
+            <hr class="sidebar-divider d-none d-md-block">-->
+
+            <!-- Sidebar Toggler (Sidebar) 
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>-->
+
+        </ul>
+        </div>
+
+        <!-- Sidebar -->
+        <div  id="user">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" >
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="redirectDashboard">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Anuncia <sup>2</sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="redirectDashboard">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Inicio</span></a>
+            </li>
+            
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePerfilUser"
+                   aria-expanded="true" aria-controls="collapsePerfilUser">
+                    <i class="fas fa fa-book"></i>
+                    <span>Perfil</span>
+                </a>
+                <div id="collapsePerfilUser" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Perfil:</h6>
+                        <form method="POST" th:action="@{/perfil}">
+                            <input class="form-control" type="text" name="id" id="idUser">
+                            <input type="submit" value="gestionar Perfil" class="collapse-item" style="border-style: hidden">
+                        </form>
+                        <!--<a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>-->
+                    </div>
+                </div>
+            </li>
+
+            <!-- Heading -->
+            <div class="sidebar-heading" >
+                Usuario
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+           
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Cursos</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Cursos activos:</h6>
+                        <form method="POST" th:action="@{/buscarCursosByPersona}">
+                        	<input class="form-control" type="text" name="id" id="idCursoUser" style="display:none">
+                        	<input type="submit" value="Mis cursos" class="btn collapse-item">
+                        </form>
+                        <form method="POST" th:action="@{/listarCursosAbiertos}">
+                            <input class="form-control" type="text" name="id" id="idPCurso" style="display:none">
+                            <input type="submit" value="cursos activos" class="btn collapse-item">
+                        </form>
+                    </div>
+                </div>
+            </li>
+
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseActividadesUser"
+                    aria-expanded="true" aria-controls="collapseActividadesUser">
+                    <i class="fas fa-clipboard"></i>
+                    <span>Actividades</span>
+                </a>
+                <div id="collapseActividadesUser" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Actividades:</h6>
+<!--                         <a class="collapse-item" th:href="@{/listarActividades}">Listar Actividades</a>-->
+                        <a class="collapse-item" >Actividades Abiertas</a>
+                    </div>
+                </div>
+            </li>
+            
+             <!-- Nav Item - seccion Asistentes Menu
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAsistentes"
+                    aria-expanded="true" aria-controls="collapseAsistentes">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Asistentes</span>
+                </a>
+                <div id="collapseAsistentes" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Asistentes:</h6>
+                        <a class="collapse-item" th:href="@{/listarAsistentesByUsuario}" >Listar Asistentes</a>
+                        <a class="collapse-item" href="redirectAsistente" >crear Asistentes</a>
+                    </div>
+                </div>
+            </li>-->
+            <!-- Nav Item - seccion TDC Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTDCUser"
+                   aria-expanded="true" aria-controls="collapseTDCUser">
+                    <i class="fas fa fa-book"></i>
+                    <span>TCD</span>
+                </a>
+                <div id="collapseTDCUser" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar TCD:</h6>
+                        <form method="POST" th:action="@{/redirectTDC}">
+                            <input class="form-control" type="text" name="idPersonaTCD" id="idPersonaTCDUser" style="display:none">
+                            <input type="submit" value="Registrar TCD" class="collapse-item" style="border-style: hidden">
+                        </form>
+                    </div>
+                </div>
+            </li>
+            <!-- Nav Item - seccion TDC Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsolidacionUser"
+                   aria-expanded="true" aria-controls="collapseConsolidacionUser">
+                    <i class="fas fa fa-book"></i>
+                    <span>Consolidacion</span>
+                </a>
+                <div id="collapseConsolidacionUser" class="collapse" aria-labelledby="headingUtilities"
+                     data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gestionar Consolidacion:</h6>
+                        <form method="POST" th:action="@{/buscarConsolidacionByPersona}">
+                            <input class="form-control" type="text" name="idPersona" id="idPersonaConsolidacion" style="display:none">
+                            <input type="submit" value="Mis asignaciones" class="collapse-item" style="border-style: hidden">
+                        </form>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+        </ul>
+        </div>
+
+</header>
+ <script src="js/cargarData.js"></script>
+</body>
+</html>

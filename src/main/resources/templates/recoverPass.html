@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>recuperar</title>
+
+<!-- Custom fonts for this template-->
+<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet"
+	type="text/css">
+<link
+	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+	rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-gradient-primary">
+
+	<div class="container">
+
+		<div class="card o-hidden border-0 shadow-lg my-5">
+			<div class="card-body p-0">
+				<!-- Nested Row within Card Body -->
+				<div class="row">
+					<div class="col-lg-5 d-none d-lg-block  bg-register-image">
+						<img height="100%" width="120%" alt="logo" src="img/logo.jpeg"></div>
+					<div class="col-lg-7">
+						<div class="p-5">
+							<div class="text-center">
+								<h1 class="h4 text-gray-900 mb-4">Recuperar contraseña</h1>
+							</div>
+							<form method="POST" th:action="@{/updatePass}"  >
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <input type="number" class="form-control form-control-user" name="documento"
+                                            id="documento" placeholder="documento" required>
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group row">
+                                    <div class="col-sm-12 mb-3 mb-sm-0">
+                                        <input type="password" class="form-control form-control-user" name="password"
+                                            id="password" placeholder="Contraseña"  minlength="6" >
+                                    </div>
+                                </div>
+                                <input type="submit" value="Actualizar Contraseña" class="btn btn-primary container">
+                                <hr>
+                            </form>
+							<div class="text-center" th:if="${msjError != null}">
+								<label class="alert alert-danger" th:text="${msjError}"></label>
+							</div>
+							<div class="text-center" th:if="${msjOk != null}">
+								<label class="alert alert-success" th:text="${msjOk}"></label>
+							</div>
+							<div align="center" class="center-block">
+								<a class="btn btn-warning container" th:href="@{/redirectLogin}" type="submit" data-toggle="tooltip" data-placement="right"
+									title="Regresar a Login"> Regresar </a>
+							</div>
+
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- Logout Modal-->
+	<header th:replace="layout/modalSalir :: header"></header>
+	<!-- Bootstrap core JavaScript-->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Core plugin JavaScript-->
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+	<!-- Custom scripts for all pages-->
+	<script src="js/sb-admin-2.min.js"></script>
+	<!-- Cargar local Storage-->
+	<script src="js/storage.js"></script>
+
+	<style>
+		.center-block {
+			margin: auto;
+			display: block;
+			width: 300px;
+		}
+		
+		input {
+  border: 2px solid currentcolor;
+}
+input:invalid {
+  border: 2px dashed red;
+}
+input:invalid:focus {
+  border: 2px dashed red;
+}
+	</style>
+
+</body>
+
+</html>
