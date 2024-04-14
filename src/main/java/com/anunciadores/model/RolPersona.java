@@ -8,11 +8,7 @@ package com.anunciadores.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.sun.istack.NotNull;
 
@@ -29,8 +25,7 @@ public class RolPersona implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
-	@Basic(optional = false)
-	@NotNull
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     

@@ -158,12 +158,13 @@ public class personaController {
 			throws JsonMappingException, JsonProcessingException {
 		PersonaDto per = personaService.buscarEmail(persona.getEmail());
 		VersiculoDto dia = bibliaService.findVerseDay();
-		String url = "redirect:/404.html";
+		String url = "login";
 		model.addAttribute("dia", dia);
+		model.addAttribute("msj", "usuario ya existe");
 		if (per == null || per.getEmail() == null) {
 			Persona personaSave = personaService.save(persona);
 			model.addAttribute("persona", persona);
-			url = "login";
+			model.addAttribute("msj", " usuario creado correctamente");
 		}
 		return url;
 	}
