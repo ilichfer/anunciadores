@@ -2,9 +2,11 @@ package com.anunciadores.service.interfaces;
 
 import com.anunciadores.dto.*;
 import com.anunciadores.model.Ministerio;
+import com.anunciadores.model.Persona;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface IServicioService {
@@ -25,7 +27,10 @@ public interface IServicioService {
 
 	public void saveProgramacion(ServicioDto servidores, Date fechaServicio);
 
+	public Optional<Persona> validarProgramacionByFecha(ServicioDto servidores, Date fechaServicio);
+
 	public List<ServicioListResponseDto>findProgramacionByDate(Date fechaActual);
+	public List<ServicioListResponseDto>findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio);
 
 	public  List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual);
 
@@ -36,5 +41,7 @@ public interface IServicioService {
 	void editPosicion(PosicionDto posicionDto);
 
 	PosicionDto findPosicion(int idposicion);
+
+	public Boolean validarDuplicados(ServicioDto servidores);
 
 }

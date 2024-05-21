@@ -35,7 +35,7 @@
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Editar Permisos!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">Editar rol de: </h1>
                             </div>
                            <form method="POST" th:action="@{/editarRoles}">
                                <div class="form-group" style="display:none;">
@@ -47,28 +47,97 @@
                                         th:value="${persona.nombre}" readonly>
                                 </div>
 
-                               <select class="form-control" name="idRol"
-                                       id="idRol">
-                                   <option value="0">opciones...</option>
-                                   <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.descripcion}"></option>
+                               <select class="form-control" name="idRol" id="idRol">
+                                   <option value="0">Seleccione una opcion...</option>
+                                   <option  th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.descripcion}"></option>
                                </select>
-
-                               
+                                <br>
                                 <input type="submit" value="Guardar " class="btn btn-primary container">
                                 <hr>
                             </form>
                         </div>
+
+                        <hr>
+                        <div class="text-center"  th:if="${descripcionRol =='ADMINISTRADOR'}" >
+                            <h1 class="h4 text-gray-900 mb-4">activa o desactiva funciones <br>para este administrador!</h1>
+                        </div>
+
+                        <hr>
+
+                        <div class="card-body"  th:if="${descripcionRol =='ADMINISTRADOR'}" >
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>estado</th>
+                                        <th>nombre boton menu</th>
+                                        <th>Acciones</th>
+
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr th:each="perm, itemStat : *{permisos}">
+                                        <div class="form-group" style="display:none;">
+                                            <input type="text" class="form-control form-control-user" name="id" id="id"
+                                                   th:value="${perm.id}" readonly>
+                                        </div>
+
+                                        <td class="permHabilitado"   th:if="${perm.estado =='true'}">Habilitado</td>
+                                        <td class="permDeshabilitado"  th:if="${perm.estado =='false'}">Deshabilitado</td>
+
+                                        <td >
+                                            <input type="text" class="form-control form-control-user" name="nombreBotonMenu" id="nombreBotonMenu"
+                                                   th:value="*{perm.nombreBotonMenu}" readonly>
+                                        </td>
+
+                                        <td>
+                                            <a class="btn btn-primary" th:if="${perm.estado =='false'}"
+                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='true',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol})}"
+                                               type="submit"  data-toggle="tooltip" data-placement="right" title="inscribirme" >Habilitar
+                                            </a>
+                                            <a class="btn btn-danger" th:if="${perm.estado =='true'}"
+                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='false',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol})}"
+                                               type="submit"  data-toggle="tooltip" data-placement="right" title="inscribirme" >Deshabilitar
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div align="center" class="center-block" >
                         <form action="listarRoles" method="GET">
-                            <button class="btn btn-primary"  type="submit"  data-toggle="tooltip" data-placement="right" title="Regresar" value="regresar">
+                            <button class="btn btn-warning"  type="submit"  data-toggle="tooltip" data-placement="right" title="Regresar" value="regresar">
                                 Regresar
                             </button>
                         </form>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>
+
+    <style>
+
+
+.permDeshabilitado {
+  border: 1px solid;
+  color: red;
+}
+
+.permHabilitado {
+  border: 1px solid;
+  color: #58D68D ;
+}
+</style>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

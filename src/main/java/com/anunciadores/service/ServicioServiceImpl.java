@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +27,9 @@ public class ServicioServiceImpl implements IServicioService {
 
 	@Autowired
 	private IPersonaMinisterioRepo personaMinisterioRepoSitory;
+
+	@Autowired
+	private IPersonaRepo personaRepository;
 	@Override
 	public List<Ministerio> getAll() {
 		List<Ministerio> listaMinisterio= new ArrayList<>();
@@ -113,6 +114,24 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
+	public Optional<Persona> validarProgramacionByFecha(ServicioDto servidores, Date fechaServicio) {
+
+		try {
+			for (String servidor:servidores.getEncargado()) {
+			Optional<Servicio> programacion = 	servicioRepository.findProgramacionServidor(Integer.parseInt(servidor), fechaServicio);
+
+				if(programacion.isPresent()){
+					Optional<Persona> per=	personaRepository.findById(Integer.parseInt(servidor));
+					return per;
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return Optional.empty();
+	}
+
+	@Override
 	public List<ServicioListResponseDto> findProgramacionByDate(Date fechaActual) {
 
 		List<ServicioListResponseDto> ListServiceDto = new ArrayList<>();
@@ -137,6 +156,13 @@ public class ServicioServiceImpl implements IServicioService {
 
 		//return ListServicioDto;
 		return ListServiceDto;
+	}
+
+	@Override
+	public List<ServicioListResponseDto> findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio) {
+	servicioRepository.findProgramacionByDateAndMinistery(fechaActual, idMinisterio);
+
+		return null;
 	}
 
 	@Override
@@ -213,6 +239,26 @@ public class ServicioServiceImpl implements IServicioService {
 		response.setNombrePosicion(posicion.getNombrePosicion());
 		response.setId(posicion.getId());
 		return response;
+	}
+
+	@Override
+	public Boolean validarDuplicados(ServicioDto servidores) {
+
+		try {
+
+
+			Set<String> set = new HashSet<>(servidores.getEncargado());
+
+			if(set.size() < servidores.getEncargado().size()){
+				return false;
+			} else {
+				return true;
+			}
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 

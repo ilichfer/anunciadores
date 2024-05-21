@@ -66,8 +66,8 @@
                 Administrar
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- Nav Item - Cursos Collapse Menu -->
+            <li class="nav-item" id="menuCursos">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
@@ -84,8 +84,8 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
+            <!-- Nav Item - Usuarios Collapse Menu -->
+            <li class="nav-item" id="menuUsuarios">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsuarios"
                     aria-expanded="true" aria-controls="collapseUsuarios">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -100,8 +100,8 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
+            <!-- Nav Item - Actividades Collapse Menu -->
+            <li class="nav-item" id="menuActividades">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseActividades"
                     aria-expanded="true" aria-controls="collapseActividades">
                     <i class="fas fa-clipboard"></i>
@@ -117,7 +117,7 @@
             </li>
             
             <!-- Nav Item - seccion Asistentes Menu -->
-            <li class="nav-item">
+            <li class="nav-item" id="menuAsistentes">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAsistentes"
                     aria-expanded="true" aria-controls="collapseAsistentes">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -134,7 +134,7 @@
             </li>
 
             <!-- Nav Item - seccion servicio Menu -->
-            <li class="nav-item">
+            <li class="nav-item" id="menuServicio">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseServicio"
                    aria-expanded="true" aria-controls="collapseServicio">
                     <i class="fas fa fa-pencil"></i>
@@ -151,7 +151,7 @@
                 </div>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" id="menuAdministrar">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRol"
                    aria-expanded="true" aria-controls="collapseRol">
                     <i class="fa-solid fa-hands-praying"></i>
@@ -167,7 +167,7 @@
             </li>
             
             <!-- Nav Item - seccion TDC Menu -->
-            <li class="nav-item">
+            <li class="nav-item" id="menuTCD">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTDC"
                     aria-expanded="true" aria-controls="collapseTDC">
                     <i class="fas fa fa-book"></i>
@@ -187,8 +187,8 @@
                     </div>
                 </div>
             </li>
-            <!-- Nav Item - seccion TDC Menu -->
-            <li class="nav-item">
+            <!-- Nav Item - seccion Consolidacion Menu -->
+            <li class="nav-item" id="menuConsolidacion">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsolidacion"
                    aria-expanded="true" aria-controls="collapseConsolidacion">
                     <i class="fas fa fa-book"></i>
@@ -358,10 +358,14 @@
                 </a>
                 <div id="collapseActividadesUser" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
+
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestionar Actividades:</h6>
-<!--                         <a class="collapse-item" th:href="@{/listarActividades}">Listar Actividades</a>-->
-                        <a class="collapse-item" >Actividades Abiertas</a>
+                        <form method="POST" th:action="@{/hisMisActividades}" >
+                            <input class="form-control" type="text" name="idPersonaMinisterioUser" id="idPersonaMinisterioUser" style="display:none">
+                            <input type="submit" value="Mis Actividades" class="btn collapse-item">
+                        </form>
+                        <a class="collapse-item" th:href="@{/actividadesAutoIncripcion}" >Actividades Abiertas</a>
                     </div>
                 </div>
             </li>

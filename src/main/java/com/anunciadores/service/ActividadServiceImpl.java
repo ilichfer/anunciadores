@@ -41,6 +41,9 @@ public class ActividadServiceImpl implements IActividadService {
 		actividadEntity = new Actividad();
 		actividadEntity.setNombreActividad(actividadDTO.getNombreActividad());
 		actividadEntity.setFecha(actividadDTO.getFecha());
+		if (actividadDTO.getId() != 0){
+			actividadEntity.setId(actividadDTO.getId());
+		}
 
 		// TODO Auto-generated method stub
 		return ActividadRepository.save(actividadEntity);
@@ -74,6 +77,11 @@ public class ActividadServiceImpl implements IActividadService {
 		//return actividadDAO.buscarMesasByActividad(actividadDto.getId());
 		//return actividadDAO.buscarMesasByActividad(actividadDto.getId());
 		return null;
+	}
+
+	@Override
+	public List<Actividad> listarActiviadesByPersona(int idPersona) {
+		return ActividadRepository.findActividadesByPersona(idPersona);
 	}
 
 }

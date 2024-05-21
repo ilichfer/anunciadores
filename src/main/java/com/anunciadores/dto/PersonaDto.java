@@ -6,6 +6,7 @@ package com.anunciadores.dto;
  */
 
 
+import com.anunciadores.model.PermisosMenu;
 import com.anunciadores.model.Rol;
 
 import java.io.Serializable;
@@ -42,6 +43,8 @@ public class PersonaDto implements Serializable {
     private boolean consolidacion;
     
     private List<Rol> roles;
+	private List<PermisosMenu> permisosMenu;
+
 
 	private Rol rolUnico;
     private boolean admin;
@@ -123,11 +126,8 @@ public class PersonaDto implements Serializable {
 		this.password = password;
 	}
 
-	
 
-	public PersonaDto(int id, String nombre, String apellido, Integer documento, String telefono,
-                      String fechanacimiento, String tipodocumento, String email, String password, List<Rol> roles, boolean validarPago) {
-		super();
+	public PersonaDto(int id, String nombre, String apellido, Integer documento, String telefono, String fechanacimiento, String tipodocumento, String email, String password, boolean consolidacion, List<Rol> roles, List<PermisosMenu> permisosMenu, Rol rolUnico, boolean admin, boolean user, boolean validarPago) {
 		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -137,7 +137,12 @@ public class PersonaDto implements Serializable {
 		this.tipodocumento = tipodocumento;
 		this.email = email;
 		this.password = password;
+		this.consolidacion = consolidacion;
 		this.roles = roles;
+		this.permisosMenu = permisosMenu;
+		this.rolUnico = rolUnico;
+		this.admin = admin;
+		this.user = user;
 		this.validarPago = validarPago;
 	}
 
@@ -187,5 +192,13 @@ public class PersonaDto implements Serializable {
 
 	public void setRolUnico(Rol rolUnico) {
 		this.rolUnico = rolUnico;
+	}
+
+	public List<PermisosMenu> getPermisosMenu() {
+		return permisosMenu;
+	}
+
+	public void setPermisosMenu(List<PermisosMenu> permisosMenu) {
+		this.permisosMenu = permisosMenu;
 	}
 }

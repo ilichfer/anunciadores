@@ -13,4 +13,7 @@ public interface PersonaFeingClient {
 	@GetMapping("/consutarEmail?email=")
 	public PersonaDto buscarPersona(@RequestParam String email);
 
+	@GetMapping("/consutarDoc?doc=")
+	public PersonaDto consutarDoc(@RequestParam String email);
+
 }

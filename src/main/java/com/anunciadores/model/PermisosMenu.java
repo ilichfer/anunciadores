@@ -18,11 +18,10 @@ import java.io.Serializable;
  */
 
 @Entity
-@Table(name = "persona_ministerio")
+@Table(name = "permisos_menu")
 
-public class PersonaMinisterio implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public class PermisosMenu implements Serializable {
+    private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -32,8 +31,19 @@ public class PersonaMinisterio implements Serializable {
 	@Column(name = "id_persona")
 	private int idPersona;
 
-	@Column(name = "id_ministerio")
-	private int idMinisterio;
+	@Column(name = "nombre_boton_menu")
+	public String nombreBotonMenu;
+
+	@Column(name = "estado")
+	public String estado;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public int getIdPersona() {
 		return idPersona;
@@ -43,20 +53,19 @@ public class PersonaMinisterio implements Serializable {
 		this.idPersona = idPersona;
 	}
 
-	public int getIdMinisterio() {
-		return idMinisterio;
+	public String getNombreBotonMenu() {
+		return nombreBotonMenu;
 	}
 
-	public void setIdMinisterio(int idMinisterio) {
-		this.idMinisterio = idMinisterio;
+	public void setNombreBotonMenu(String nombreBotonMenu) {
+		this.nombreBotonMenu = nombreBotonMenu;
 	}
 
-	public int getId() {
-		return id;
+	public String getEstado() {
+		return estado;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 }
-

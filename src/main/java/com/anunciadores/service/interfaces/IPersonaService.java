@@ -14,6 +14,7 @@ public interface IPersonaService {
 	public List<Persona> findAllUsuarios();
 
 	public Persona save(Persona persona);
+	public Persona update(Persona persona);
 	
 	public Persona saveAsistente(Persona persona);
 	public Persona saveAsistenteConsolidacion(Persona persona, Consolidacion consolidacion);

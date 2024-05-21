@@ -7,11 +7,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.anunciadores.dto.CursoDto;
-import com.anunciadores.dto.ServicioListResponseDto;
+import com.anunciadores.dto.*;
 import com.anunciadores.model.*;
-import com.anunciadores.repository.IPersonaRepo;
-import com.anunciadores.repository.IRolesRepo;
+import com.anunciadores.repository.*;
 import com.anunciadores.service.interfaces.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -32,9 +30,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.anunciadores.dto.PersonaDto;
-import com.anunciadores.dto.VersiculoDto;
-import com.anunciadores.repository.ConsolidacionRepoImpl;
 import com.anunciadores.service.UsuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -72,6 +67,12 @@ public class personaController {
 
 	@Autowired
 	private IRolesRepo rolesPersonaRepo;
+
+	@Autowired
+	private IPermisosRepo permisosMenuRepo;
+
+	@Autowired
+	private RolesRepoImpl rolesDao;
 
 	List<Persona> personasList;
 	List<PersonaDto> personasListDto;
@@ -156,16 +157,30 @@ public class personaController {
 	@PostMapping("/saveOut")
 	public String saveOut(@ModelAttribute Persona persona, HttpServletResponse response, Model model)
 			throws JsonMappingException, JsonProcessingException {
-		PersonaDto per = personaService.buscarEmail(persona.getEmail());
-		VersiculoDto dia = bibliaService.findVerseDay();
-		String url = "login";
-		model.addAttribute("dia", dia);
-		model.addAttribute("msj", "usuario ya existe");
+		PersonaDto per;
+		String url = "registerOut";
+		model.addAttribute("persona", persona);
+		per = personaService.buscarByDocumento(persona.getDocumento());
+		if (per != null && per.getDocumento() != null) {
+			model.addAttribute("msj", "numero de documento ya registrado");
+			return url;
+		}
 		if (per == null || per.getEmail() == null) {
 			Persona personaSave = personaService.save(persona);
-			model.addAttribute("persona", persona);
-			model.addAttribute("msj", " usuario creado correctamente");
+			model.addAttribute("msj", null);
+			model.addAttribute("msjCreate", " usuario creado correctamente");
+			url = "login";
 		}
+		return url;
+	}
+
+	@PostMapping("/actualizarPerfil")
+	public String actualizarPerfil(@ModelAttribute Persona persona, HttpServletResponse response, Model model)
+			throws JsonMappingException, JsonProcessingException {
+		PersonaDto per;
+		String url = "perfil";
+		Persona personaSave = personaService.update(persona);
+		model.addAttribute("personaSave", persona);
 		return url;
 	}
 	
@@ -180,7 +195,20 @@ public class personaController {
 
 		return new ResponseEntity<PersonaDto>(person, null, HttpStatus.ACCEPTED);
 	}
-	
+
+	@GetMapping("/consutarDoc")
+	public ResponseEntity<PersonaDto> consutarDoc(@RequestParam int doc, HttpServletResponse response,
+													Model model) throws JsonMappingException, JsonProcessingException {
+		PersonaDto person = new PersonaDto();
+		person = personaService.buscarByDocumento(doc);
+		//person = personaService.buscarEmail(person.getEmail());;
+		model.addAttribute("admin", person.isAdmin());
+		model.addAttribute("user", person.isUser());
+		model.addAttribute("persona", person);
+
+		return new ResponseEntity<PersonaDto>(person, null, HttpStatus.ACCEPTED);
+	}
+
 	@GetMapping("/cargarMenu")
 	public String cargarMenu(@RequestParam String email, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
 		
@@ -275,7 +303,7 @@ public class personaController {
 	@PostMapping("/login2")
 	public String login2(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
 //		usuarioService.loadUserByUsername(persona.getEmail());
-		PersonaDto per = personaService.buscarEmail(persona.getEmail());
+		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
 //		User user = new User(persona.getNombre(), persona.getPassword(), authorities)
 		VersiculoDto dia =bibliaService.findVerseDay();
 		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
@@ -299,7 +327,7 @@ public class personaController {
 		String url = "login";
 		String Passw = personaService.encriptar(persona.getPassword());
 		if (per != null
-				&& (persona.getEmail().equals(per.getEmail()) && Passw.equals(per.getPassword()))) {
+				&& (persona.getDocumento().equals(per.getDocumento()) && Passw.equals(per.getPassword()))) {
 			url = "index";
 		}
 		return url;
@@ -461,17 +489,40 @@ public class personaController {
 	}
 
 	@GetMapping("/editarRol")
-	public String asignarRol(@ModelAttribute PersonaDto personaDto, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
+	public String asignarRol(@ModelAttribute PersonaDto personaDto,@RequestParam String descripcionRol, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
 		Persona persona = personaService.findPersonaById(personaDto.getId());
 		List<Rol> roles = rolesPersonaRepo.findAll();
+		List<Rol> rolActual = rolesDao.buscarRoles(personaDto.getId());
+		List<PermisosMenu> permisosMenu = permisosMenuRepo.findByIdPersona(persona.getId());
 		model.addAttribute("persona", persona);
 		model.addAttribute("roles", roles);
+		model.addAttribute("idRol", roles.get(0));
+		model.addAttribute("permisos", permisosMenu);
+		model.addAttribute("descripcionRol", descripcionRol);
 
 		return "editar-rol";
 	}
 
+	@GetMapping("/actualizarPermiso")
+	public String actualizarPermiso(@ModelAttribute PermisosMenu permisos,@RequestParam int idPersona, @RequestParam String descRol, Model model) {
+
+		PermisosMenu permisoActual = permisosMenuRepo.save(permisos);
+
+
+		Persona persona = personaService.findPersonaById(idPersona);
+		List<Rol> roles = rolesPersonaRepo.findAll();
+		List<Rol> rolActual = rolesDao.buscarRoles(idPersona);
+		List<PermisosMenu> permisosMenu = permisosMenuRepo.findByIdPersona(persona.getId());
+		model.addAttribute("persona", persona);
+		model.addAttribute("roles", roles);
+		model.addAttribute("idRol", roles.get(0));
+		model.addAttribute("permisos", permisosMenu);
+		model.addAttribute("descripcionRol", descRol);
+		return "editar-rol";
+	}
+
 	@PostMapping("/editarRoles")
-	public String editarRoles(@RequestParam int idPersona,@RequestParam int idRol, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
+	public String editarRoles(@ModelAttribute("permisos") PermisosDto permisos, @RequestParam int idPersona, @RequestParam int idRol, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
 
 		personaService.findUsuariosRol(idPersona,idRol);
 		personasListDto = personaService.findAllUsuariosRol();

@@ -35,13 +35,17 @@
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Crea una Cuenta!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">Actualiza tus datos!</h1>
                             </div>
                             <div class="text-center" th:if="${msj != null}">
                                 <label class="alert alert-danger" th:text="${msj}"></label>
                             </div>
-                            <form method="POST" th:action="@{/saveOut}">
+                            <form method="POST" th:action="@{/actualizarPerfil}">
                                 <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0" style="display:none;">
+                                        <input type="text" class="form-control form-control-user" name="id"
+                                               id="id" placeholder="id" th:value="${persona.id}" >
+                                    </div>
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" name="nombre"
                                             id="nombre" placeholder="nombre" th:value="${persona.nombre}" >
@@ -54,7 +58,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-6">
                                         <input type="number" class="form-control form-control-user" name="documento"
-                                            id="documento" placeholder="No de documento" th:value="${persona.documento}" required>
+                                            id="documento" placeholder="No de documento" th:value="${persona.documento}" readonly>
                                     </div>
                                     <div class="col-sm-6">
                                         <select class="form-control" name="tipodocumento"
@@ -199,12 +203,6 @@
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-user" name="email" id="email"
                                         placeholder="Email" th:value="${persona.email}">
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user" name="password"
-                                            id="password" placeholder="Password" required>
-                                    </div>
                                 </div>
                                 <input type="submit" value="Registrar" class="btn btn-primary container">
                                 <hr>

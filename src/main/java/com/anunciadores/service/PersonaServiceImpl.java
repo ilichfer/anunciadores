@@ -39,6 +39,9 @@ public class PersonaServiceImpl implements IPersonaService {
 	private IRolesRepo rolesRepo;
 
 	@Autowired
+	private IPermisosRepo permisosRepo;
+
+	@Autowired
 	private IRolesPersonaRepo rolesPersonaRepository;
 
 	@Autowired
@@ -80,6 +83,11 @@ public class PersonaServiceImpl implements IPersonaService {
 		rolesPersonaRepository.save(rolPersona);
 
 		return personaSave;
+	}
+
+	@Override
+	public Persona update(Persona persona) {
+		return personaRepository.save(persona);
 	}
 
 	@Override
@@ -261,6 +269,27 @@ public class PersonaServiceImpl implements IPersonaService {
 			personadto.setFechanacimiento(per.getFechanacimiento());
 			personadto.setTelefono(per.getTelefono());
 			personadto.setPassword(per.getPassword() != null ? per.getPassword() : "");
+			personadto.setRoles(new ArrayList<Rol>());
+				List<RolPersona> rol = new ArrayList<>();
+
+				List<Rol> roles = rolesDao.buscarRoles(personadto.getId());
+
+				List<PermisosMenu> persmisos = permisosRepo.findByIdPersona(personadto.getId());
+
+				for (com.anunciadores.model.Rol rolAsignado : roles) {
+					if (rolAsignado.getDescripcion().equalsIgnoreCase("ADMINISTRADOR")) {
+
+						personadto.getRoles().add(rolAsignado);
+						personadto.setAdmin(true);
+						personadto.setUser(false);
+						personadto.setPermisosMenu(persmisos);
+					} else {
+						personadto.getRoles().add(rolAsignado);
+						personadto.setAdmin(false);
+						personadto.setUser(true);
+					}
+
+				}
 			}else {
 				personadto = new PersonaDto();
 			}
@@ -395,7 +424,44 @@ public class PersonaServiceImpl implements IPersonaService {
 		RolPersona rolUpdate = rol.get(0);
 		rolUpdate.setIdRol(idRolNuevo);
 		rolesPersonaRepository.save(rolUpdate);
+		if(rolUpdate.getIdRol()==1){
+			List<PermisosMenu>listpermisos = permisosRepo.findByIdPersona(idPersona);
+			if (listpermisos.size() == 0) {
+				List<PermisosMenu> listRolsInicial= crearRolesPrimerVezAdmin(idPersona);
+				for (PermisosMenu permiso : listRolsInicial) {
+					permisosRepo.save(permiso);
+				}
+			}
+		}
 
+	}
+
+	private List<PermisosMenu> crearRolesPrimerVezAdmin(int idPersona) {
+		List<String> listBotones = new ArrayList<>();
+		listBotones.add("menuAdministrar");
+		listBotones.add("menuUsuarios");
+		listBotones.add("menuCursos");
+		listBotones.add("menuActividades");
+		listBotones.add("menuAsistentes");
+		listBotones.add("menuServicio");
+		listBotones.add("menuTCD");
+		listBotones.add("menuConsolidacion");
+
+		List<PermisosMenu> listPermisosIniciales = new ArrayList<>();
+		String estadoInicial = "true";
+
+		for (String boton : listBotones) {
+			PermisosMenu permisoInicial = new PermisosMenu();
+			permisoInicial.setIdPersona(idPersona);
+			if (boton.equals("menuAdministrar")) {
+				permisoInicial.setEstado("false");
+			}else{
+				permisoInicial.setEstado(estadoInicial);
+			}
+			permisoInicial.setNombreBotonMenu(boton);
+			listPermisosIniciales.add(permisoInicial);
+		}
+		return listPermisosIniciales;
 	}
 
 	@Override

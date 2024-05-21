@@ -80,6 +80,7 @@
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
                                         <tr>
+                                            <th>Acciones</th>
                                             <th>ministerio</th>
                                             <th>fecha</th>
                                             <th>posicion</th>
@@ -90,15 +91,20 @@
                                         <tbody>
                                         <div th:remove="tag" th:each="prog:${programacionMin}">
                                             <tr>
+                                                <td th:rowspan="${prog.tamanoLista}"  style="vertical-align : middle;text-align:center;">
+                                                    <a class="btn btn-primary"
+                                                       th:href="@{/editarProgramacion(fecha=${prog.fechaServcio},idMinisterio=${prog.idMinisterio})}" type="submit"  data-toggle="tooltip" data-placement="right" title="Editar" >Editar programacion
+                                                    </a>
+                                                </td>
                                                 <td class="servicioPendiente" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista < 2}" style="vertical-align : middle;text-align:center;"></td>
                                                 <td class="m-0 font-weight-bold text-primary" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista > 1}" style="vertical-align : middle;text-align:center;"></td>
-                                                <td th:rowspan="${prog.tamanoLista}" th:text="${prog.fechaServcio}"></td>
+                                                <td th:rowspan="${prog.tamanoLista}" th:text="${prog.fechaServcio}" th:if="${prog.tamanoLista > 1}" style="vertical-align : middle;text-align:center;"></td>
                                             </tr>
                                             <tr th:each="article,stats:${prog.servicioDTO}">
                                                 <td th:text="${article.posicion}"></td>
                                                 <td th:text="${article.encargado}"></td>
-
                                             </tr>
+
                                         </div>
                                         </tbody>
 

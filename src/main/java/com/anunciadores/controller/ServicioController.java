@@ -43,6 +43,20 @@ public class ServicioController {
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		return url;
 	}
+	@GetMapping("/editarProgramacion")
+	public String editarProgramacion(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException {
+		String url = "editar_programacion";
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateAndMinisterio(fecha,idMinisterio);
+		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
+		if(listProgramacionMinisterio.size()>0) {
+			//model.addAttribute("programacion", listProgramacionMinisterio);
+			model.addAttribute("programacionMin", listProgramacionMinisterio);
+		}else{
+			model.addAttribute("programacionMin", null);
+		}
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		return url;
+	}
 
 	@PostMapping("/buscarProgramacionByFecha")
 	public String buscarProgramacionByFecha(@RequestParam Date fecha, Model model) {

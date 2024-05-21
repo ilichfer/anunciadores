@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.anunciadores.dto.CursoDto;
+import com.anunciadores.dto.PersonaDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -52,6 +54,13 @@ public class actividadController {
 		return "actividades";
 	}
 
+	@GetMapping("/actividadesAutoIncripcion")
+	public String listarActividadesAutoIncripcion(HttpServletResponse response, Model model) {
+		ActividadesList = actividadService.listarActiviades();
+		model.addAttribute("actividades", ActividadesList);
+		return "actividadesAutoInscripcion";
+	}
+
 	@GetMapping("/buscarActividad/{id}")
 	public ResponseEntity<Object> getProductoById(@PathVariable Integer id) {
 
@@ -91,20 +100,10 @@ public class actividadController {
 	
 	@GetMapping("/editarActividad")
 	public String editarCursoById(@ModelAttribute ActividadDto actividadDto, HttpServletResponse response,
-			Model model) throws ParseException {	
-		Curso cursoMostrar = new Curso();
-//		actividadService.save(curso);
-//		System.out.println("fechaInicio para modificacion " + actividadDto.getFechaInicio());
-//		System.out.println("fechaFin para modificacion " + actividadDto.getFechaFin());
-		cursoMostrar.setId(actividadDto.getId());
-//		cursoMostrar.setFechaInicio(actividadService.ParseFecha(curso.getFechaInicio()));
-//		cursoMostrar.setFechaFin(actividadService.ParseFecha(curso.getFechaFin()));
-//		cursoMostrar.setNombreCurso(actividadDto.getNombreCurso());
-//		cursoMostrar.setValorTotal(actividadDto.getValorTotal());
-		
+			Model model) throws ParseException {
 		model.addAttribute("actividad", actividadDto);
 		
-		return "edit-curso";
+		return "edit-actividad";
 
 	}
 	
@@ -134,8 +133,14 @@ public class actividadController {
 		model.addAttribute("idActividad", idActividad);
 		return "personasActividad";
 	}
-	
 
+	@PostMapping("/hisMisActividades")
+	public String hisMisActividades(@RequestParam int idPersonaMinisterioUser, Model model) {
+		List<Actividad>  actividades = actividadService.listarActiviadesByPersona(idPersonaMinisterioUser);
+
+		model.addAttribute("actividades", actividades);
+		return "misActividades";
+	}
 	
 
 

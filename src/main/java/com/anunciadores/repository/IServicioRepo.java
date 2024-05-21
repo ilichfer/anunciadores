@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
 
@@ -20,6 +21,16 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
             "join Ministerio m on pm.idMinisterio = m.id " +
             "WHERE s.fechaServicio = :fechaServicio")
     public List<Object> findProgramacionServicio(@Param("fechaServicio") Date fechaServicio);
+
+    @Query("select s from Servicio s " +
+            "where s.idPersona = :idPersona " +
+            "and s.fechaServicio = :fechaServicio")
+    public Optional<Servicio> findProgramacionServidor(@Param("idPersona") int idPersona, @Param("fechaServicio") Date fechaServicio);
+
+    @Query("select s from Servicio s " +
+            "where s.idPersona = :idMinisterio " +
+            "and s.fechaServicio = :fechaServicio")
+    public Optional<Servicio> findProgramacionByDateAndMinistery(@Param("fechaServicio") Date fechaServicio, @Param("idMinisterio") int idMinisterio);
 
 
 }

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -62,6 +63,7 @@ public class programacionController {
 
 	@PostMapping("/guardarServicio")
 	public String save(@ModelAttribute ServicioDto servicio, @RequestParam Date fechaServicio,@RequestParam int idMinisterio, HttpServletResponse response, Model model) {
+
 		if(servicio.getEncargado().contains("0") || fechaServicio == null){
 			model.addAttribute("message", "todos los campos son obligatorios");
 			List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
@@ -70,10 +72,29 @@ public class programacionController {
 			model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
 			return "listarPosiciones";
 		}else {
-			servicioService.saveProgramacion(servicio, fechaServicio);
-			List<Ministerio> ministerios = servicioService.getAll();
-			model.addAttribute("ministerios", ministerios);
-			return "ministerios";
+			if(servicioService.validarDuplicados(servicio)) {
+				Optional<Persona> per =servicioService.validarProgramacionByFecha(servicio, fechaServicio);
+				if(per.isPresent()){
+					model.addAttribute("message", "el servidor "+per.get().getNombre()+" ya tiene una asignacion para esta fecha " + fechaServicio);
+					List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
+					model.addAttribute("listaPosiciones", ministerios);
+					model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+					model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+					return "listarPosiciones";
+				}else{
+					servicioService.saveProgramacion(servicio, fechaServicio);
+					List<Ministerio> ministerios = servicioService.getAll();
+					model.addAttribute("ministerios", ministerios);
+					return "ministerios";
+				}
+			}else{
+				model.addAttribute("message", "un servidor solo puede tener una asignacion por fecha" );
+				List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
+				model.addAttribute("listaPosiciones", ministerios);
+				model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+				model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+				return "listarPosiciones";
+			}
 		}
 	}
 

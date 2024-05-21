@@ -102,7 +102,7 @@
                                              <tr>
                                                  <td class="servicioPendiente" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista < 2}" style="vertical-align : middle;text-align:center;"></td>
                                                  <td class="m-0 font-weight-bold text-primary" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista > 1}" style="vertical-align : middle;text-align:center;"></td>
-                                                 <td th:rowspan="${prog.tamanoLista}" th:text="${prog.fechaServcio}"></td>
+                                                 <td th:rowspan="${prog.tamanoLista}" th:text="${prog.fechaServcio}"  style="vertical-align : middle;text-align:center;"></td>
                                              </tr>
                                              <tr th:each="article,stats:${prog.servicioDTO}">
                                                  <td th:text="${article.posicion}"></td>

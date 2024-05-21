@@ -46,15 +46,19 @@ xmlns:th="http://www.thymeleaf.org">
 <!--                 <form class="user" method="POST" action="login"> -->
 					<form method="POST" th:action="@{/login2}">
                   <div class="form-group">
-                     <input class="form-control" type="email" name="email" id="txtEmail"
-                      aria-describedby="emailHelp" placeholder="Email">
+                     <input class="form-control" type="number" name="documento" id="documento"
+                            placeholder="No documento" required>
                   </div>
                   <div class="form-group">
                     <input type="password" class="form-control form-control-user" id="password" name="password"
-                      placeholder="password">
+                      placeholder="password" required>
                   </div>
                   <div class="text-center" th:if="${msj != null}">
                   		<label class="alert alert-danger" th:text="${msj}"></label>
+                  </div>
+
+                  <div class="text-center" th:if="${msjCreate != null}">
+                    <label class="alert alert-success" th:text="${msjCreate}"></label>
                   </div>
 
                       <br>

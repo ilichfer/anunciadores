@@ -23,5 +23,7 @@ public interface IActividadService {
 	public List<Persona> buscarPersonasActividad(int idActividad);
 	
 	public List<Mesa> buscarMesasActividad(ActividadDto actividadDto);
+
+	public List<Actividad> listarActiviadesByPersona(int idPersona);
 	
 }

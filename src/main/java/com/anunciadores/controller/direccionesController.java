@@ -76,7 +76,9 @@ public class direccionesController {
 	@GetMapping("/redirectPersonaOut")
 	public String redirectPersonaOut(@RequestParam(value = "action", required = false) String action,
 			Model model) {
+		Persona persona = new Persona();
 		model.addAttribute("name", action);
+		model.addAttribute("persona", persona);
 		return "registerOut";
 	}
 	
@@ -133,6 +135,12 @@ public class direccionesController {
 		Persona per = personaService.findPersonaById(persona.getId());
 		model.addAttribute("persona", per);
 		return "perfil";
+	}
+	@GetMapping("/editarPerfil")
+	public String editarPerfil(@RequestParam int idPersona,Model model) {
+		Persona per = personaService.findPersonaById(idPersona);
+		model.addAttribute("persona", per);
+		return "editPerfil";
 	}
 
 	@GetMapping("/redirectPago")

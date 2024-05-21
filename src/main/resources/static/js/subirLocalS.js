@@ -8,7 +8,7 @@ function limpiarlocalStorage() {
 
 function subir_localStorage() {
 
-  var email = document.getElementById("txtEmail").value;
-  localStorage.setItem("email",email);
+  var email = document.getElementById("documento").value;
+  localStorage.setItem("documento",email);
 
 }
