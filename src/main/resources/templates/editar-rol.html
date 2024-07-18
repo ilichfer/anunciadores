@@ -48,9 +48,10 @@
                                 </div>
 
                                <select class="form-control" name="idRol" id="idRol">
-                                   <option value="0">Seleccione una opcion...</option>
-                                   <option  th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.descripcion}"></option>
+                                   <option  th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.descripcion}"
+                                            th:selected="${rol.id==idRol.id}"></option>
                                </select>
+
                                 <br>
                                 <input type="submit" value="Guardar " class="btn btn-primary container">
                                 <hr>

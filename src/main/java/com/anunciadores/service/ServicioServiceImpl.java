@@ -83,6 +83,24 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
+	public List<MinisterioDto> getPositionByidMinisterioAndPerson(Date fechaActual , int idMinisterio) {
+		List<PosicionesMinisterio> listaPosiciones = new ArrayList<>();
+		List<MinisterioDto> listaPosicionesDto = new ArrayList<>();
+
+		List<Object> obj = new ArrayList<>();
+		List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
+		obj = servicioRepository.findProgramacionByDateAndMinistery(fechaActual, idMinisterio);
+
+		Ministerio ministerio = ministerioRepository.findById(idMinisterio).get();
+		listaPosiciones = posicionesRepository.findAllByIdMinisterio(idMinisterio);
+		List<Object> finalObj = obj;
+		listaPosiciones.forEach(p -> listaPosicionesDto.add(mapEntityToDtoAndPerson(p,ministerio.getNombre(), finalObj)));
+		return listaPosicionesDto;
+	}
+
+
+
+	@Override
 	public List<PersonaDto> getPeopleWithoutMinisterio(int idMinisterio) {
 		List<PersonaDto> listaDto = new ArrayList<>();
 		List<Persona> listaEntity= ministerioRepository.findPeopleWithOutMinisterio(idMinisterio);
@@ -114,6 +132,31 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
+	public void updateProgramacion(ServicioDto servidores, Date fechaServicio) {
+
+		List<Servicio> progServicio = new ArrayList<>();
+		try {
+
+
+			for (int i = 0; i < servidores.getPosicion().size(); i++) {
+				Servicio servicio = new Servicio();
+				List<PosicionesMinisterio> posicionEntity = posicionesRepository.findMinisterioByName(servidores.getPosicion().get(i));
+				//int nombreposi = posicionEntity.get(0).getId();
+				Optional<Servicio> programacion = 	servicioRepository.findProgramacionPosition(Integer.parseInt(servidores.getEncargado().get(i)), fechaServicio);
+				//servicio.setIdPosicion(posicionEntity.get(0).getId());
+				servicio = programacion.get();
+				servicio.setIdPosicion(posicionEntity.get(0).getId());
+				progServicio.add(servicio);
+			}
+			servicioRepository.saveAll(progServicio);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+
+	@Override
 	public Optional<Persona> validarProgramacionByFecha(ServicioDto servidores, Date fechaServicio) {
 
 		try {
@@ -121,6 +164,24 @@ public class ServicioServiceImpl implements IServicioService {
 			Optional<Servicio> programacion = 	servicioRepository.findProgramacionServidor(Integer.parseInt(servidor), fechaServicio);
 
 				if(programacion.isPresent()){
+					Optional<Persona> per=	personaRepository.findById(Integer.parseInt(servidor));
+					return per;
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<Persona> validarActualizarProgramacionByFecha(ServicioDto servidores, Date fechaServicio, int ministerio) {
+
+		try {
+			for (String servidor:servidores.getEncargado()) {
+				Optional<Servicio> programacion = 	servicioRepository.findProgramacionServidor(Integer.parseInt(servidor), fechaServicio);
+
+				if(programacion.isPresent() && programacion.get().getIdMinisterio() != ministerio){
 					Optional<Persona> per=	personaRepository.findById(Integer.parseInt(servidor));
 					return per;
 				}
@@ -160,8 +221,23 @@ public class ServicioServiceImpl implements IServicioService {
 
 	@Override
 	public List<ServicioListResponseDto> findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio) {
-	servicioRepository.findProgramacionByDateAndMinistery(fechaActual, idMinisterio);
+		List<Object> obj = new ArrayList<>();
+		List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
+		obj = servicioRepository.findProgramacionByDateAndMinistery(fechaActual, idMinisterio);
+		for (int i = 0; i < 6; i++) {
 
+				obj.forEach(O -> {
+					try {
+						ListServicioDto.add(mapObjectToDto(O));
+
+
+					} catch (ParseException e) {
+						throw new RuntimeException(e);
+					}
+				});
+				break;
+			}
+		ListServicioDto.size();
 		return null;
 	}
 
@@ -261,6 +337,27 @@ public class ServicioServiceImpl implements IServicioService {
 		return false;
 	}
 
+	@Override
+	public List<MinisterioDto> poblarPosiciones(List<MinisterioDto> ministerios, ServicioDto servicioDto) {
+		List<MinisterioDto> ministeriosFinal = new ArrayList<>();
+		ministerios.forEach(m -> {
+
+			m.getPosicionDto().getNombrePosicion();
+			for (int i = 0; i < servicioDto.getPosicion().size() ; i++) {
+				if (m.getPosicionDto().getNombrePosicion().equals(servicioDto.getPosicion().get(i))){
+					PersonaDto perMinisterio= new PersonaDto();
+					perMinisterio.setId(Integer.parseInt(servicioDto.getEncargado().get(i)));
+					m.getPosicionDto().setPersonaDto(perMinisterio);
+				}
+
+			}
+
+			});
+		ministeriosFinal = ministerios;
+
+		return ministeriosFinal;
+	}
+
 
 	private MinisterioDto mapEntityToDto (PosicionesMinisterio Posicion, String nombreMinisterio){
 		MinisterioDto dto = new MinisterioDto();
@@ -269,6 +366,26 @@ public class ServicioServiceImpl implements IServicioService {
 		dto.getPosicionDto().setIdMinisterio(Posicion.getIdMinisterio());
 		dto.getPosicionDto().setNombrePosicion(Posicion.getNombrePosicion());
 		dto.getPosicionDto().setId(Posicion.getId());
+		return dto;
+	}
+
+	private MinisterioDto mapEntityToDtoAndPerson (PosicionesMinisterio Posicion, String nombreMinisterio, List<Object> obj){
+		MinisterioDto dto = new MinisterioDto();
+		dto.setPosicionDto(new PosicionDto());
+		dto.setNombreMinisterio(nombreMinisterio);
+		dto.getPosicionDto().setIdMinisterio(Posicion.getIdMinisterio());
+		dto.getPosicionDto().setNombrePosicion(Posicion.getNombrePosicion());
+		dto.getPosicionDto().setId(Posicion.getId());
+		obj.forEach(o -> {
+			Object[] object = (Object[]) o;
+			Integer idPosicion = Posicion.getId();
+			if (idPosicion.equals(Integer.parseInt(object[2].toString()))) {
+				PersonaDto perMinisterio= new PersonaDto();
+				perMinisterio.setId(Integer.parseInt(object[0].toString()));
+				perMinisterio.setNombre(object[1].toString());
+				dto.getPosicionDto().setPersonaDto(perMinisterio);
+			}
+		});
 		return dto;
 	}
 

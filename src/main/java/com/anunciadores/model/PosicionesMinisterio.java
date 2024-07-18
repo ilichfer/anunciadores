@@ -33,6 +33,15 @@ public class PosicionesMinisterio implements Serializable {
 	@Column(name = "nombre_posicion")
 	private String nombrePosicion;
 
+	@Override
+	public String toString() {
+		return "PosicionesMinisterio{" +
+				"id=" + id +
+				", idMinisterio=" + idMinisterio +
+				", nombrePosicion='" + nombrePosicion + '\'' +
+				'}';
+	}
+
 	public int getId() {
 		return id;
 	}

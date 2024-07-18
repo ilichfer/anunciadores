@@ -76,9 +76,17 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestionar Cursos:</h6>
-                        <a class="collapse-item" th:href="@{/listarCursos}" >Listar cursos</a>
-                        <a class="collapse-item" href="redirectCurso">crear Curso</a>
-                         <a class="collapse-item" th:href="@{/reportePagos}">reporte pagos Cursos</a>
+                        <form method="POST" th:action="@{/buscarCursosByPersona}">
+                            <input class="form-control" type="text" name="id" id="idCursoUser" style="display:none">
+                            <input type="submit" value="Mis cursos" class="btn collapse-item">
+                        </form>
+                        <form method="POST" th:action="@{/listarCursosAbiertos}">
+                            <input class="form-control" type="text" name="id" id="idPCurso" style="display:none">
+                            <input type="submit" value="cursos activos" class="btn collapse-item">
+                        </form>
+                        <a id="subMenuListarCursos" class="collapse-item" th:href="@{/listarCursos}" >Listar cursos</a>
+                        <a id="subMenuCrearCursos" class="collapse-item" href="redirectCurso">crear Curso</a>
+                        <a id="subMenuReporteCursos" class="collapse-item" th:href="@{/reportePagos}">reporte pagos Cursos</a>
                          
                     </div>
                 </div>
@@ -111,7 +119,12 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestionar Actividades:</h6>
-                        <a class="collapse-item" th:href="@{/listarActividades}">Listar Actividades</a>
+                        <a id="SubMenuListActividades"class="collapse-item" th:href="@{/listarActividades}">Listar Actividades</a>
+                        <form  method="POST" th:action="@{/hisMisActividades}" >
+                            <input class="form-control" type="text" name="idPersonaMinisterioUser" id="idPersonaMinisterioUser" style="display:none">
+                            <input type="submit" value="Mis Actividades" class="btn collapse-item" disabled>
+                        </form>
+                        <a  class="collapse-item" th:href="@{/actividadesAutoIncripcion}" >Actividades Abiertas</a>
                     </div>
                 </div>
             </li>
@@ -167,7 +180,7 @@
             </li>
             
             <!-- Nav Item - seccion TDC Menu -->
-            <li class="nav-item" id="menuTCD">
+            <li class="nav-item" >
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTDC"
                     aria-expanded="true" aria-controls="collapseTDC">
                     <i class="fas fa fa-book"></i>
@@ -181,9 +194,8 @@
                             <input class="form-control" type="text" name="idPersonaTCD" id="idPersonaTCD" style="display:none">
                             <input type="submit" value="Registrar TCD" class="collapse-item" style="border-style: hidden">
                         </form>
-
-                        <a class="collapse-item" th:href="@{/listarTdc}">buscar TCD</a>
-                        <a class="collapse-item" th:href="@{/redirectReporteTDC}">reporte TCD</a>
+                        <a id="SubMenuTCDListar" class="collapse-item" th:href="@{/listarTdc}">buscar TCD</a>
+                        <a id="SubMenuTCDReporte" class="collapse-item" th:href="@{/redirectReporteTDC}">reporte TCD</a>
                     </div>
                 </div>
             </li>
@@ -198,11 +210,11 @@
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Gestionar Consolidacion:</h6>
-                        <!--<form method="POST" th:action="@{/redirectTDC}">
-                            <input class="form-control" type="text" name="id" id="id" style="display: none">
-                            <input type="submit" value="Registrar Consolidacion" class="collapse-item" style="border-style: hidden">
-                        </form>-->
-                        <a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>
+                        <form method="POST" th:action="@{/buscarConsolidacionByPersona}">
+                            <input class="form-control" type="text" name="idPersona" id="idPersonaConsolidacion" style="display:none">
+                            <input type="submit" value="Mis asignaciones" class="collapse-item" style="border-style: hidden">
+                        </form>
+                        <a id="SubMenuSerConsolidacion"  class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>
                     </div>
                 </div>
             </li>
@@ -274,11 +286,11 @@
         </ul>
         </div>
 
-        <!-- Sidebar -->
+        <!--
         <div  id="user">
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" >
 
-            <!-- Sidebar - Brand -->
+
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="redirectDashboard">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
@@ -286,10 +298,9 @@
                 <div class="sidebar-brand-text mx-3">Anuncia <sup>2</sup></div>
             </a>
 
-            <!-- Divider -->
+
             <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="redirectDashboard">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
@@ -297,10 +308,9 @@
             </li>
             
 
-            <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Nav Item - Dashboard -->
+
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePerfilUser"
                    aria-expanded="true" aria-controls="collapsePerfilUser">
@@ -315,18 +325,16 @@
                             <input class="form-control" type="text" name="id" id="idUser">
                             <input type="submit" value="gestionar Perfil" class="collapse-item" style="border-style: hidden">
                         </form>
-                        <!--<a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>-->
                     </div>
                 </div>
             </li>
 
-            <!-- Heading -->
-            <div class="sidebar-heading" >
-                Usuario
-            </div>
-
+                        <div class="sidebar-heading" >
+                            Usuario
+                        </div>
+                -->
             <!-- Nav Item - Pages Collapse Menu -->
-           
+            <!--
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
@@ -347,87 +355,93 @@
                     </div>
                 </div>
             </li>
-
+            -->
 
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseActividadesUser"
-                    aria-expanded="true" aria-controls="collapseActividadesUser">
-                    <i class="fas fa-clipboard"></i>
-                    <span>Actividades</span>
-                </a>
-                <div id="collapseActividadesUser" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
+            <!--
+           <li class="nav-item">
+               <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseActividadesUser"
+                   aria-expanded="true" aria-controls="collapseActividadesUser">
+                   <i class="fas fa-clipboard"></i>
+                   <span>Actividades</span>
+               </a>
+               <div id="collapseActividadesUser" class="collapse" aria-labelledby="headingUtilities"
+                   data-parent="#accordionSidebar">
 
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Gestionar Actividades:</h6>
-                        <form method="POST" th:action="@{/hisMisActividades}" >
-                            <input class="form-control" type="text" name="idPersonaMinisterioUser" id="idPersonaMinisterioUser" style="display:none">
-                            <input type="submit" value="Mis Actividades" class="btn collapse-item">
-                        </form>
-                        <a class="collapse-item" th:href="@{/actividadesAutoIncripcion}" >Actividades Abiertas</a>
-                    </div>
-                </div>
-            </li>
-            
-             <!-- Nav Item - seccion Asistentes Menu
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAsistentes"
-                    aria-expanded="true" aria-controls="collapseAsistentes">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Asistentes</span>
-                </a>
-                <div id="collapseAsistentes" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Gestionar Asistentes:</h6>
-                        <a class="collapse-item" th:href="@{/listarAsistentesByUsuario}" >Listar Asistentes</a>
-                        <a class="collapse-item" href="redirectAsistente" >crear Asistentes</a>
-                    </div>
-                </div>
-            </li>-->
+                   <div class="bg-white py-2 collapse-inner rounded">
+                       <h6 class="collapse-header">Gestionar Actividades:</h6>
+                       <form method="POST" th:action="@{/hisMisActividades}" >
+                           <input class="form-control" type="text" name="idPersonaMinisterioUser" id="idPersonaMinisterioUser" style="display:none">
+                           <input type="submit" value="Mis Actividades" class="btn collapse-item">
+                       </form>
+                       <a class="collapse-item" th:href="@{/actividadesAutoIncripcion}" >Actividades Abiertas</a>
+                   </div>
+               </div>
+           </li>
+           -->
+            <!-- Nav Item - seccion Asistentes Menu
+           <li class="nav-item">
+               <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAsistentes"
+                   aria-expanded="true" aria-controls="collapseAsistentes">
+                   <i class="fas fa-fw fa-wrench"></i>
+                   <span>Asistentes</span>
+               </a>
+               <div id="collapseAsistentes" class="collapse" aria-labelledby="headingUtilities"
+                   data-parent="#accordionSidebar">
+                   <div class="bg-white py-2 collapse-inner rounded">
+                       <h6 class="collapse-header">Gestionar Asistentes:</h6>
+                       <a class="collapse-item" th:href="@{/listarAsistentesByUsuario}" >Listar Asistentes</a>
+                       <a class="collapse-item" href="redirectAsistente" >crear Asistentes</a>
+                   </div>
+               </div>
+           </li>-->
             <!-- Nav Item - seccion TDC Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTDCUser"
-                   aria-expanded="true" aria-controls="collapseTDCUser">
-                    <i class="fas fa fa-book"></i>
-                    <span>TCD</span>
-                </a>
-                <div id="collapseTDCUser" class="collapse" aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Gestionar TCD:</h6>
-                        <form method="POST" th:action="@{/redirectTDC}">
-                            <input class="form-control" type="text" name="idPersonaTCD" id="idPersonaTCDUser" style="display:none">
-                            <input type="submit" value="Registrar TCD" class="collapse-item" style="border-style: hidden">
-                        </form>
-                    </div>
-                </div>
-            </li>
-            <!-- Nav Item - seccion TDC Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsolidacionUser"
-                   aria-expanded="true" aria-controls="collapseConsolidacionUser">
-                    <i class="fas fa fa-book"></i>
-                    <span>Consolidacion</span>
-                </a>
-                <div id="collapseConsolidacionUser" class="collapse" aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Gestionar Consolidacion:</h6>
-                        <form method="POST" th:action="@{/buscarConsolidacionByPersona}">
-                            <input class="form-control" type="text" name="idPersona" id="idPersonaConsolidacion" style="display:none">
-                            <input type="submit" value="Mis asignaciones" class="collapse-item" style="border-style: hidden">
-                        </form>
-                    </div>
-                </div>
-            </li>
 
-            <!-- Divider -->
+            <!--
+           <li class="nav-item">
+               <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTDCUser"
+                  aria-expanded="true" aria-controls="collapseTDCUser">
+                   <i class="fas fa fa-book"></i>
+                   <span>TCD</span>
+               </a>
+               <div id="collapseTDCUser" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                   <div class="bg-white py-2 collapse-inner rounded">
+                       <h6 class="collapse-header">Gestionar TCD:</h6>
+                       <form method="POST" th:action="@{/redirectTDC}">
+                           <input class="form-control" type="text" name="idPersonaTCD" id="idPersonaTCDUser" style="display:none">
+                           <input type="submit" value="Registrar TCD" class="collapse-item" style="border-style: hidden">
+                       </form>
+                   </div>
+               </div>
+           </li>
+           -->
+           <!-- Nav Item - seccion TDC Menu -->
+
+            <!--
+           <li class="nav-item">
+               <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsolidacionUser"
+                  aria-expanded="true" aria-controls="collapseConsolidacionUser">
+                   <i class="fas fa fa-book"></i>
+                   <span>Consolidacion</span>
+               </a>
+               <div id="collapseConsolidacionUser" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                   <div class="bg-white py-2 collapse-inner rounded">
+                       <h6 class="collapse-header">Gestionar Consolidacion:</h6>
+                       <form method="POST" th:action="@{/buscarConsolidacionByPersona}">
+                           <input class="form-control" type="text" name="idPersona" id="idPersonaConsolidacion" style="display:none">
+                           <input type="submit" value="Mis asignaciones" class="collapse-item" style="border-style: hidden">
+                       </form>
+                   </div>
+               </div>
+           </li>
+
             <hr class="sidebar-divider">
 
         </ul>
         </div>
+        -->
 
 </header>
  <script src="js/cargarData.js"></script>

@@ -27,10 +27,19 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
             "and s.fechaServicio = :fechaServicio")
     public Optional<Servicio> findProgramacionServidor(@Param("idPersona") int idPersona, @Param("fechaServicio") Date fechaServicio);
 
+
     @Query("select s from Servicio s " +
-            "where s.idPersona = :idMinisterio " +
+            "where s.idPersona = :idPersona " +
             "and s.fechaServicio = :fechaServicio")
-    public Optional<Servicio> findProgramacionByDateAndMinistery(@Param("fechaServicio") Date fechaServicio, @Param("idMinisterio") int idMinisterio);
+    public Optional<Servicio> findProgramacionPosition(@Param("idPersona") int idPersona, @Param("fechaServicio") Date fechaServicio);
+
+    @Query("select p.id  , p.nombre,pm.id , pm.nombrePosicion from Servicio s " +
+            "            join Persona p on s.idPersona = p.id " +
+            "            join PosicionesMinisterio pm on s.idPosicion = pm.id " +
+            "            join Ministerio m on pm.idMinisterio = m.id " +
+            "            WHERE s.fechaServicio = :fechaServicio" +
+            "            and m.id = :idMinisterio")
+    public List<Object> findProgramacionByDateAndMinistery(@Param("fechaServicio") Date fechaServicio, @Param("idMinisterio") int idMinisterio);
 
 
 }

@@ -6,10 +6,9 @@ package com.anunciadores.model;
  */
 
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -36,6 +35,15 @@ public class PermisosMenu implements Serializable {
 
 	@Column(name = "estado")
 	public String estado;
+
+	@Column(name = "id_menu")
+	public int idMenu;
+
+	@OneToOne
+	@JoinColumn(
+			name = "id",
+			referencedColumnName = "id") // "id_menu" is the foreign key in "permisos_menu" table that references "id" in "param_menu" table
+	private ParamMenu menu;
 
 	public int getId() {
 		return id;
@@ -67,5 +75,21 @@ public class PermisosMenu implements Serializable {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	public ParamMenu getMenu() {
+		return menu;
+	}
+
+	public void setMenu(ParamMenu menu) {
+		this.menu = menu;
+	}
+
+	public int getIdMenu() {
+		return idMenu;
+	}
+
+	public void setIdMenu(int idMenu) {
+		this.idMenu = idMenu;
 	}
 }

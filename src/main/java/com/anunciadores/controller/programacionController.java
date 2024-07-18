@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,6 +99,55 @@ public class programacionController {
 		}
 	}
 
+
+	@PostMapping("/actualizarServicio")
+	public String actualizarServicio(@ModelAttribute ServicioDto servicio, @RequestParam Date fechaServicio,@RequestParam int idMinisterio, HttpServletResponse response, Model model) {
+
+		if(servicio.getEncargado().contains("0") || fechaServicio == null){
+			model.addAttribute("message", "todos los campos son obligatorios");
+			List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
+			model.addAttribute("listaPosiciones", ministerios);
+			model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+			model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+			return "listarPosiciones";
+		}else {
+			if(servicioService.validarDuplicados(servicio)) {
+				Optional<Persona> per =servicioService.validarActualizarProgramacionByFecha(servicio, fechaServicio, idMinisterio);
+				if(per.isPresent()){
+					model.addAttribute("message", "el servidor "+per.get().getNombre()+" ya tiene una asignacion para la fecha " + fechaServicio +" en otro ministerio ");
+					List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
+					model.addAttribute("listaPosiciones", ministerios);
+					model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+					model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+					return "listarPosiciones";
+				}else{
+					servicioService.updateProgramacion(servicio, fechaServicio);
+					List<Ministerio> ministerios = servicioService.getAll();
+					model.addAttribute("ministerios", ministerios);
+					return "redirect:/consultarProgramacion";
+				}
+			}else{
+				model.addAttribute("message", "un servidor solo puede tener una asignacion para esta fecha" );
+				List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
+				List<MinisterioDto>  ministeriosEditar =  servicioService.poblarPosiciones(ministerios,servicio);
+				model.addAttribute("listaPosiciones", ministeriosEditar);
+				model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+				model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+
+
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String fechaComoCadena = sdf.format(fechaServicio);
+
+
+				//model.addAttribute("listaPosiciones", ministerios);
+				//model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+				model.addAttribute("fecha", fechaComoCadena );
+
+				return "editar_programacion";
+			}
+		}
+	}
 	@PostMapping("/saveMinisterio")
 	public String save(@RequestParam String nombreMinisterio, HttpServletResponse response, Model model) throws ParseException, JsonProcessingException {
 		String url = "redirect:/404.html";

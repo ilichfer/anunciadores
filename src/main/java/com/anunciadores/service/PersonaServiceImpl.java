@@ -42,6 +42,12 @@ public class PersonaServiceImpl implements IPersonaService {
 	private IPermisosRepo permisosRepo;
 
 	@Autowired
+	private IParamMenuRepo paramMenuRepo;
+
+	@Autowired
+	private IPermisosSubMenuRepo permisosSubMenuRepo;
+
+	@Autowired
 	private IRolesPersonaRepo rolesPersonaRepository;
 
 	@Autowired
@@ -273,20 +279,21 @@ public class PersonaServiceImpl implements IPersonaService {
 				List<RolPersona> rol = new ArrayList<>();
 
 				List<Rol> roles = rolesDao.buscarRoles(personadto.getId());
-
-				List<PermisosMenu> persmisos = permisosRepo.findByIdPersona(personadto.getId());
+				List<PermisosMenu> permisos = null;
 
 				for (com.anunciadores.model.Rol rolAsignado : roles) {
 					if (rolAsignado.getDescripcion().equalsIgnoreCase("ADMINISTRADOR")) {
-
+						permisos = permisosRepo.findByIdPersona(personadto.getId());
 						personadto.getRoles().add(rolAsignado);
 						personadto.setAdmin(true);
 						personadto.setUser(false);
-						personadto.setPermisosMenu(persmisos);
+						personadto.setPermisosMenu(permisos);
 					} else {
+						List<ParamMenu> menuList = paramMenuRepo.findAll();
 						personadto.getRoles().add(rolAsignado);
 						personadto.setAdmin(false);
 						personadto.setUser(true);
+						personadto.setPermisosMenu(contruirPermisosServidor( menuList));
 					}
 
 				}
@@ -300,6 +307,22 @@ public class PersonaServiceImpl implements IPersonaService {
 			personadto.setId(1);
 		}
 		return personadto;
+	}
+
+	private List<PermisosMenu> contruirPermisosServidor(List<ParamMenu> menuList){
+		List<PermisosMenu> listPermisosIniciales = new ArrayList<>();
+		String estadoInicial = "false";
+
+		for (ParamMenu boton : menuList) {
+			PermisosMenu permisoInicial = new PermisosMenu();
+			permisoInicial.setIdPersona(1);
+			permisoInicial.setIdMenu(boton.getId());
+			permisoInicial.setEstado(estadoInicial);
+			permisoInicial.setNombreBotonMenu(boton.getNombreBotonMenu());
+			permisoInicial.setMenu(boton);
+			listPermisosIniciales.add(permisoInicial);
+		}
+		return listPermisosIniciales;
 	}
 
 	@Override
@@ -437,28 +460,21 @@ public class PersonaServiceImpl implements IPersonaService {
 	}
 
 	private List<PermisosMenu> crearRolesPrimerVezAdmin(int idPersona) {
-		List<String> listBotones = new ArrayList<>();
-		listBotones.add("menuAdministrar");
-		listBotones.add("menuUsuarios");
-		listBotones.add("menuCursos");
-		listBotones.add("menuActividades");
-		listBotones.add("menuAsistentes");
-		listBotones.add("menuServicio");
-		listBotones.add("menuTCD");
-		listBotones.add("menuConsolidacion");
+		List<ParamMenu> menuList = paramMenuRepo.findAll();
 
 		List<PermisosMenu> listPermisosIniciales = new ArrayList<>();
 		String estadoInicial = "true";
 
-		for (String boton : listBotones) {
+		for (ParamMenu boton : menuList) {
 			PermisosMenu permisoInicial = new PermisosMenu();
 			permisoInicial.setIdPersona(idPersona);
-			if (boton.equals("menuAdministrar")) {
+			permisoInicial.setIdMenu(boton.getId());
+			if (boton.getNombreBotonMenu().equals("menuAdministrar")) {
 				permisoInicial.setEstado("false");
 			}else{
 				permisoInicial.setEstado(estadoInicial);
 			}
-			permisoInicial.setNombreBotonMenu(boton);
+			permisoInicial.setNombreBotonMenu(boton.getNombreBotonMenu());
 			listPermisosIniciales.add(permisoInicial);
 		}
 		return listPermisosIniciales;

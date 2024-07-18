@@ -10,8 +10,8 @@
       
     
   
-  //const response = await fetch("http://localhost:5000/consutarDoc?doc="+documento);
-  const response = await fetch("https://anunciaig.com/consutarDoc?doc="+documento);
+  const response = await fetch("http://localhost:5000/consutarDoc?doc="+documento);
+  //const response = await fetch("https://anunciaig.com/consutarDoc?doc="+documento);
   const datos = await response.json();
   
   // Fuerzo artificialmente a que dure más para que se pueda observar el Spinner
@@ -28,7 +28,7 @@
           console.log(JSON.stringify(datos.permisosMenu));
           localStorage.setItem("permisosMenu",JSON.stringify(datos.permisosMenu))
         } else {
-          alert("no se encontro informacion en localStorage")
+          alert("no se encontro informacion de este usuario")
         }
 
         //location.reload();
@@ -39,14 +39,12 @@
 
 
 
-/*Obtener datos almacenados*/   
+/*Obtener datos almacenados*/
 var  admin= localStorage.getItem('admin');
 if (admin== "true") {
-document.getElementById("user").style.display = "none";
-consultarPermisos(localStorage.getItem('permisosMenu'));
-//localStorage.getItem('permisosMenu') == 'true'?document.getElementById("menuAdministrar").style.display = "block":document.getElementById("menuAdministrar").style.display = "none";
+consultarPermisosAdmin(localStorage.getItem('permisosMenu'));
 }else{
-document.getElementById("admin").style.display = "none";
+consultarPermisosAdmin(localStorage.getItem('permisosMenu'));
 }
 
 /*Mostrar datos almacenados*/      
@@ -59,15 +57,15 @@ console.log( "id de esta persona "+localStorage.getItem('id'));
 document.getElementById("id").value = localStorage.getItem('id');
 document.getElementById("idPersonaTCD").value = localStorage.getItem('id');
 document.getElementById("id").style.display = "none";
-
-/* datos usuario*/
-document.getElementById("idUser").value = localStorage.getItem('id');
 document.getElementById("idCursoUser").value = localStorage.getItem('id');
 document.getElementById("idPCurso").value = localStorage.getItem('id');
+
+/* datos usuario
+document.getElementById("idUser").value = localStorage.getItem('id');
 document.getElementById("idPersonaTCDUser").value = localStorage.getItem('id');
 document.getElementById("idPersonaConsolidacion").value = localStorage.getItem('id');
 document.getElementById("idPersonaMinisterioUser").value = localStorage.getItem('id');
-document.getElementById("idUser").style.display = "none";
+document.getElementById("idUser").style.display = "none";*/
 /*Mostrar pagina*/  
 
 var x = document.getElementById("contenido");
@@ -121,16 +119,37 @@ const accionAsincrona = async () => {
 });   
 }
 
-function consultarPermisos(permisosMenu){
+function consultarPermisosAdmin(permisosMenu){
 let perm=[];
 perm=JSON.parse(permisosMenu);
  var existe=false;
     for (i=0; i < perm.length; i++) {
         console.log("estado "+perm[i].estado);
         console.log("nombreBotonMenu "+perm[i].nombreBotonMenu);
-        perm[i].estado == 'true'?document.getElementById(perm[i].nombreBotonMenu).style.display = "block":document.getElementById(perm[i].nombreBotonMenu).style.display = "none";
+        if(perm[i].estado == 'false'){
+
+         let menuObtenido = perm[i].menu;
+             for (j=0; j < menuObtenido.subMenu.length; j++) {
+                         document.getElementById(menuObtenido.subMenu[j].etiqueta).style.display = "none";
+                         }
+                     }
+            }
+        //perm[i].estado == 'true'?document.getElementById(perm[i].nombreBotonMenu).style.display = "block":document.getElementById(perm[i].nombreBotonMenu).style.display = "none";
 
     }
+
+
+function PermisosUser(permisosMenu){
+let perm=[];
+perm=JSON.parse(permisosMenu);
+ var existe=false;
+    for (i=0; i < perm.length; i++) {
+        console.log("estado "+perm[i].estado);
+        console.log("nombreBotonMenu "+perm[i].nombreBotonMenu);
+         for (j=0; j < perm[i].subMenu.length; j++) {
+         console.log(perm[i].subMenu[j].etiqueta)
+         document.getElementById(perm[i].subMenu[j].etiqueta).style.display = "none";}
+   }
 }
 
 

@@ -49,16 +49,16 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Lista Posiciones</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Lista Posiciones a editar</h1>
                     <p class="mb-4">Tabla de posiciones para servicio.</p>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Lista de posiciones para servicio</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Lista de posiciones para servicio a editar</h6>
                         </div>
 
-                        <form method="POST" th:action="@{/guardarServicio}">
+                        <form method="POST" th:action="@{/actualizarServicio}">
                             <div class="form-group" style="display:none;">
                                 <input type="text" class="form-control form-control-user" name="idMinisterio" id="idMinisterio"
                                        th:value="${ministerio.id}" readonly>
@@ -70,8 +70,21 @@
                                         <label for="fechaServicio"> fecha de servicio</label>
                                     </div>
                                     <div  style ="margin:10px">
-                                    <input type="date" class="form-control form-control-user" name="fechaServicio"
-                                           id="fechaServicio" required >
+                                        <input type="date" class="form-control form-control-user" name="fechaServicio"
+                                               id="fechaServicio" th:value="${{fecha}}" readonly>
+                                    </div>
+                                    <div class="form-group" style="display:none;">
+                                        <input type="text" class="form-control form-control-user" name="fechaServici" id="fechaServici"
+                                               th:value="${{fecha}}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div  style ="text-align:center;">
+                                        <label for="ServicioMinisterio"> Ministerio</label>
+                                    </div>
+                                    <div  style ="text-align:center;">
+                                        <p th:text="${ministerio.nombre}" class="m-0 font-weight-bold text-primary" id="ServicioMinisterio">
+
                                     </div>
                                 </div>
                             </div>
@@ -82,59 +95,55 @@
                             </div>
 
 
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
                                         <tr>
                                             <th>nombre Posicion</th>
                                             <th>responsable</th>
 
-<!--                                              <th th:if="${admin != false}">Pagos</th> -->
+                                            <!--                                              <th th:if="${admin != false}">Pagos</th> -->
                                         </tr>
-                                    </thead>
+                                        </thead>
 
-                                    <tbody>
+                                        <tbody>
                                         <tr th:each="posicion, itemStat : ${listaPosiciones}">
                                             <td ><input type="text"  class="form-control form-control-user" th:value="${posicion.posicionDto.nombrePosicion}" name="posicion"
                                                         id="posicion" readonly>
-                                                </td>
+                                            </td>
 
                                             <td>
                                                 <select class="form-control" name="encargado"
                                                         id="encargado">
-                                                    <option value="0">seleccione una opcion</option>
-                                                    <option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}" required></option>
+                                                    <option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}"
+                                                            th:selected="${servidor.id==posicion.posicionDto.personaDto.id}" required></option>
                                                 </select>
+
                                             </td>
 
 
 
 
                                         </tr>
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div align="center" class="center-block" >
+                                    <input type="submit" value="Actualizar Programacion" class="btn btn-primary container" style="width:60%">
+                                </div>
 
                             </div>
-                            <div align="center" class="center-block" >
-                                <input type="submit" value="Programar Servidores" class="btn btn-primary container" style="width:70%">
-                            </div>
-
-                        </div>
 
                             <div align="center" class="center-block" >
                                 <a class="mb-2 btn btn-warning container" th:href="@{/listarMinisterios}"
                                    type="submit" data-toggle="tooltip" data-placement="right"
                                    title="Regresar" style="width:40%"> Regresar </a>
                             </div>
-
-
-
-                </div>
-
-                <hr>
-
-                </form>
+                    </div>
+                    <hr>
+                    </form>
 
 
                 <style>

@@ -1,5 +1,6 @@
 package com.anunciadores.controller;
 
+import com.anunciadores.dto.MinisterioDto;
 import com.anunciadores.dto.ServicioListResponseDto;
 import com.anunciadores.model.Persona;
 import com.anunciadores.service.interfaces.IServicioService;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -44,16 +47,18 @@ public class ServicioController {
 		return url;
 	}
 	@GetMapping("/editarProgramacion")
-	public String editarProgramacion(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException {
+	public String editarProgramacion(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		String url = "editar_programacion";
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateAndMinisterio(fecha,idMinisterio);
-		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
-		if(listProgramacionMinisterio.size()>0) {
-			//model.addAttribute("programacion", listProgramacionMinisterio);
-			model.addAttribute("programacionMin", listProgramacionMinisterio);
-		}else{
-			model.addAttribute("programacionMin", null);
-		}
+		List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fecha,idMinisterio);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaComoCadena = sdf.format(fecha);
+
+
+		model.addAttribute("listaPosiciones", ministerios);
+		model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+		model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+		model.addAttribute("fecha", fechaComoCadena );
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		return url;
 	}

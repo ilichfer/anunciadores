@@ -496,7 +496,7 @@ public class personaController {
 		List<PermisosMenu> permisosMenu = permisosMenuRepo.findByIdPersona(persona.getId());
 		model.addAttribute("persona", persona);
 		model.addAttribute("roles", roles);
-		model.addAttribute("idRol", roles.get(0));
+		model.addAttribute("idRol", !roles.isEmpty() && roles.get(0).getDescripcion().equals(descripcionRol)?roles.get(0):roles.get(1));
 		model.addAttribute("permisos", permisosMenu);
 		model.addAttribute("descripcionRol", descripcionRol);
 

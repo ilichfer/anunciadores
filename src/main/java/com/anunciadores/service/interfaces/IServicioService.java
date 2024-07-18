@@ -23,11 +23,18 @@ public interface IServicioService {
 	public List<PersonaDto> findPersonaByidMnisterio(int idMinisterio);
 
 	public List<MinisterioDto> getPositionByidMinisterio(int idMinisterio);
+
+	List<MinisterioDto> getPositionByidMinisterioAndPerson(Date fecha, int idMinisterio);
+
 	public List<PersonaDto> getPeopleWithoutMinisterio(int idMinisterio);
 
 	public void saveProgramacion(ServicioDto servidores, Date fechaServicio);
 
+	void updateProgramacion(ServicioDto servidores, Date fechaServicio);
+
 	public Optional<Persona> validarProgramacionByFecha(ServicioDto servidores, Date fechaServicio);
+
+	Optional<Persona> validarActualizarProgramacionByFecha(ServicioDto servidores, Date fechaServicio, int ministerio);
 
 	public List<ServicioListResponseDto>findProgramacionByDate(Date fechaActual);
 	public List<ServicioListResponseDto>findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio);
@@ -43,5 +50,7 @@ public interface IServicioService {
 	PosicionDto findPosicion(int idposicion);
 
 	public Boolean validarDuplicados(ServicioDto servidores);
+
+	public List<MinisterioDto> poblarPosiciones(List<MinisterioDto>  ministerios,ServicioDto servicioDto);
 
 }
