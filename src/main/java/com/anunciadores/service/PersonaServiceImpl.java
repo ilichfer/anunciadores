@@ -305,6 +305,7 @@ public class PersonaServiceImpl implements IPersonaService {
 			e.printStackTrace();
 			personadto = new PersonaDto();
 			personadto.setId(1);
+			throw new RuntimeException(e.getMessage());
 		}
 		return personadto;
 	}

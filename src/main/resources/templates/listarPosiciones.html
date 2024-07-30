@@ -70,8 +70,9 @@
                                         <label for="fechaServicio"> fecha de servicio</label>
                                     </div>
                                     <div  style ="margin:10px">
-                                    <input type="date" class="form-control form-control-user" name="fechaServicio"
-                                           id="fechaServicio" required >
+                                        <input type="date" class="form-control form-control-user" name="fechaServicio"
+                                               id="fechaServicio" th:value="${{fecha}}" >
+
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +105,9 @@
                                                 <select class="form-control" name="encargado"
                                                         id="encargado">
                                                     <option value="0">seleccione una opcion</option>
-                                                    <option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}" required></option>
+                                                    <!--<option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}" required></option> -->
+                                                    <option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}"
+                                                            th:selected="${servidor.id==posicion.posicionDto.personaDto.id}" required></option>
                                                 </select>
                                             </td>
 

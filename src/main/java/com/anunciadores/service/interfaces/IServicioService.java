@@ -53,4 +53,8 @@ public interface IServicioService {
 
 	public List<MinisterioDto> poblarPosiciones(List<MinisterioDto>  ministerios,ServicioDto servicioDto);
 
+	public List<MinisterioDto> getPositionInitial(List<MinisterioDto> idMinisterio);
+
+	public Persona getPersonDuplicate(ServicioDto servidores);
+
 }

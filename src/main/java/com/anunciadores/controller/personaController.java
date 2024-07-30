@@ -303,6 +303,7 @@ public class personaController {
 	@PostMapping("/login2")
 	public String login2(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
 //		usuarioService.loadUserByUsername(persona.getEmail());
+		try {
 		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
 //		User user = new User(persona.getNombre(), persona.getPassword(), authorities)
 		VersiculoDto dia =bibliaService.findVerseDay();
@@ -331,6 +332,10 @@ public class personaController {
 			url = "index";
 		}
 		return url;
+		}catch (Exception e) {
+			model.addAttribute("msj", e.getMessage());
+			return "login";
+		}
 	}
 
 	@GetMapping("/personasCurso")

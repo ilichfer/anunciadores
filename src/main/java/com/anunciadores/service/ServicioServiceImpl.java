@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -243,9 +244,9 @@ public class ServicioServiceImpl implements IServicioService {
 
 	@Override
 	public List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual) {
-		LocalDate fechaActualizada = LocalDate.now();
-
 		List<ServicioListResponseDto> ListServiceDto = new ArrayList<>();
+		try {
+		LocalDate fechaActualizada = LocalDate.now();
 
 		List<Object> obj = new ArrayList<>();
 		List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
@@ -269,7 +270,10 @@ public class ServicioServiceImpl implements IServicioService {
 		}
 
 		ListServiceDto = buscarMinistarios(ListServicioDto);
-
+		}catch (Exception e){
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 
 	//return ListServicioDto;
 		return ListServiceDto;
@@ -356,6 +360,38 @@ public class ServicioServiceImpl implements IServicioService {
 		ministeriosFinal = ministerios;
 
 		return ministeriosFinal;
+	}
+
+	@Override
+	public List<MinisterioDto> getPositionInitial(List<MinisterioDto> Ministerio) {
+		PersonaDto perPos= new PersonaDto();
+		perPos.setId(0);
+		Ministerio.forEach(o->o.getPosicionDto().setPersonaDto(perPos));
+		return Ministerio;
+	}
+
+	@Override
+	public Persona getPersonDuplicate(ServicioDto servidores) {
+			Integer contador = 0;
+		Optional<Persona> p ;
+		for (String o:	servidores.getEncargado()) {
+			p = validarRepetido(o,servidores.getEncargado());
+			return p.get();
+		}
+			return new Persona();
+	}
+
+	private Optional<Persona> validarRepetido(String idUser, List<String> listUsers){
+		int c = 0;
+		for (int j = 0; j < listUsers.size(); j++) {
+			if ( idUser.equalsIgnoreCase(listUsers.get(j))){
+				c= c+ 1;
+				if (c > 1){
+					return personaRepository.findById(Integer.parseInt(idUser));
+				}
+			}
+		}
+		return Optional.empty();
 	}
 
 

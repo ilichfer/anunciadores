@@ -92,9 +92,11 @@
                                         <div th:remove="tag" th:each="prog:${programacionMin}">
                                             <tr>
                                                 <td th:rowspan="${prog.tamanoLista}"  style="vertical-align : middle;text-align:center;">
-                                                    <a class="btn btn-primary"
+                                                    <div>
+                                                    <a class="btn btn-primary" th:if="${prog.tamanoLista > 1}"
                                                        th:href="@{/editarProgramacion(fecha=${prog.fechaServcio},idMinisterio=${prog.idMinisterio})}" type="submit"  data-toggle="tooltip" data-placement="right" title="Editar" >Editar programacion
                                                     </a>
+                                                    </div>
                                                 </td>
                                                 <td class="servicioPendiente" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista < 2}" style="vertical-align : middle;text-align:center;"></td>
                                                 <td class="m-0 font-weight-bold text-primary" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista > 1}" style="vertical-align : middle;text-align:center;"></td>

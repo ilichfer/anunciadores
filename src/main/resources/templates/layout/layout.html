@@ -75,7 +75,7 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Gestionar Cursos:</h6>
+                        <h6 class="collapse-header">mi area de cursos:</h6>
                         <form method="POST" th:action="@{/buscarCursosByPersona}">
                             <input class="form-control" type="text" name="id" id="idCursoUser" style="display:none">
                             <input type="submit" value="Mis cursos" class="btn collapse-item">
@@ -84,7 +84,8 @@
                             <input class="form-control" type="text" name="id" id="idPCurso" style="display:none">
                             <input type="submit" value="cursos activos" class="btn collapse-item">
                         </form>
-                        <a id="subMenuListarCursos" class="collapse-item" th:href="@{/listarCursos}" >Listar cursos</a>
+                        <h6 class="collapse-header">Administrar Cursos:</h6>
+                        <a id="subMenuListarCursos" class="collapse-item" th:href="@{/listarCursos}" >Gestionar cursos</a>
                         <a id="subMenuCrearCursos" class="collapse-item" href="redirectCurso">crear Curso</a>
                         <a id="subMenuReporteCursos" class="collapse-item" th:href="@{/reportePagos}">reporte pagos Cursos</a>
                          
