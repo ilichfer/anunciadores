@@ -44,49 +44,60 @@
                                 </div>
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-user" name="nombreCurso" id="nombreCurso"
-                                       th:value="${curso.nombreCurso}"  placeholder="nombre Curso">
+                                       th:value="${curso.nombreCurso}"  placeholder="nombre Curso" required>
                                 </div>
                                     
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="fechaInicio">fecha Inicio</label>
                                         <input type="date" class="form-control form-control-user" name="fechaInicio"
-                                            id="fechaInicio" th:value="${curso.fechaInicio}">
+                                            id="fechaInicio" th:value="${curso.fechaInicio}" required>
                                     </div>
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="fechaFin">fecha Fin</label>
                                         <input type="date" class="form-control form-control-user" name="fechaFin"
-                                            id="fechaFin" th:value="${curso.fechaFin}">
+                                            id="fechaFin" th:value="${curso.fechaFin}" required>
                                     </div>
                                 </div>
                                 
                                 	<div class="form-group">
                                     	<input type="number" class="form-control form-control-user" name="valorTotal" id="valorTotal"
-                                        placeholder="Valor del curso" th:value="${curso.valorTotal}">
+                                        placeholder="Valor del curso" th:value="${curso.valorTotal}" required>
                                 	</div>
-                                	<div class="form-check">
-                                    	<input type="checkbox" class="form-check-input" name="check" 
-                                    	id="check" th:value="${curso.comentario}" />
-                                    	<label lass="form-check-input" for="checkbox">Requiere seccion de comentarios</label>
-                                	</div>
-                               
-                                <input type="submit" value="Guardar" class="btn btn-primary container">
-                                <hr>
-                            </form>
-                        </div>
-                        <div align="center" class="center-block" >
-                            <a class="mb-2 btn btn-warning container" th:href="@{/listarCursos}"
-                               type="submit" data-toggle="tooltip" data-placement="right"
-                               title="Regresar" style="width:70%"> Regresar </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-    </div>
+                               <div class="form-group">
+                                   <select th:if="${curso.profesor !=null}" class="form-control" name="profesor" id="profesor" required>
+                                       <option  th:each="per : ${personas}" th:value="${per.id}" th:text="${per.nombre}"
+                                                th:selected="${per.id==curso.profesor.id}"></option>
+                                   </select>
+                                   <select th:if="${curso.profesor ==null}" class="form-control" name="profesor" id="profesor1" required>
+                                       <option value="">seleccione una opcion</option>
+                                       <option  th:each="per : ${personas}" th:value="${per.id}" th:text="${per.nombre}"></option>
+                                   </select>
+                               </div>
+                               <!--	<div class="form-check">
+                                       <input type="checkbox" class="form-check-input" name="check"
+                                       id="check" th:value="${curso.comentario}" />
+                                       <label lass="form-check-input" for="checkbox">Requiere seccion de comentarios</label>
+                                   </div> -->
 
-    <!-- Bootstrap core JavaScript-->
+                               <input type="submit" value="Guardar" class="btn btn-primary container">
+                               <hr>
+                           </form>
+                       </div>
+                       <div align="center" class="center-block" >
+                           <a class="mb-2 btn btn-warning container" th:href="@{/listarCursos}"
+                              type="submit" data-toggle="tooltip" data-placement="right"
+                              title="Regresar" style="width:70%"> Regresar </a>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+   </div>
+
+   <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 

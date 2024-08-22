@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.anunciadores.repository.IPersonaRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,8 @@ public class CursoServiceImpl implements ICursoService {
 
 	@Autowired
 	private ICursoRepo cursoRepository;
+	@Autowired
+	private IPersonaRepo personaRepo;
 	
 	@Autowired
 	private CursosRepoImpl cursosRepository;
@@ -93,6 +96,7 @@ public class CursoServiceImpl implements ICursoService {
 		cursoSave.setValorTotal(curso.getValorTotal());
 		cursoSave.setComentario(curso.getCheck() !=null? true: false);
 		cursoSave.setActivo(true);
+		cursoSave.setProfesor(personaRepo.findById(curso.getProfesor()).get());
 		return cursoRepository.save(cursoSave);
 	}
 

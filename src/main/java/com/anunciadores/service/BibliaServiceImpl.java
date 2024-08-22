@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import com.anunciadores.controller.ServicioController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -40,6 +43,8 @@ public class BibliaServiceImpl implements IBibliaService {
 
 	@Autowired
 	BibliaFeingClient bibliaFeingClient;
+
+	private Logger LOGGER = LoggerFactory.getLogger(BibliaServiceImpl.class);
 
 	@Override
 	public BibliaDto findBible(String idioma) throws JsonMappingException, JsonProcessingException {
@@ -107,7 +112,7 @@ public class BibliaServiceImpl implements IBibliaService {
 	@Override
 	public VersiculoDto findVerseDay() throws JsonMappingException, JsonProcessingException {
 		try {
-
+/*
 			VersionBiblesDto versionesbiblia = bibliaFeingClient.buscarBiblia(token);
 			LibrosDto librosDto = findBook(versionesbiblia.getData().get(0).getId());
 
@@ -123,14 +128,21 @@ public class BibliaServiceImpl implements IBibliaService {
 			VersiculoDto Versiculo = versiculos.getData().get(ver);
 
 			VersiculoResponseDto pasaje = findVerse(versionesbiblia.getData().get(0).getId(), Versiculo.getId());
-			
-			return pasaje.getData();
-		} catch (Exception e) {
-			System.out.println("error de servicio de biblia");
+			*/
+
 			VersiculoDto pasajeError = new VersiculoDto();
 			pasajeError.setContent("[27] Yo soy el Señor, Dios de toda la humanidad. ¿Hay algo imposible para mí?");
 			pasajeError.setReference("Jeremías 32:27");
+
 			return pasajeError;
+		} catch (Exception e) {
+			System.out.println("error de servicio de biblia");
+			LOGGER.error("[findVerseDay] " + e.getMessage());
+			e.printStackTrace();
+			VersiculoDto pasajeError = new VersiculoDto();
+			pasajeError.setContent("[27] Yo soy el Señor, Dios de toda la humanidad. ¿Hay algo imposible para mí?");
+			pasajeError.setReference("Jeremías 32:27");
+			throw new RuntimeException("[findVerseDay]"+e.getMessage());
 		}
 	}
 

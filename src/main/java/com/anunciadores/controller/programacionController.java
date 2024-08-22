@@ -19,6 +19,7 @@ import java.sql.Date;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,32 +67,37 @@ public class programacionController {
 
 	@PostMapping("/guardarServicio")
 	public String save(@ModelAttribute ServicioDto servicio, @RequestParam Date fechaServicio,@RequestParam int idMinisterio, HttpServletResponse response, Model model) {
-
+		List<String> encargadosList = new ArrayList<>();
+		List<String> posicionesList =  new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaComoCadena = sdf.format(fechaServicio);
 		model.addAttribute("fecha", fechaComoCadena );
 
-		if(servicio.getEncargado().contains("0") || fechaServicio == null){
-			model.addAttribute("message", "todos los campos son obligatorios");
-			List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
-			ministerios =  servicioService.poblarPosiciones(ministerios,servicio);
-			model.addAttribute("listaPosiciones", ministerios);
-			model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
-			model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+		try {
+			for (int i = 0; i < servicio.getEncargado().size() ; i++) {
+				if (!servicio.getEncargado().get(i).equals("0")&&!servicio.getEncargado().get(i).equals("")) {
+					encargadosList.add(servicio.getEncargado().get(i));
+					posicionesList.add(servicio.getPosicion().get(i));
+				}
 
-			return "listarPosiciones";
-		}else {
+			}
+			servicio.setEncargado(encargadosList);
+			servicio.setPosicion(posicionesList);
+
+
 			if(servicioService.validarDuplicados(servicio)) {
 				Optional<Persona> per =servicioService.validarProgramacionByFecha(servicio, fechaServicio);
 				if(per.isPresent()){
-					model.addAttribute("message", "el servidor "+per.get().getNombre()+" ya tiene una asignacion para esta fecha " + fechaServicio);
-					List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
-					ministerios =  servicioService.poblarPosiciones(ministerios,servicio);
-					model.addAttribute("listaPosiciones", ministerios);
+					model.addAttribute("message", "Servicio Guardado EXitosamente!!! \n el servidor "+per.get().getNombre()+" ya tiene una asignacion para la fecha " + fechaServicio +" en otro ministerio ");
+					servicioService.updateProgramacion(servicio, fechaServicio,idMinisterio);
+					List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fechaServicio,idMinisterio);
+					List<MinisterioDto>  ministeriosEditar =  servicioService.poblarPosiciones(ministerios,servicio);
+					model.addAttribute("listaPosiciones", ministeriosEditar);
 					model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
 					model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
 
-					return "listarPosiciones";
+					return "editar_programacion";
+
 				}else{
 					servicioService.saveProgramacion(servicio, fechaServicio);
 					List<Ministerio> ministerios = servicioService.getAll();
@@ -99,19 +105,26 @@ public class programacionController {
 					return "ministerios";
 				}
 			}else{
-				Persona p = servicioService.getPersonDuplicate(servicio);
-				String mensaje = MessageFormat.format("El servidor {0} {1} solo puede tener una asignacion por fecha",p.getNombre(),p.getApellido());
-
-
-				model.addAttribute("message", mensaje );
-				List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
-				ministerios =  servicioService.poblarPosiciones(ministerios,servicio);
-				model.addAttribute("listaPosiciones", ministerios);
+				Persona perDobleAsignacion = servicioService.identificarDuplicados(servicio);
+				model.addAttribute("message", "Servicio Guardado Exitosamente!!! \n el servidor "+perDobleAsignacion.getNombre()+" posee doble asignacion para la fecha " + fechaServicio +" en este ministerio ");
+				servicioService.updateProgramacion(servicio, fechaServicio,idMinisterio);
+				List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fechaServicio,idMinisterio);
+				List<MinisterioDto>  ministeriosEditar =  servicioService.poblarPosiciones(ministerios,servicio);
+				model.addAttribute("listaPosiciones", ministeriosEditar);
 				model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
 				model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+				model.addAttribute("fecha", fechaComoCadena );
 
-				return "listarPosiciones";
+				return "editar_programacion";
 			}
+		}catch (Exception e) {
+			model.addAttribute("message", "Error: " +e.getMessage());
+			List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
+			ministerios =  servicioService.poblarPosiciones(ministerios,servicio);
+			model.addAttribute("listaPosiciones", ministerios);
+			model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+			model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
+			return "listarPosiciones";
 		}
 	}
 
@@ -119,50 +132,56 @@ public class programacionController {
 	@PostMapping("/actualizarServicio")
 	public String actualizarServicio(@ModelAttribute ServicioDto servicio, @RequestParam Date fechaServicio,@RequestParam int idMinisterio, HttpServletResponse response, Model model) {
 
-		if(servicio.getEncargado().contains("0") || fechaServicio == null){
-			model.addAttribute("message", "todos los campos son obligatorios");
-			List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
-			model.addAttribute("listaPosiciones", ministerios);
-			model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
-			model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
-			return "listarPosiciones";
-		}else {
+		List<MinisterioDto>  ministerioOriginal = servicioService.getPositionByidMinisterioAndPerson(fechaServicio,idMinisterio);
+
+		List<String> encargadosList = new ArrayList<>();
+		List<String> posicionesList =  new ArrayList<>();
+		for (int i = 0; i < servicio.getEncargado().size() ; i++) {
+			if (!servicio.getEncargado().get(i).equals("0")&&!servicio.getEncargado().get(i).equals("")) {
+				encargadosList.add(servicio.getEncargado().get(i));
+				posicionesList.add(servicio.getPosicion().get(i));
+			}
+
+		}
+		servicio.setEncargado(encargadosList);
+		servicio.setPosicion(posicionesList);
 			if(servicioService.validarDuplicados(servicio)) {
 				Optional<Persona> per =servicioService.validarActualizarProgramacionByFecha(servicio, fechaServicio, idMinisterio);
 				if(per.isPresent()){
-					model.addAttribute("message", "el servidor "+per.get().getNombre()+" ya tiene una asignacion para la fecha " + fechaServicio +" en otro ministerio ");
-					List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
-					model.addAttribute("listaPosiciones", ministerios);
+					model.addAttribute("message", "Servicio Guardado Exitosamente!!! \n el servidor "+per.get().getNombre()+" ya tiene una asignacion para la fecha " + fechaServicio +" en otro ministerio ");
+					servicioService.updateProgramacion(servicio, fechaServicio,idMinisterio);
+					List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fechaServicio,idMinisterio);
+					List<MinisterioDto>  ministeriosEditar =  servicioService.poblarPosiciones(ministerios,servicio);
+					model.addAttribute("listaPosiciones", ministeriosEditar);
 					model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
 					model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
-					return "listarPosiciones";
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					String fechaComoCadena = sdf.format(fechaServicio);
+					model.addAttribute("fecha", fechaComoCadena );
+
+					return "editar_programacion";
 				}else{
-					servicioService.updateProgramacion(servicio, fechaServicio);
+					//servicioService.deleteProgramacion(fechaServicio);
+					servicioService.updateProgramacion(servicio, fechaServicio,idMinisterio);
 					List<Ministerio> ministerios = servicioService.getAll();
 					model.addAttribute("ministerios", ministerios);
 					return "redirect:/consultarProgramacion";
 				}
 			}else{
-				model.addAttribute("message", "un servidor solo puede tener una asignacion para esta fecha" );
-				List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterio(idMinisterio);
+				Persona perDobleAsignacion = servicioService.identificarDuplicados(servicio);
+				model.addAttribute("message", "Servicio Guardado Exitosamente!!! \n el servidor "+perDobleAsignacion.getNombre()+" posee doble asignacion para la fecha " + fechaServicio +" en este ministerio ");
+				servicioService.updateProgramacion(servicio, fechaServicio,idMinisterio);
+				List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fechaServicio,idMinisterio);
 				List<MinisterioDto>  ministeriosEditar =  servicioService.poblarPosiciones(ministerios,servicio);
 				model.addAttribute("listaPosiciones", ministeriosEditar);
 				model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
 				model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
-
-
-
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				String fechaComoCadena = sdf.format(fechaServicio);
-
-
-				//model.addAttribute("listaPosiciones", ministerios);
-				//model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
 				model.addAttribute("fecha", fechaComoCadena );
 
 				return "editar_programacion";
 			}
-		}
 	}
 	@PostMapping("/saveMinisterio")
 	public String save(@RequestParam String nombreMinisterio, HttpServletResponse response, Model model) throws ParseException, JsonProcessingException {

@@ -31,7 +31,7 @@
                 <!-- Nested Row within Card Body -->
                 <div class="row">
                     <div class="col-lg-5 d-none d-lg-block  bg-register-image">
-                        <img height="100%" width="120%" alt="logo" src="img/logo.jpeg"></div>
+                        <img height="50%" width="120%" alt="logo" src="img/logo.jpeg"></div>
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
@@ -94,11 +94,11 @@
 
                                         <td>
                                             <a class="btn btn-primary" th:if="${perm.estado =='false'}"
-                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='true',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol})}"
+                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='true',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol},idMenu=${perm.idMenu})}"
                                                type="submit"  data-toggle="tooltip" data-placement="right" title="inscribirme" >Habilitar
                                             </a>
                                             <a class="btn btn-danger" th:if="${perm.estado =='true'}"
-                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='false',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol})}"
+                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='false',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol},idMenu=${perm.idMenu})}"
                                                type="submit"  data-toggle="tooltip" data-placement="right" title="inscribirme" >Deshabilitar
                                             </a>
 

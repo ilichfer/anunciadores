@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import com.anunciadores.model.*;
 import com.anunciadores.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class PersonaServiceImpl implements IPersonaService {
+
+	private Logger LOGGER = LoggerFactory.getLogger(PersonaServiceImpl.class);
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -93,6 +97,8 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Override
 	public Persona update(Persona persona) {
+		Persona pUpdate = personaRepository.findByDocumento(persona.getDocumento());
+		persona.setPassword(pUpdate.getPassword() != null ? pUpdate.getPassword() : "");
 		return personaRepository.save(persona);
 	}
 
@@ -302,10 +308,11 @@ public class PersonaServiceImpl implements IPersonaService {
 			}
 
 		} catch (Exception e) {
+			LOGGER.error("[buscarByDocumento] " + e.getMessage());
 			e.printStackTrace();
 			personadto = new PersonaDto();
 			personadto.setId(1);
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException("[buscarByDocumento]"+e.getMessage());
 		}
 		return personadto;
 	}
@@ -317,7 +324,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		for (ParamMenu boton : menuList) {
 			PermisosMenu permisoInicial = new PermisosMenu();
 			permisoInicial.setIdPersona(1);
-			permisoInicial.setIdMenu(boton.getId());
+			//permisoInicial.setIdMenu(boton.getId());
 			permisoInicial.setEstado(estadoInicial);
 			permisoInicial.setNombreBotonMenu(boton.getNombreBotonMenu());
 			permisoInicial.setMenu(boton);
@@ -469,7 +476,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		for (ParamMenu boton : menuList) {
 			PermisosMenu permisoInicial = new PermisosMenu();
 			permisoInicial.setIdPersona(idPersona);
-			permisoInicial.setIdMenu(boton.getId());
+			//permisoInicial.setIdMenu(boton.getId());
 			if (boton.getNombreBotonMenu().equals("menuAdministrar")) {
 				permisoInicial.setEstado("false");
 			}else{

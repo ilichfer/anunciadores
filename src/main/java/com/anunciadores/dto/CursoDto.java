@@ -32,7 +32,8 @@ public class CursoDto {
     private Boolean check;
     
     private PersonaDto personaAConsolidar;
-    
+    private int profesor;
+
       public CursoDto() {
     }
 
@@ -107,5 +108,13 @@ public class CursoDto {
 
 	public void setPersonaAConsolidar(PersonaDto personaAConsolidar) {
 		this.personaAConsolidar = personaAConsolidar;
+	}
+
+	public int getProfesor() {
+		return profesor;
+	}
+
+	public void setProfesor(int profesor) {
+		this.profesor = profesor;
 	}
 }

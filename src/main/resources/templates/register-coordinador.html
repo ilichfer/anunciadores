@@ -35,39 +35,32 @@
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Crea un Curso!</h1>
+                                <h1 class="h4 text-gray-900 mb-4">Asignacion de Coordinadores</h1>
                             </div>
-                            <form method="POST" th:action="@{/saveCurso}">
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" name="nombreCurso" id="nombreCurso"
-                                       placeholder="nombre Curso" required>
+                            <form method="POST" th:action="@{/saveCoordinador}">
+
+                                <div class="text-center" th:if="${msj != null}">
+                                    <label class="alert alert-danger" th:text="${msj}"></label>
                                 </div>
-                                    
+
+                                <div class="form-group">
+                                    <label for="idPersona">coordinador asignado</label>
+                                    <select class="form-control" name="idPersona" id="idPersona" required>
+                                        <option value="">seleccione una opcion</option>
+                                        <option  th:each="per : ${personas}" th:value="${per.id}"  th:text="${per.nombre} + ' ' + ${per.apellido}"></option>
+                                    </select>
+                                </div>
+
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <label for="fechaInicio">fecha Inicio</label>
-                                        <input type="date" class="form-control form-control-user" name="fechaInicio"
-                                            id="fechaInicio" required>
-                                    </div>
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <label for="fechaFin">fecha Fin</label>
-                                        <input type="date" class="form-control form-control-user" name="fechaFin"
-                                            id="fechaFin" required>
+                                        <label for="fechaServcio">fecha de servicio</label>
+                                        <input type="date" class="form-control form-control-user" name="fechaServcio"
+                                            id="fechaServcio" required>
                                     </div>
                                 </div>
                                 
-                                	<div class="form-group">
-                                    	<input type="number" class="form-control form-control-user" name="valorTotal" id="valorTotal"
-                                        placeholder="Valor del curso" required>
-                                	</div>
 
-                                <div class="form-group">
-                                    <label for="profesor">Profesor Asignado</label>
-                                    <select class="form-control" name="profesor" id="profesor" required>
-                                        <option value="">seleccione una opcion</option>
-                                        <option  th:each="per : ${personas}" th:value="${per.id}" th:text="${per.nombre}"></option>
-                                    </select>
-                                </div>
+
 
                                 <!--	<div class="form-check">
                                     	<input type="checkbox" class="form-check-input" name="check" 
@@ -81,7 +74,7 @@
                             </form>
                         </div>
                         <div align="center" class="center-block" >
-                            <a class="mb-2 btn btn-warning container" th:href="@{/listarCursos}"
+                            <a class="mb-2 btn btn-warning container" th:href="@{/listarMinisterios}"
                                type="submit" data-toggle="tooltip" data-placement="right"
                                title="Regresar" style="width:70%"> Regresar </a>
                         </div>

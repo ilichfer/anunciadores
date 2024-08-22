@@ -112,6 +112,39 @@
                                              </div>
                                              </tbody>
 
+                                             <tfoot>
+                                             <tr>
+
+
+                                                 <td colspan="1" style="vertical-align : middle;text-align:center;" th:if="${coordinador == null}">
+                                                     <h6 class="servicioPendiente">Coordinador</h6>
+                                                 </td>
+                                                 <td colspan="1" style="vertical-align : middle;text-align:center;" th:if="${coordinador != null}">
+                                                     <h6 class="m-0 font-weight-bold text-primary">Coordinador</h6>
+                                                 </td>
+                                                 <td colspan="1"  style="vertical-align : middle;text-align:center;"
+                                                     th:text="${fechaCoordinador}" th:if="${coordinador != null}" >
+                                                     <h6 >persona asignada</h6>
+                                                 </td>
+                                                 <td colspan="2" style="vertical-align : middle;text-align:center;"
+                                                     th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio == null}" >
+                                                     <h6 >persona asignada 3 campos</h6>
+                                                 </td>
+                                                 <td colspan="1" style="vertical-align : middle;text-align:center;"
+                                                     th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio != null}" >
+                                                     <h6 >persona asignada + boton</h6>
+                                                 </td>
+                                                 <td colspan="1" style="vertical-align : middle;text-align:center;"
+                                                     th:if="${coordinador != null} and ${coordinador.notasServicio != null}" >
+                                                     <button>boton prueba</button>
+                                                 </td>
+                                                 <td colspan="3"  style="vertical-align : middle;text-align:center;"
+                                                     th:if="${coordinador == null}" >
+                                                     <h6 >no se encontro registrado coordinador para esta fecha</h6>
+                                                 </td>
+                                             </tr>
+                                             </tfoot>
+
 
                                           </table>
                                       </div>

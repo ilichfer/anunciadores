@@ -69,6 +69,7 @@
                                             <th>nombre curso</th>
                                             <th>fecha inicio</th>
                                             <th>fecha fin</th>
+                                            <th>Profesor</th>
                                             <th>valor</th>
                                             <th>Acciones</th>
                                         </tr>
@@ -79,6 +80,8 @@
                                             <td th:text="${curso.nombreCurso}">nombreCurso</td>
                                             <td th:text="${curso.fechaInicio}">fechaInicio</td>
                                             <td th:text="${curso.fechaFin}">fechaFin</td>
+                                            <td th:if="${curso.profesor !=null}" th:text="${curso.profesor.nombre}">fechaFin</td>
+                                            <td th:if="${curso.profesor ==null}" >N/A</td>
                                             <td th:text="'$ '+${curso.valorTotal}">valor</td>
 
                                             <td >

@@ -12,9 +12,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.anunciadores.dto.ServicioListResponseDto;
-import com.anunciadores.dto.ServicioResponseDto;
-import com.anunciadores.dto.TdcDto;
+import com.anunciadores.dto.*;
+import com.anunciadores.model.Coordinador;
 import com.anunciadores.model.Ministerio;
 import com.anunciadores.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.anunciadores.dto.VersiculoDto;
 import com.anunciadores.model.Curso;
 import com.anunciadores.model.Persona;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -56,6 +54,9 @@ public class direccionesController {
 
 	@Autowired
 	private IServicioService servicioService;
+
+	@Autowired
+	private ICombos combosService;
 	
 	List<Persona> personasList;
 
@@ -63,7 +64,18 @@ public class direccionesController {
 	@GetMapping("/redirectCurso")
 	public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
 			Model model) {
+		personasList= personaService.findAllUsuarios();
+		model.addAttribute("personas", personasList);
 		return "register-curso";
+	}
+
+	@GetMapping("/redirectCoordinador")
+	public String redirectCoordinador(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+						   Model model) {
+		personasList= personaService.findAllUsuarios();
+		model.addAttribute("personas", personasList);
+		model.addAttribute("msj", null);
+		return "register-coordinador";
 	}
 
 	
@@ -77,8 +89,13 @@ public class direccionesController {
 	public String redirectPersonaOut(@RequestParam(value = "action", required = false) String action,
 			Model model) {
 		Persona persona = new Persona();
+		ListasCombos listas = combosService.listarParametros();
 		model.addAttribute("name", action);
 		model.addAttribute("persona", persona);
+		model.addAttribute("listaGenero", listas.getListaGenero());
+		model.addAttribute("listaEstadoCivil", listas.getEstadoCivil());
+		model.addAttribute("listaEscolaridad", listas.getListaEscolaridad());
+		model.addAttribute("listaDocumento", listas.getListaDocuemntos());
 		return "registerOut";
 	}
 	
@@ -88,7 +105,11 @@ public class direccionesController {
 		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
 		model.addAttribute("dia", dia);
 		if(listProgramacionMinisterio.size()>0) {
+			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);
+			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
+			model.addAttribute("coordinador", cor);
+			model.addAttribute("fechaCoordinador", dt1.format(cor.getFechaServicio()));
 		}else{
 			model.addAttribute("programacionMin", null);
 		}
@@ -139,7 +160,12 @@ public class direccionesController {
 	@GetMapping("/editarPerfil")
 	public String editarPerfil(@RequestParam int idPersona,Model model) {
 		Persona per = personaService.findPersonaById(idPersona);
+		ListasCombos listas = combosService.listarParametros();
 		model.addAttribute("persona", per);
+		model.addAttribute("listaGenero", listas.getListaGenero());
+		model.addAttribute("listaEstadoCivil", listas.getEstadoCivil());
+		model.addAttribute("listaEscolaridad", listas.getListaEscolaridad());
+		model.addAttribute("listaDocumento", listas.getListaDocuemntos());
 		return "editPerfil";
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.anunciadores.service.interfaces.IPersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,12 @@ public class CursoController {
 	@Autowired
 	private IBibliaService bibliaService;
 
+	@Autowired
+	private IPersonaService personaService;
+
 	List<Curso> CursosList;
+
+	List<Persona> personasList;
 
 	@GetMapping("/listarCursos")
 	public String Cursos(HttpServletResponse response, Model model) {
@@ -105,6 +111,9 @@ public class CursoController {
 		
 		curso.setFechaInicio(cursoService.formatFecha(curso.getFechaInicio()));
 		curso.setFechaFin(cursoService.formatFecha(curso.getFechaFin()));
+
+		personasList= personaService.findAllUsuarios();
+		model.addAttribute("personas", personasList);
 		model.addAttribute("curso", cursoMostrar);
 		
 		return "edit-curso";

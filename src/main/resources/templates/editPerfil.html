@@ -63,8 +63,8 @@
                                     <div class="col-sm-6">
                                         <select class="form-control" name="tipodocumento"
                                             id="tipodocumento" >
-                                            <option value="CC">CC</option>
-                                            <option value="TI">TI</option>
+                                            <option th:each="documento : ${listaDocumento}" th:value="${documento.descripcion}" th:text="${documento.descripcion}"
+                                                    th:selected="${documento.descripcion==persona.tipodocumento}" required></option>
                                         </select>
                                     </div>
                                 </div>
@@ -84,18 +84,17 @@
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="genero">Genero</label>
                                         <select class="form-control" name="genero"
-                                                id="genero" >
-                                            <option value="hombre">hombre</option>
-                                            <option value="mujer">mujer</option>
+                                                id="genero">
+                                            <option th:each="genero : ${listaGenero}" th:value="${genero.descripcion}" th:text="${genero.descripcion}"
+                                                    th:selected="${genero.descripcion==persona.genero}" required></option>
                                         </select>
                                     </div>
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="estadoCivil">estado Civil</label>
                                         <select class="form-control" name="estadoCivil"
                                                 id="estadoCivil" >
-                                            <option value="soltero">soltero</option>
-                                            <option value="casado">casado</option>
-                                            <option value="viud@">viud@</option>
+                                            <option th:each="estadoCivil : ${listaEstadoCivil}" th:value="${estadoCivil.descripcion}" th:text="${estadoCivil.descripcion}"
+                                                    th:selected="${estadoCivil.descripcion==persona.estadoCivil}" required></option>
                                         </select>
                                     </div>
                                 </div>
@@ -107,7 +106,7 @@
                                     </div>
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" name="ciudad"
-                                               id="ciudad" placeholder="ciudad" th:value="${persona.ciudad}">
+                                               id="ciudad" placeholder="ciudad de Nacimiento" th:value="${persona.ciudad}">
 
                                     </div>
                                 </div>
@@ -145,7 +144,7 @@
                                     <div class="col-sm-6 mb-3 mb-sm-0">
 
                                         <input type="text" class="form-control form-control-user" name="ciudadDeptoDireccion"
-                                               id="ciudadDeptoDireccion" placeholder="ciudad" th:value="${persona.ciudadDeptoDireccion}">
+                                               id="ciudadDeptoDireccion" placeholder="ciudad de recidencia" th:value="${persona.ciudadDeptoDireccion}">
                                     </div>
                                 </div>
 
@@ -168,9 +167,8 @@
                                         <label for="escolaridad">escolaridad</label>
                                         <select class="form-control" name="escolaridad"
                                                 id="escolaridad" >
-                                            <option value="primaria">primaria</option>
-                                            <option value="bachillerato">bachillerato</option>
-                                            <option value="profesional@">profesional</option>
+                                            <option th:each="escolaridad : ${listaEscolaridad}" th:value="${escolaridad.descripcion}" th:text="${escolaridad.descripcion}"
+                                                    th:selected="${escolaridad.descripcion==persona.escolaridad}" required></option>
                                         </select>
                                     </div>
                                     <div class="col-sm-6 mb-3 mb-sm-0">

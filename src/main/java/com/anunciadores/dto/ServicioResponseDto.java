@@ -74,5 +74,8 @@ public class ServicioResponseDto implements Serializable {
 		this.nombreMinisterio = nombreMinisterio;
 		this.idMinisterio = idMinisterio;
 	}
+
+	public ServicioResponseDto() {
+	}
 }
 

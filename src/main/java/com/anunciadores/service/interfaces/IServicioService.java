@@ -1,9 +1,12 @@
 package com.anunciadores.service.interfaces;
 
 import com.anunciadores.dto.*;
+import com.anunciadores.model.Coordinador;
 import com.anunciadores.model.Ministerio;
 import com.anunciadores.model.Persona;
+import com.anunciadores.model.Servicio;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +32,15 @@ public interface IServicioService {
 	public List<PersonaDto> getPeopleWithoutMinisterio(int idMinisterio);
 
 	public void saveProgramacion(ServicioDto servidores, Date fechaServicio);
+	public void saveCoordinado(CoordinadorDTO cordinador);
 
-	void updateProgramacion(ServicioDto servidores, Date fechaServicio);
+	public Coordinador findCoordinador(List<ServicioListResponseDto> listProgramacionMinisterio );
+	public Coordinador findCoordinadorByFecha(Date fechaServicio );
+
+
+	void updateProgramacion(ServicioDto servidores, Date fechaServicio,int idMinisterio);
+
+	void deleteProgramacion(Date fechaServicio);
 
 	public Optional<Persona> validarProgramacionByFecha(ServicioDto servidores, Date fechaServicio);
 
@@ -42,6 +52,7 @@ public interface IServicioService {
 	public  List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual);
 
 	void agregarPersonaAMinisterio(int idPersona, int idMinisterio);
+	List<ServicioResponseDto> buscarProgramacionMes(int idPersona) throws ParseException;
 
 	void savePosicion(PosicionDto posicionDto);
 
@@ -51,7 +62,9 @@ public interface IServicioService {
 
 	public Boolean validarDuplicados(ServicioDto servidores);
 
-	public List<MinisterioDto> poblarPosiciones(List<MinisterioDto>  ministerios,ServicioDto servicioDto);
+	public Persona identificarDuplicados(ServicioDto servidores);
+
+	public List<MinisterioDto> poblarPosiciones(List<MinisterioDto>  ministerios, ServicioDto servicioDto);
 
 	public List<MinisterioDto> getPositionInitial(List<MinisterioDto> idMinisterio);
 

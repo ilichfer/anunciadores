@@ -8,8 +8,6 @@
     var persona = localStorage.getItem("persona");
     if (persona == null) {
       
-    
-  
   //const response = await fetch("http://localhost:5000/consutarDoc?doc="+documento);
   const response = await fetch("https://anunciaig.com/consutarDoc?doc="+documento);
   const datos = await response.json();
@@ -56,6 +54,7 @@ console.log( "id de esta persona "+localStorage.getItem('id'));
 /* datos adminstrador*/
 document.getElementById("id").value = localStorage.getItem('id');
 document.getElementById("idPersonaTCD").value = localStorage.getItem('id');
+document.getElementById("idProgramacion").value = localStorage.getItem('id');
 document.getElementById("id").style.display = "none";
 document.getElementById("idCursoUser").value = localStorage.getItem('id');
 document.getElementById("idPCurso").value = localStorage.getItem('id');

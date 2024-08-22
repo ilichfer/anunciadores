@@ -42,4 +42,13 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
     public List<Object> findProgramacionByDateAndMinistery(@Param("fechaServicio") Date fechaServicio, @Param("idMinisterio") int idMinisterio);
 
 
+    @Modifying
+    public void deleteByFechaServicioAndIdMinisterio(@Param("fechaServicio") Date fechaServicio,int idMinisterio);
+
+    @Query("select s from Servicio s " +
+            "WHERE s.fechaServicio  BETWEEN :fechaInicial AND :fechaFinal " +
+            "and s.idPersona =:idPersona " +
+            "order by s.fechaServicio asc")
+    public List<Servicio> BuscarServicioMes(@Param("fechaInicial")Date fechaInicial, @Param("fechaFinal")Date fechaFinal,@Param("idPersona")int idPersona);
+
 }

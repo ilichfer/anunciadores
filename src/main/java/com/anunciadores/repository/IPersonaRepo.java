@@ -43,7 +43,8 @@ void deletePersonaConCurso(@Param("idPersona") int idPersona,@Param("idCurso")  
 void deletePersonaMinisterio(@Param("idPersona") int idPersona,@Param("idMinisterio")  int idMinisterio);
 @Query(nativeQuery = true,value = "select p.* from persona p "
         + "WHERE p.id  in( "
-        + "select pr.id_persona from persona_rol pr) ")
+        + "select pr.id_persona from persona_rol pr) " +
+        " order by p.nombre asc")
 List<Persona> findUsuarios();
 @Query(nativeQuery = true,value = "select p.* from persona p " +
         "WHERE p.id not in(select pr.id_persona from persona_rol pr) " +

@@ -71,7 +71,7 @@
                                     </div>
                                     <div  style ="margin:10px">
                                         <input type="date" class="form-control form-control-user" name="fechaServicio"
-                                               id="fechaServicio" th:value="${{fecha}}" >
+                                               id="fechaServicio" th:value="${{fecha}}" required>
 
                                     </div>
                                 </div>
@@ -104,10 +104,12 @@
                                             <td>
                                                 <select class="form-control" name="encargado"
                                                         id="encargado">
-                                                    <option value="0">seleccione una opcion</option>
+                                                    <option value="">seleccione una opcion</option>
+                                                    <option value="0">N/A</option>
                                                     <!--<option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}" required></option> -->
-                                                    <option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}"
+                                                    <option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre} + ' ' + ${servidor.apellido}"
                                                             th:selected="${servidor.id==posicion.posicionDto.personaDto.id}" required></option>
+
                                                 </select>
                                             </td>
 

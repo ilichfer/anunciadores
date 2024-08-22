@@ -36,13 +36,11 @@ public class PermisosMenu implements Serializable {
 	@Column(name = "estado")
 	public String estado;
 
-	@Column(name = "id_menu")
-	public int idMenu;
 
-	@OneToOne
-	@JoinColumn(
-			name = "id",
-			referencedColumnName = "id") // "id_menu" is the foreign key in "permisos_menu" table that references "id" in "param_menu" table
+
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_menu", referencedColumnName = "id")
 	private ParamMenu menu;
 
 	public int getId() {
@@ -85,11 +83,5 @@ public class PermisosMenu implements Serializable {
 		this.menu = menu;
 	}
 
-	public int getIdMenu() {
-		return idMenu;
-	}
 
-	public void setIdMenu(int idMenu) {
-		this.idMenu = idMenu;
-	}
 }

@@ -1,6 +1,7 @@
 package com.anunciadores.controller;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -302,16 +303,17 @@ public class personaController {
 	
 	@PostMapping("/login2")
 	public String login2(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
-//		usuarioService.loadUserByUsername(persona.getEmail());
 		try {
 		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
-//		User user = new User(persona.getNombre(), persona.getPassword(), authorities)
-		VersiculoDto dia =bibliaService.findVerseDay();
+		VersiculoDto dia = bibliaService.findVerseDay();
 		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
 		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 		if(listProgramacionMinisterio.size()>0) {
-			//model.addAttribute("programacion", listProgramacionMinisterio);
+			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);
+			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
+			model.addAttribute("coordinador", cor);
+			model.addAttribute("fechaCoordinador", dt1.format(cor.getFechaServicio()));
 		}else{
 			model.addAttribute("programacionMin", null);
 		}
@@ -333,7 +335,7 @@ public class personaController {
 		}
 		return url;
 		}catch (Exception e) {
-			model.addAttribute("msj", e.getMessage());
+			model.addAttribute("msj", e.toString());
 			return "login";
 		}
 	}
@@ -341,14 +343,35 @@ public class personaController {
 	@GetMapping("/personasCurso")
 	public String personasCurso(@RequestParam int idCurso, @RequestParam String nombreCurso, @RequestParam Integer valorCurso, Model model) {
 		personasList = personaService.findAllByCurso(idCurso);
-		List<PersonaDto> listPersonasConsolidacion = personaService.buscarConsolidacion(personasList, idCurso);	
+	//	List<PersonaDto> listPersonasConsolidacion = personaService.buscarConsolidacion(personasList, idCurso);
 		Curso cursoMostrar = new Curso();
 		cursoMostrar = cursoService.findCursoById(idCurso);
 		boolean consolidacion =false;
 		if (cursoMostrar.getNombreCurso().contentEquals("padres espirituales")) {
 			consolidacion =true;
 		}
-		model.addAttribute("personas", listPersonasConsolidacion);
+		model.addAttribute("personas", personasList);
+		model.addAttribute("idCurso", idCurso);
+		model.addAttribute("nombreCurso", nombreCurso);
+		model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
+		model.addAttribute("titulo", "Lista de Personas inscritas");
+		model.addAttribute("add", false);
+		model.addAttribute("delete", true);
+		model.addAttribute("consolidacion", consolidacion);
+		return "personasCurso";
+	}
+
+	@GetMapping("/notasPersonasCurso")
+	public String notasPersonasCurso(@RequestParam int idCurso, @RequestParam String nombreCurso, @RequestParam Integer valorCurso, Model model) {
+		personasList = personaService.findAllByCurso(idCurso);
+		//	List<PersonaDto> listPersonasConsolidacion = personaService.buscarConsolidacion(personasList, idCurso);
+		Curso cursoMostrar = new Curso();
+		cursoMostrar = cursoService.findCursoById(idCurso);
+		boolean consolidacion =false;
+		if (cursoMostrar.getNombreCurso().contentEquals("padres espirituales")) {
+			consolidacion =true;
+		}
+		//model.addAttribute("personas", listPersonasConsolidacion);
 		model.addAttribute("idCurso", idCurso);
 		model.addAttribute("nombreCurso", nombreCurso);
 		model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
@@ -380,8 +403,8 @@ public class personaController {
 			@RequestParam String nombreCurso, Model model) {
 		personaService.eliminarPersonaCurso(idPersona, idCurso);
 		personasList = personaService.findAllByCurso(idCurso);
-		List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList,0);
-		model.addAttribute("personas", listPersonasConsolidacion);
+		//List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList,0);
+		model.addAttribute("personas", personasList);
 		model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
 		model.addAttribute("titulo", "Lista de Personas inscritas");
 		model.addAttribute("add", false);

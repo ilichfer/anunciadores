@@ -8,14 +8,7 @@ package com.anunciadores.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.sun.istack.NotNull;
 
@@ -56,6 +49,12 @@ public class Curso implements Serializable {
     
     @Column(name = "activo")
     private boolean activo;
+
+	@OneToOne
+	@JoinColumn(
+			name = "profesor",
+			referencedColumnName = "id") // "id_other_class" is the foreign key in "permisos_menu" table that references "id" in "param_menu" table
+	private Persona profesor;
     
       public Curso() {
     }
@@ -138,4 +137,11 @@ public class Curso implements Serializable {
 		this.activo = activo;
 	}
 
+	public Persona getProfesor() {
+		return profesor;
+	}
+
+	public void setProfesor(Persona profesor) {
+		this.profesor = profesor;
+	}
 }
