@@ -40,6 +40,9 @@ public class Servicio implements Serializable {
 	@Column(name = "fecha_servicio")
 	Date fechaServicio;
 
+	@Column(name = "asistencia")
+	String asistencia;
+
 	public int getId() {
 		return id;
 	}
@@ -78,6 +81,14 @@ public class Servicio implements Serializable {
 
 	public void setFechaServicio(Date fechaServicio) {
 		this.fechaServicio = fechaServicio;
+	}
+
+	public String getAsistencia() {
+		return asistencia;
+	}
+
+	public void setAsistencia(String asistencia) {
+		this.asistencia = asistencia;
 	}
 }
 

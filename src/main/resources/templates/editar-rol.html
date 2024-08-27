@@ -94,11 +94,11 @@
 
                                         <td>
                                             <a class="btn btn-primary" th:if="${perm.estado =='false'}"
-                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='true',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol},idMenu=${perm.idMenu})}"
+                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='true',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol},idMenu=${perm.id})}"
                                                type="submit"  data-toggle="tooltip" data-placement="right" title="inscribirme" >Habilitar
                                             </a>
                                             <a class="btn btn-danger" th:if="${perm.estado =='true'}"
-                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='false',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol},idMenu=${perm.idMenu})}"
+                                               th:href="@{/actualizarPermiso(idPersona=${perm.idPersona},estado='false',id=${perm.id},nombreBotonMenu=${perm.nombreBotonMenu},descRol=${descripcionRol},idMenu=${perm.id})}"
                                                type="submit"  data-toggle="tooltip" data-placement="right" title="inscribirme" >Deshabilitar
                                             </a>
 

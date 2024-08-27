@@ -58,7 +58,12 @@
                             <input class="form-control" type="text" name="id" id="idProgramacion" style="display:none">
                             <input type="submit" value="Mi programacion" class="collapse-item" style="border-style: hidden">
                         </form>
+
                         <!--<a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>-->
+                    </div>
+                    <div id="menuCoordinador" class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Agregar informe</h6>
+                        <a id="idCoordinador" class="collapse-item" th:href="@{/crearInforme}" >informe coordinador</a>
                     </div>
 
                 </div>
@@ -91,6 +96,10 @@
                         <form method="POST" th:action="@{/listarCursosAbiertos}">
                             <input class="form-control" type="text" name="id" id="idPCurso" style="display:none">
                             <input type="submit" value="cursos activos" class="btn collapse-item">
+                        </form>
+                        <form >
+                            <input class="form-control" type="text" name="id" id="idHistorico" style="display:none">
+                            <input type="submit" value="historico notas" class="btn collapse-item" disabled>
                         </form>
                         <h6 class="collapse-header">Administrar Cursos:</h6>
                         <a id="subMenuListarCursos" class="collapse-item" th:href="@{/listarCursos}" >Gestionar cursos</a>

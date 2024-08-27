@@ -51,7 +51,7 @@ public class ServicioController {
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
 			model.addAttribute("coordinador", cor);
-			model.addAttribute("fechaCoordinador", dt1.format(cor.getFechaServicio()));
+			model.addAttribute("fechaCoordinador", cor != null?  dt1.format(cor.getFechaServicio()): null);
 		}else{
 			model.addAttribute("programacionMin", null);
 		}
@@ -71,6 +71,24 @@ public class ServicioController {
 		model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
 		model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
 		model.addAttribute("fecha", fechaComoCadena );
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		return url;
+	}
+
+	@GetMapping("/registrarAsistencia")
+	public String registrarAsistencia(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
+		String url = "register_asistencia";
+		List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fecha,idMinisterio);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaComoCadena = sdf.format(fecha);
+
+		ministerios = servicioService.limpiarListaPosiciones(ministerios,fecha,idMinisterio);
+		model.addAttribute("listaPosiciones", ministerios);
+		model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+		model.addAttribute("servidores", servicioService.findPersonaByidMnisterioAsistencia(idMinisterio));
+		model.addAttribute("fecha", fechaComoCadena );
+		model.addAttribute("itemsCombo", servicioService.findItemsCombo() );
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		return url;
 	}
@@ -117,7 +135,7 @@ public class ServicioController {
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
 			model.addAttribute("coordinador", cord);
-			model.addAttribute("fechaCoordinador", dt1.format(cor.getFechaServicio()));
+			model.addAttribute("fechaCoordinador", cord != null?  dt1.format(cord.getFechaServicio()): null);
 		}else{
 			model.addAttribute("programacionMin", null);
 			model.addAttribute("fechaBuscada", cordinador.getFechaServcio());
@@ -150,7 +168,7 @@ public class ServicioController {
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
 			model.addAttribute("coordinador", cor);
-			model.addAttribute("fechaCoordinador", dt1.format(cor.getFechaServicio()));
+			model.addAttribute("fechaCoordinador", cor != null?  dt1.format(cor.getFechaServicio()): null);
 		}else{
 			model.addAttribute("programacionMin", null);
 			model.addAttribute("fechaBuscada", fecha);
@@ -173,6 +191,63 @@ public class ServicioController {
 		model.addAttribute("listMes", listServ);
 		model.addAttribute("msj", "personasList");
 		model.addAttribute("mesActual", month);
+		return url;
+	}
+
+	@GetMapping("/crearInforme")
+	public String crearInforme( Model model) throws ParseException {
+		String url = "asistenciaProgramacion";
+		//String url = "register-informCoordinador";
+		Coordinador cor= new Coordinador();
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
+
+		if(listProgramacionMinisterio.size()>0) {
+			cor =servicioService.findCoordinador(listProgramacionMinisterio);
+			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+			model.addAttribute("programacionMin", listProgramacionMinisterio);
+			model.addAttribute("coordinador", cor);
+			model.addAttribute("fechaCoordinador", cor != null?  dt1.format(cor.getFechaServicio()): null);
+		}else{
+			model.addAttribute("programacionMin", null);
+		}
+
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		Persona per  = personaService.findPersonaById(cor.getPersona().getId());
+
+		model.addAttribute("msj", "personasList");
+		model.addAttribute("persona", per);
+		model.addAttribute("coordinador", cor);
+		model.addAttribute("fechaServicio", cor != null?  dt1.format(cor.getFechaServicio()): null);
+		return url;
+	}
+
+	@PostMapping("/redirectCrearInforme")
+	public String redirectCrearInforme(@ModelAttribute Persona persona, Model model) throws ParseException {
+			String url = "register-informCoordinador";
+			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+			//Persona per  = personaService.findPersonaById(persona.getId());
+			Coordinador cor = new Coordinador() ;
+			List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+			if(listProgramacionMinisterio.size()>0) {
+				cor =servicioService.findCoordinador(listProgramacionMinisterio);
+			}
+			model.addAttribute("msj", "personasList");
+			model.addAttribute("persona", cor.getPersona());
+			model.addAttribute("coordinador", cor);
+			model.addAttribute("fechaServicio", dt1.format(cor.getFechaServicio()));
+			return url;
+		}
+
+	@PostMapping("/guardarInforme")
+	public String guardarInforme(@ModelAttribute Coordinador cordinador, int idPersona,String fechaServCoord,  Model model) throws ParseException {
+		String url = "redirect:/redirectDashboard";
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		Persona per  = personaService.findPersonaById(idPersona);
+		cordinador.setPersona(per);
+		cordinador.setFechaServicio(dt1.parse(fechaServCoord));
+		servicioService.saveCoordinadorEntity(cordinador);
+		model.addAttribute("msj", "personasList");
 		return url;
 	}
 

@@ -54,22 +54,29 @@ public class TdcController {
 
 	@PostMapping("/upload") public String uploadImage(@ModelAttribute Persona persona, Model model, @RequestParam("image") MultipartFile file) throws IOException {
 		log.info("cargar imagenes inicio");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
+		String fecha = nowInBogota.format(formatter);
+		model.addAttribute("fecha", fecha);
 		try {
 			model.addAttribute("idPersona", persona.getId());
-		Tdc picture = new Tdc();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
+			Tdc picture = new Tdc();
+			DateTimeFormatter formatterSAve = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/Bogota"));
 
-			String fechaformateada = nowInBogota.format(formatter);
+			String fechaformateada = now.format(formatterSAve);
 			Date fechafinal = Date.valueOf(fechaformateada);
 			String extension = null;
-			if(file != null)
+			if(file != null && file.getSize()>0)
 			{
 				 extension = FilenameUtils.getExtension(file.getOriginalFilename());
 				System.out.println(extension);
 
 				log.info("tamaño del archivo es de "+file.getSize()+" bytes");
 				log.info("fecha a usar: "+fechafinal);
+			} else{
+				model.addAttribute("messageError", "Debe seleccionar una foto o documento de su tiempo con Dios");
+				return  "registerTDC";
 			}
 			if(extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("jpg")  || extension.equalsIgnoreCase("png")|| extension.equalsIgnoreCase("jfif")) {
 				BufferedImage image = ImageIO.read(file.getInputStream());
@@ -104,13 +111,13 @@ public class TdcController {
 			model.addAttribute("message", "su Imagen ha sido cargada correctamente");
 			model.addAttribute("msg", null);
 		}else {
-			model.addAttribute("message", "ud ya a cargardo su TCD del dia de hoy");
+			model.addAttribute("messageError", "ud ya a cargardo su TCD del dia de hoy");
 			model.addAttribute("msg", null);
 		}
 		} catch (Exception e) {
 			log.error("error cargar imagen: ", e);
 			model.addAttribute("message", null);
-			model.addAttribute("msg", "Error al cargar imagen");
+			model.addAttribute("messageError", "Error al cargar imagen");
 			return  "registerTDC";
 
 		}

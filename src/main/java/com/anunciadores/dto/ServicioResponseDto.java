@@ -27,6 +27,8 @@ public class ServicioResponseDto implements Serializable {
 	private String nombreMinisterio;
 	private Integer idMinisterio;
 
+	private List<ItemCombo> asistenciaList;
+
 	public String getPosicion() {
 		return posicion;
 	}
@@ -65,6 +67,14 @@ public class ServicioResponseDto implements Serializable {
 
 	public void setIdMinisterio(Integer idMinisterio) {
 		this.idMinisterio = idMinisterio;
+	}
+
+	public List<ItemCombo> getAsistenciaList() {
+		return asistenciaList;
+	}
+
+	public void setAsistenciaList(List<ItemCombo> asistenciaList) {
+		this.asistenciaList = asistenciaList;
 	}
 
 	public ServicioResponseDto(String posicion, String encargado, String fechaServcio, String nombreMinisterio, Integer idMinisterio) {

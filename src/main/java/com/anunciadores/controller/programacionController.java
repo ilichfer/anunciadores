@@ -5,10 +5,13 @@ import com.anunciadores.dto.MinisterioDto;
 import com.anunciadores.dto.PersonaDto;
 import com.anunciadores.dto.PosicionDto;
 import com.anunciadores.dto.ServicioDto;
+import com.anunciadores.model.Coordinador;
 import com.anunciadores.model.Ministerio;
 import com.anunciadores.model.Persona;
 import com.anunciadores.service.interfaces.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -182,6 +185,47 @@ public class programacionController {
 
 				return "editar_programacion";
 			}
+	}
+
+	@PostMapping("/guardarAsistencia")
+	public String guardarAsistencia(@ModelAttribute ServicioDto servicio, @RequestParam Date fechaServicio ,@RequestParam int idMinisterio, HttpServletResponse response, Model model) {
+		List<MinisterioDto>  ministerioOriginal = servicioService.getPositionByidMinisterioAndPerson(fechaServicio,idMinisterio);
+		Coordinador corSave =servicioService.findCoordinadorByFecha(fechaServicio);
+		List<String> encargadosList = new ArrayList<>();
+		List<String> posicionesList =  new ArrayList<>();
+		for (int i = 0; i < servicio.getEncargado().size() ; i++) {
+			if (!servicio.getEncargado().get(i).equals("0")&&!servicio.getEncargado().get(i).equals("")) {
+				encargadosList.add(servicio.getEncargado().get(i));
+				posicionesList.add(servicio.getPosicion().get(i));
+			}
+
+		}
+		servicio.setEncargado(encargadosList);
+		servicio.setPosicion(posicionesList);
+			boolean asistenciaGuardad = servicioService.validarActualizarProgramacionByFechaAndName(servicio, fechaServicio, idMinisterio);
+			if(asistenciaGuardad){
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				model.addAttribute("message", "Asistencia Guardada Exitosamente!!! ");
+				String url = "register_asistencia";
+				List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fechaServicio,idMinisterio);
+				String fechaComoCadena = sdf.format(fechaServicio);
+
+				ministerios = servicioService.limpiarListaPosiciones(ministerios,fechaServicio,idMinisterio);
+				model.addAttribute("listaPosiciones", ministerios);
+				model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
+				model.addAttribute("servidores", servicioService.findPersonaByidMnisterioAsistencia(idMinisterio));
+				model.addAttribute("fecha", fechaComoCadena );
+				model.addAttribute("itemsCombo", servicioService.findItemsCombo() );
+				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+				return url;
+			}else{
+				//servicioService.deleteProgramacion(fechaServicio);
+				//servicioService.updateProgramacion(servicio, fechaServicio,idMinisterio);
+				List<Ministerio> ministerios = servicioService.getAll();
+				model.addAttribute("ministerios", ministerios);
+				return "redirect:/consultarProgramacion";
+			}
+
 	}
 	@PostMapping("/saveMinisterio")
 	public String save(@RequestParam String nombreMinisterio, HttpServletResponse response, Model model) throws ParseException, JsonProcessingException {

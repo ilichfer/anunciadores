@@ -4,14 +4,12 @@
   const cargarDat =async () => {
     var  documento= localStorage.getItem('documento');
 
-
     var persona = localStorage.getItem("persona");
     if (persona == null) {
-      
-  //const response = await fetch("http://localhost:5000/consutarDoc?doc="+documento);
-  const response = await fetch("https://anunciaig.com/consutarDoc?doc="+documento);
+
+  const response = await fetch("http://localhost:5000/consutarDoc?doc="+documento);
+  //const response = await fetch("https://anunciaig.com/consutarDoc?doc="+documento);
   const datos = await response.json();
-  
   // Fuerzo artificialmente a que dure más para que se pueda observar el Spinner
   await accionAsincrona();
        
@@ -25,6 +23,7 @@
           localStorage.setItem("id",datos.id)
           console.log(JSON.stringify(datos.permisosMenu));
           localStorage.setItem("permisosMenu",JSON.stringify(datos.permisosMenu))
+          localStorage.setItem("coordinadorActual",JSON.stringify(datos.coordinadorActual))
         } else {
           alert("no se encontro informacion de este usuario")
         }
@@ -44,7 +43,13 @@ consultarPermisosAdmin(localStorage.getItem('permisosMenu'));
 }else{
 consultarPermisosAdmin(localStorage.getItem('permisosMenu'));
 }
-
+/*Obtener datos almacenados*/
+var  coordinadorActual = localStorage.getItem('coordinadorActual');
+if (admin != "true" && coordinadorActual == "false") {
+document.getElementById("menuCoordinador").style.display = "none";
+}else{
+document.getElementById("menuCoordinador").style.display = "block";
+}
 /*Mostrar datos almacenados*/      
 
 var nombre=localStorage.getItem('nombre');
@@ -56,6 +61,9 @@ document.getElementById("id").value = localStorage.getItem('id');
 document.getElementById("idPersonaTCD").value = localStorage.getItem('id');
 document.getElementById("idProgramacion").value = localStorage.getItem('id');
 document.getElementById("id").style.display = "none";
+document.getElementById("idHistorico").value = localStorage.getItem('id');
+document.getElementById("idCoordinador").value = localStorage.getItem('id');
+document.getElementById("idHistorico").style.display = "none";
 document.getElementById("idCursoUser").value = localStorage.getItem('id');
 document.getElementById("idPCurso").value = localStorage.getItem('id');
 document.getElementById("idPersonaConsolidacion").value = localStorage.getItem('id');

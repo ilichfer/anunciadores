@@ -22,6 +22,7 @@ public class ServicioDto implements Serializable {
 	private List<String> posicion;
 
 	private List<String> encargado;
+	private List<String> asistencia;
 
 	private Date fechaServcio;
 
@@ -47,6 +48,14 @@ public class ServicioDto implements Serializable {
 
 	public void setFechaServcio(Date fechaServcio) {
 		this.fechaServcio = fechaServcio;
+	}
+
+	public List<String> getAsistencia() {
+		return asistencia;
+	}
+
+	public void setAsistencia(List<String> asistencia) {
+		this.asistencia = asistencia;
 	}
 }
 

@@ -10,6 +10,7 @@ import com.anunciadores.model.PermisosMenu;
 import com.anunciadores.model.Rol;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 
@@ -49,6 +50,8 @@ public class PersonaDto implements Serializable {
 	private Rol rolUnico;
     private boolean admin;
     private boolean user;
+    private boolean coordinadorActual;
+    private Date fechaCoordinador;
     private boolean validarPago;
 
       public PersonaDto() {
@@ -200,5 +203,21 @@ public class PersonaDto implements Serializable {
 
 	public void setPermisosMenu(List<PermisosMenu> permisosMenu) {
 		this.permisosMenu = permisosMenu;
+	}
+
+	public boolean isCoordinadorActual() {
+		return coordinadorActual;
+	}
+
+	public void setCoordinadorActual(boolean coordinadorActual) {
+		this.coordinadorActual = coordinadorActual;
+	}
+
+	public Date getFechaCoordinador() {
+		return fechaCoordinador;
+	}
+
+	public void setFechaCoordinador(Date fechaCoordinador) {
+		this.fechaCoordinador = fechaCoordinador;
 	}
 }

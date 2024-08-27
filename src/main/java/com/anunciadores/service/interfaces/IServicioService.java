@@ -24,18 +24,23 @@ public interface IServicioService {
 
 	public Ministerio findByidMnisterio(int idMinisterio);
 	public List<PersonaDto> findPersonaByidMnisterio(int idMinisterio);
+	public List<PersonaDto> findPersonaByidMnisterioAsistencia(int idMinisterio);
 
 	public List<MinisterioDto> getPositionByidMinisterio(int idMinisterio);
 
 	List<MinisterioDto> getPositionByidMinisterioAndPerson(Date fecha, int idMinisterio);
+	List<MinisterioDto> limpiarListaPosiciones(List<MinisterioDto> posiciones,Date fechaServicio,int idMinisterio);
 
 	public List<PersonaDto> getPeopleWithoutMinisterio(int idMinisterio);
 
 	public void saveProgramacion(ServicioDto servidores, Date fechaServicio);
 	public void saveCoordinado(CoordinadorDTO cordinador);
+	public void saveCoordinadorEntity(Coordinador cordinador);
 
 	public Coordinador findCoordinador(List<ServicioListResponseDto> listProgramacionMinisterio );
 	public Coordinador findCoordinadorByFecha(Date fechaServicio );
+	public Coordinador findCoordinadorByFechaAndIdPersona(String fechaServicio, int idPersona );
+	public Boolean validateCoordinadorByFechaAndIdPersona(String fechaServicio, int idPersona );
 
 
 	void updateProgramacion(ServicioDto servidores, Date fechaServicio,int idMinisterio);
@@ -46,10 +51,13 @@ public interface IServicioService {
 
 	Optional<Persona> validarActualizarProgramacionByFecha(ServicioDto servidores, Date fechaServicio, int ministerio);
 
+	boolean validarActualizarProgramacionByFechaAndName(ServicioDto servidores, Date fechaServicio, int ministerio);
+
 	public List<ServicioListResponseDto>findProgramacionByDate(Date fechaActual);
 	public List<ServicioListResponseDto>findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio);
 
 	public  List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual);
+	public  List<ItemCombo> findItemsCombo();
 
 	void agregarPersonaAMinisterio(int idPersona, int idMinisterio);
 	List<ServicioResponseDto> buscarProgramacionMes(int idPersona) throws ParseException;

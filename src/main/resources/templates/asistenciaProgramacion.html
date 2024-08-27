@@ -49,27 +49,19 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Busqueda de programacion</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Registro de asistencia</h1>
                     <p class="mb-4">Para servidores.</p>
 
                     <!-- Data servicio -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary"> Programacion de Servidores</h6>
+                                <h6 class="m-0 font-weight-bold text-primary"> Registro de asistencia</h6>
                             </div>
-                            <form method="POST" th:action="@{/buscarProgramacionByFecha}">
+                            <form method="POST" th:action="@{/redirectCrearInforme}">
 
-                                <div class="form-group row" style="margin-left:10px">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <label for="fecha"> fecha de busqueda</label>
-                                        <input type="date" class="form-control form-control-user" name="fecha"
-                                               id="fecha" placeholder="fecha de busqueda" required>
-                                    </div>
-                                </div>
-
-                                <input type="submit" value="Buscar Programacion" class="btn btn-primary container">
-                                <hr>
-
+                                <input type="text"  class="form-control form-control-user" th:value="${persona.id}"
+                                       name="id" id="id" style="display:none">
+                                <input type="submit" value="informe coordinador" class="btn btn-primary">
                             </form>
                             <div class="card-body">
                                 <div class="table-responsive" th:if="${programacionMin == null}">
@@ -92,8 +84,8 @@
                                             <tr>
                                                 <td th:rowspan="${prog.tamanoLista}"  style="vertical-align : middle;text-align:center;">
                                                     <div>
-                                                    <a class="btn btn-primary" th:if="${prog.tamanoLista > 1}"
-                                                       th:href="@{/editarProgramacion(fecha=${prog.fechaServcio},idMinisterio=${prog.idMinisterio})}" type="submit"  data-toggle="tooltip" data-placement="right" title="Editar" >Editar programacion
+                                                    <a class="btn btn-warning" th:if="${prog.tamanoLista > 1}"
+                                                       th:href="@{/registrarAsistencia(fecha=${prog.fechaServcio},idMinisterio=${prog.idMinisterio})}" type="submit"  data-toggle="tooltip" data-placement="right" title="Editar" >Registrar Asistencia
                                                     </a>
                                                     </div>
                                                 </td>
@@ -110,12 +102,6 @@
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                            <td colspan="1"  style="vertical-align : middle;text-align:center;">
-                                                <a class="btn btn-primary" th:if="${coordinador != null}" th:href="@{/editarCoordinador(fecha=${fechaCoordinador},idPersona=${coordinador.persona.id})}"
-                                                   type="submit"  data-toggle="tooltip" data-placement="right" title="Editar" >Editar Coordinador
-                                                </a>
-                                            </td>
-
                                             <td colspan="1" style="vertical-align : middle;text-align:center;" th:if="${coordinador == null}">
                                                 <h6 class="servicioPendiente">Coordinador</h6>
                                             </td>

@@ -105,11 +105,11 @@ public class direccionesController {
 		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
 		model.addAttribute("dia", dia);
 		if(listProgramacionMinisterio.size()>0) {
-			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);
+			Coordinador cor = servicioService.findCoordinador(listProgramacionMinisterio);
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
 			model.addAttribute("coordinador", cor);
-			model.addAttribute("fechaCoordinador", dt1.format(cor.getFechaServicio()));
+			model.addAttribute("fechaCoordinador",cor != null?  dt1.format(cor.getFechaServicio()): null);
 		}else{
 			model.addAttribute("programacionMin", null);
 		}

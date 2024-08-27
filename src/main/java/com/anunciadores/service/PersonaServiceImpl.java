@@ -3,10 +3,13 @@ package com.anunciadores.service;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.anunciadores.dto.MinisterioDto;
 import com.anunciadores.model.*;
 import com.anunciadores.repository.*;
 import org.slf4j.Logger;
@@ -44,6 +47,8 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private IPermisosRepo permisosRepo;
+	@Autowired
+	private ICoordinadorRepo coordinadorRepo;
 
 	@Autowired
 	private IParamMenuRepo paramMenuRepo;
@@ -290,6 +295,7 @@ public class PersonaServiceImpl implements IPersonaService {
 				for (com.anunciadores.model.Rol rolAsignado : roles) {
 					if (rolAsignado.getDescripcion().equalsIgnoreCase("ADMINISTRADOR")) {
 						permisos = permisosRepo.findByIdPersona(personadto.getId());
+						compararPermisos(permisos,personadto.getId());
 						personadto.getRoles().add(rolAsignado);
 						personadto.setAdmin(true);
 						personadto.setUser(false);
@@ -315,6 +321,34 @@ public class PersonaServiceImpl implements IPersonaService {
 			throw new RuntimeException("[buscarByDocumento]"+e.getMessage());
 		}
 		return personadto;
+	}
+
+
+	private void compararPermisos (List<PermisosMenu> permisos, int idPersona){
+		List<ParamMenu> menuList = paramMenuRepo.findAll();
+		List<PermisosMenu> permisosCompletos = contruirPermisosServidor( menuList);
+		List<PermisosMenu> permisosActivos = new ArrayList<>();
+
+		for (PermisosMenu min: permisosCompletos) {
+			for (int i = 0; i < permisos.size(); i++) {
+				if (permisos.get(i).getMenu().getNombreBotonMenu() == min.getMenu().getNombreBotonMenu()) {
+					permisosActivos.add(min);
+				}
+			}
+		}
+
+		permisosCompletos.removeAll(permisosActivos);
+
+				if (!permisosCompletos.isEmpty()){
+					for (PermisosMenu permSave : permisosCompletos){
+						PermisosMenu perm = new PermisosMenu();
+						perm.setIdPersona(idPersona);
+						perm.setNombreBotonMenu(permSave.getMenu().getNombreBotonMenu());
+						perm.setEstado("false");
+						perm.setMenu(permSave.getMenu());
+						permisosRepo.save(perm);
+					}
+				}
 	}
 
 	private List<PermisosMenu> contruirPermisosServidor(List<ParamMenu> menuList){

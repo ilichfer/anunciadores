@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
 
     @Modifying
-    @Query("select s.fechaServicio, p.nombre, pm.nombrePosicion, m.id, m.nombre from Servicio s " +
+    @Query("select s.fechaServicio, concat(p.nombre,' ',p.apellido), pm.nombrePosicion, m.id, m.nombre from Servicio s " +
             "join Persona p on s.idPersona = p.id " +
             "join PosicionesMinisterio pm on s.idPosicion = pm.id " +
             "join Ministerio m on pm.idMinisterio = m.id " +
@@ -26,6 +26,14 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
             "where s.idPersona = :idPersona " +
             "and s.fechaServicio = :fechaServicio")
     public Optional<Servicio> findProgramacionServidor(@Param("idPersona") int idPersona, @Param("fechaServicio") Date fechaServicio);
+
+    @Query("select s from Servicio s " +
+            "join Persona p on (s.idPersona = p.id) " +
+            "join PosicionesMinisterio pm on(s.idPosicion = pm.id) " +
+            "where p.nombre = :persona " +
+            "and s.fechaServicio = :fechaServicio " +
+            "and pm.nombrePosicion =:nombrePosicion")
+    public Optional<Servicio> findProgramacionServidorAndMinisterio(@Param("persona") String persona, @Param("fechaServicio") Date fechaServicio,@Param("nombrePosicion") String nombrePosicion);
 
 
     @Query("select s from Servicio s " +
@@ -44,6 +52,8 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
 
     @Modifying
     public void deleteByFechaServicioAndIdMinisterio(@Param("fechaServicio") Date fechaServicio,int idMinisterio);
+
+    public List<Servicio> findByFechaServicioAndIdMinisterio(@Param("fechaServicio") Date fechaServicio,int idMinisterio);
 
     @Query("select s from Servicio s " +
             "WHERE s.fechaServicio  BETWEEN :fechaInicial AND :fechaFinal " +

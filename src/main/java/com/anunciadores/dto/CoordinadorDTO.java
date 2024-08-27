@@ -23,6 +23,7 @@ public class CoordinadorDTO implements Serializable {
 	private int idPersona;
 
 	private Date fechaServcio;
+	private String fechaString;
 
 	public int getIdPersona() {
 		return idPersona;
@@ -46,6 +47,14 @@ public class CoordinadorDTO implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getFechaString() {
+		return fechaString;
+	}
+
+	public void setFechaString(String fechaString) {
+		this.fechaString = fechaString;
 	}
 }
 

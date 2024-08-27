@@ -201,11 +201,15 @@ public class personaController {
 	public ResponseEntity<PersonaDto> consutarDoc(@RequestParam int doc, HttpServletResponse response,
 													Model model) throws JsonMappingException, JsonProcessingException {
 		PersonaDto person = new PersonaDto();
+		String fechaCoor= null;
 		person = personaService.buscarByDocumento(doc);
-		//person = personaService.buscarEmail(person.getEmail());;
-		model.addAttribute("admin", person.isAdmin());
-		model.addAttribute("user", person.isUser());
-		model.addAttribute("persona", person);
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
+		if(listProgramacionMinisterio.size()>0) {
+			person.setCoordinadorActual(servicioService.validateCoordinadorByFechaAndIdPersona(listProgramacionMinisterio.get(0).getFechaServcio(),person.getId()));
+		}else {
+			person.setCoordinadorActual(false);
+		}
 
 		return new ResponseEntity<PersonaDto>(person, null, HttpStatus.ACCEPTED);
 	}
@@ -313,7 +317,7 @@ public class personaController {
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
 			model.addAttribute("coordinador", cor);
-			model.addAttribute("fechaCoordinador", dt1.format(cor.getFechaServicio()));
+			model.addAttribute("fechaCoordinador", cor != null?  dt1.format(cor.getFechaServicio()): null);
 		}else{
 			model.addAttribute("programacionMin", null);
 		}
@@ -335,7 +339,7 @@ public class personaController {
 		}
 		return url;
 		}catch (Exception e) {
-			model.addAttribute("msj", e.toString());
+			model.addAttribute("msj", e.getMessage());
 			return "login";
 		}
 	}
@@ -533,8 +537,9 @@ public class personaController {
 
 	@GetMapping("/actualizarPermiso")
 	public String actualizarPermiso(@ModelAttribute PermisosMenu permisos,@RequestParam int idPersona, @RequestParam String descRol, Model model) {
-
-		PermisosMenu permisoActual = permisosMenuRepo.save(permisos);
+		PermisosMenu menuUpdate = permisosMenuRepo.findByIdPersonaAndNombreBotonMenu(permisos.getIdPersona(), permisos.getNombreBotonMenu());
+		menuUpdate.setEstado(permisos.getEstado());
+		PermisosMenu permisoActual = permisosMenuRepo.save(menuUpdate);
 
 
 		Persona persona = personaService.findPersonaById(idPersona);

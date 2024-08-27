@@ -14,4 +14,6 @@ public interface IPermisosRepo extends JpaRepository<PermisosMenu, Integer>{
     @Query()
     public List<PermisosMenu> findByIdPersona(int idPersona);
 
+    public PermisosMenu findByIdPersonaAndNombreBotonMenu(int idPersona,String nombreBoton);
+
 }
