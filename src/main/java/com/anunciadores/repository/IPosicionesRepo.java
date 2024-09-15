@@ -18,8 +18,9 @@ public interface IPosicionesRepo extends JpaRepository<PosicionesMinisterio, Int
     public List<PosicionesMinisterio> findAllByIdMinisterio(@Param("idMinisterio") int idMinisterio);
 
     @Modifying
-    @Query("select p from PosicionesMinisterio p  where p.nombrePosicion = :nombrePosicion")
-    public List<PosicionesMinisterio> findMinisterioByName(@Param("nombrePosicion") String nombrePosicion);
+    @Query("select p from PosicionesMinisterio p  where p.nombrePosicion = :nombrePosicion" +
+            " and p.idMinisterio =:idMinisterio")
+    public List<PosicionesMinisterio> findMinisterioByName(@Param("nombrePosicion") String nombrePosicion, @Param("idMinisterio") int idMinisterio);
 
 
 }

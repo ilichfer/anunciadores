@@ -97,8 +97,9 @@ public class ConsolidacionServiceImpl implements IConsolidacionService {
 	}
 
 	private List<PersonaConsolidacionDto> buscarAsignacion(List<PersonaConsolidacionDto> servidoresConsolidacion){
-		List<AsignacionConsolidacionDto> asignacionlist = new ArrayList<>();
+
 		for (PersonaConsolidacionDto per :servidoresConsolidacion) {
+			List<AsignacionConsolidacionDto> asignacionlist = new ArrayList<>();
 			List<inscripcionConsolidacion> insConsolidacion = inscripcionConsolidacionRepo.findByIdPadreEspiritual(per.getId());
 			if(insConsolidacion.isEmpty()){
 				AsignacionConsolidacionDto dto = new AsignacionConsolidacionDto();
@@ -111,6 +112,7 @@ public class ConsolidacionServiceImpl implements IConsolidacionService {
 				dto.setHorarioConsolidacionSugerido("N/A");
 				asignacionlist.add(dto);
 				per.setAsignacion(asignacionlist);
+				per.setTamanoLista(asignacionlist.size()+1);
 			}else {
 
 				AsignacionConsolidacionDto dto = new AsignacionConsolidacionDto();
@@ -124,6 +126,7 @@ public class ConsolidacionServiceImpl implements IConsolidacionService {
 				dto.setHorarioConsolidacionSugerido(con.getHorarioConsolidacionSugerido());
 				asignacionlist.add(dto);
 				per.setAsignacion(asignacionlist);
+				per.setTamanoLista(asignacionlist.size()+1);
 			}
 		}
 

@@ -54,7 +54,7 @@
                     <!-- Data servicio -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary"> Mi programacion para el mes: <span th:text="${mesActual}"></span></h6>
+                                <h6 class="m-0 font-weight-bold text-primary"> Mi programacion para los meses: <span th:text="${mesActual}"></span></h6>
                             </div>
 
                             <div class="card-body">
@@ -69,6 +69,7 @@
                                             <th>fecha (año-mes-dia)</th>
                                             <th>posicion</th>
                                             <th>encargado</th>
+                                            <th>Acciones</th>
                                         </tr>
                                         </thead>
 
@@ -78,6 +79,11 @@
                                                 <td th:text="${serv.fechaServcio}"></td>
                                                 <td th:text="${serv.posicion}"></td>
                                                 <td th:text="${serv.encargado}"></td>
+                                                <td >
+                                                    <a class="btn btn-primary"  th:href="@{/consultarMiProgramacion(fecha=${serv.fechaServcio},idMinisterio=${serv.idMinisterio})}"
+                                                       type="submit"  data-toggle="tooltip" data-placement="right" title="notas" >ver programacion
+                                                    </a>
+                                                </td>
                                             </tr>
 
                                         </tbody>

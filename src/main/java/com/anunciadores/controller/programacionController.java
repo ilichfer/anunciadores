@@ -102,7 +102,7 @@ public class programacionController {
 					return "editar_programacion";
 
 				}else{
-					servicioService.saveProgramacion(servicio, fechaServicio);
+					servicioService.saveProgramacion(servicio, fechaServicio,idMinisterio);
 					List<Ministerio> ministerios = servicioService.getAll();
 					model.addAttribute("ministerios", ministerios);
 					return "ministerios";

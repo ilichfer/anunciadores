@@ -52,11 +52,11 @@
                         <h6 class="collapse-header">Gestionar Perfil:</h6>
                         <form method="POST" th:action="@{/perfil}">
                             <input class="form-control" type="text" name="id" id="id">
-                            <input type="submit" value="gestionar Perfil" class="collapse-item" style="border-style: hidden">
+                            <input type="submit" value="gestionar Perfil" class="collapse-item" style="border-style: hidden;width: 90%;text-align:left;">
                         </form>
                         <form method="POST" th:action="@{/miProgramacion}">
                             <input class="form-control" type="text" name="id" id="idProgramacion" style="display:none">
-                            <input type="submit" value="Mi programacion" class="collapse-item" style="border-style: hidden">
+                            <input type="submit" value="Mi programacion" class="collapse-item" style="border-style: hidden;width: 90%;text-align:left;">
                         </form>
 
                         <!--<a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>-->
@@ -91,15 +91,15 @@
                         <h6 class="collapse-header">mi area de cursos:</h6>
                         <form method="POST" th:action="@{/buscarCursosByPersona}">
                             <input class="form-control" type="text" name="id" id="idCursoUser" style="display:none">
-                            <input type="submit" value="Mis cursos" class="btn collapse-item">
+                            <input type="submit" value="Mis cursos" class="btn collapse-item" style="border-style: hidden;width: 90%;text-align:left;">
                         </form>
                         <form method="POST" th:action="@{/listarCursosAbiertos}">
                             <input class="form-control" type="text" name="id" id="idPCurso" style="display:none">
-                            <input type="submit" value="cursos activos" class="btn collapse-item">
+                            <input type="submit" value="cursos activos" class="btn collapse-item" style="border-style: hidden;width: 90%;text-align:left;text-align:left">
                         </form>
                         <form >
                             <input class="form-control" type="text" name="id" id="idHistorico" style="display:none">
-                            <input type="submit" value="historico notas" class="btn collapse-item" disabled>
+                            <input type="submit" value="historico notas" class="btn collapse-item" style="border-style: hidden;width: 90%;text-align:left;" disabled>
                         </form>
                         <h6 class="collapse-header">Administrar Cursos:</h6>
                         <a id="subMenuListarCursos" class="collapse-item" th:href="@{/listarCursos}" >Gestionar cursos</a>
@@ -140,7 +140,7 @@
                         <a id="SubMenuListActividades"class="collapse-item" th:href="@{/listarActividades}">Listar Actividades</a>
                         <form  method="POST" th:action="@{/hisMisActividades}" >
                             <input class="form-control" type="text" name="idPersonaMinisterioUser" id="idPersonaMinisterioUser" style="display:none">
-                            <input type="submit" value="Mis Actividades" class="btn collapse-item" disabled>
+                            <input type="submit" value="Mis Actividades" class="btn collapse-item" style="border-style: hidden;width: 90%;text-align:left;" disabled>
                         </form>
                         <a  class="collapse-item" th:href="@{/actividadesAutoIncripcion}" >Actividades Abiertas</a>
                     </div>
@@ -210,7 +210,7 @@
                         <h6 class="collapse-header">Gestionar TCD:</h6>
                         <form method="POST" th:action="@{/redirectTDC}">
                             <input class="form-control" type="text" name="idPersonaTCD" id="idPersonaTCD" style="display:none">
-                            <input type="submit" value="Registrar TCD" class="collapse-item" style="border-style: hidden">
+                            <input type="submit" value="Registrar TCD" class="collapse-item" style="border-style: hidden;width: 90%;text-align:left;">
                         </form>
                         <a id="SubMenuTCDListar" class="collapse-item" th:href="@{/listarTdc}">buscar TCD</a>
                         <a id="SubMenuTCDReporte" class="collapse-item" th:href="@{/redirectReporteTDC}">reporte TCD</a>
@@ -230,7 +230,7 @@
                         <h6 class="collapse-header">Gestionar Consolidacion:</h6>
                         <form method="POST" th:action="@{/buscarConsolidacionByPersona}">
                             <input class="form-control" type="text" name="idPersona" id="idPersonaConsolidacion" style="display:none">
-                            <input type="submit" value="Mis asignaciones" class="collapse-item" style="border-style: hidden">
+                            <input type="submit" value="Mis asignaciones" class="collapse-item" style="border-style: hidden;width: 90%;text-align:left">
                         </form>
                         <a id="SubMenuSerConsolidacion"  class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>
                     </div>

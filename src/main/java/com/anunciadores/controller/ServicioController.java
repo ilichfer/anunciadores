@@ -4,6 +4,7 @@ import com.anunciadores.dto.CoordinadorDTO;
 import com.anunciadores.dto.MinisterioDto;
 import com.anunciadores.dto.ServicioListResponseDto;
 import com.anunciadores.dto.ServicioResponseDto;
+import com.anunciadores.enums.EMeses;
 import com.anunciadores.model.Coordinador;
 import com.anunciadores.model.Persona;
 import com.anunciadores.model.Servicio;
@@ -20,13 +21,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -41,10 +45,26 @@ public class ServicioController {
 	@Autowired
 	private IPersonaService personaService;
 
+
+
+	private Date cargarfechaActualBogota() throws ParseException {
+		Date actualDate ;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
+		String fechaActualStr = nowInBogota.format(formatter);
+		actualDate = sdf.parse(fechaActualStr);
+		return  actualDate;
+	}
+
+
+
+
 	@GetMapping("/consultarProgramacion")
-	public String consultarProgramacion(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
+	public String consultarProgramacion(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		String url = "buscarServicio";
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+		Date actualDate = cargarfechaActualBogota();
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(actualDate);
 		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 		if(listProgramacionMinisterio.size()>0) {
 			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);
@@ -58,6 +78,25 @@ public class ServicioController {
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		return url;
 	}
+
+	@GetMapping("/consultarMiProgramacion")
+	public String consultarMiProgramacion(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
+		String url = "buscarServicioPersona";
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateAndMinisterio(fecha,idMinisterio);
+		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
+		if(listProgramacionMinisterio.size()>0) {
+			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);
+			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+			model.addAttribute("programacionMin", listProgramacionMinisterio);
+			model.addAttribute("coordinador", cor);
+			model.addAttribute("fechaCoordinador", cor != null?  dt1.format(cor.getFechaServicio()): null);
+		}else{
+			model.addAttribute("programacionMin", null);
+		}
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		return url;
+	}
+
 	@GetMapping("/editarProgramacion")
 	public String editarProgramacion(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		String url = "editar_programacion";
@@ -95,6 +134,7 @@ public class ServicioController {
 	@PostMapping("/saveCoordinador")
 	public String saveCoordinado(@ModelAttribute CoordinadorDTO cordinador, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		String url = "buscarServicio";
+		Date actualDate = cargarfechaActualBogota();
 
 		Coordinador corSave =servicioService.findCoordinadorByFecha(cordinador.getFechaServcio());
 		if (corSave != null && corSave.getId()!= 0) {
@@ -105,7 +145,7 @@ public class ServicioController {
 			return "register-coordinador";
 		}else{
 			servicioService.saveCoordinado(cordinador);
-			List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+			List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(actualDate);
 			//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 			if (listProgramacionMinisterio.size() > 0) {
 				Coordinador cor = servicioService.findCoordinador(listProgramacionMinisterio);
@@ -188,18 +228,25 @@ public class ServicioController {
 		LocalDate ld = LocalDate.parse(fechaActual, dtf);
 
 		int month = ld.getMonthValue();
+		int mesSiguiente = month+1;
+		String meses =  month + "  y "+ mesSiguiente;
+
 		model.addAttribute("listMes", listServ);
 		model.addAttribute("msj", "personasList");
-		model.addAttribute("mesActual", month);
+		model.addAttribute("mesActual", meses);
 		return url;
 	}
 
 	@GetMapping("/crearInforme")
 	public String crearInforme( Model model) throws ParseException {
 		String url = "asistenciaProgramacion";
+		Date actualDate = cargarfechaActualBogota();
+		model.addAttribute("fechaActual", actualDate);
+
 		//String url = "register-informCoordinador";
 		Coordinador cor= new Coordinador();
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+		Persona per = new Persona();
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(actualDate);
 		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 
 		if(listProgramacionMinisterio.size()>0) {
@@ -213,10 +260,12 @@ public class ServicioController {
 		}
 
 		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
-		Persona per  = personaService.findPersonaById(cor.getPersona().getId());
+		if(cor != null && cor.getPersona() != null) {
+			per = personaService.findPersonaById(cor.getPersona().getId());
+		}
 
 		model.addAttribute("msj", "personasList");
-		model.addAttribute("persona", per);
+		model.addAttribute("persona", per!=null?per:null);
 		model.addAttribute("coordinador", cor);
 		model.addAttribute("fechaServicio", cor != null?  dt1.format(cor.getFechaServicio()): null);
 		return url;
@@ -225,10 +274,11 @@ public class ServicioController {
 	@PostMapping("/redirectCrearInforme")
 	public String redirectCrearInforme(@ModelAttribute Persona persona, Model model) throws ParseException {
 			String url = "register-informCoordinador";
+			Date actualDate = cargarfechaActualBogota();
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			//Persona per  = personaService.findPersonaById(persona.getId());
 			Coordinador cor = new Coordinador() ;
-			List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+			List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(actualDate);
 			if(listProgramacionMinisterio.size()>0) {
 				cor =servicioService.findCoordinador(listProgramacionMinisterio);
 			}

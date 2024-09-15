@@ -123,10 +123,11 @@
 
                                             <td>
                                                 <select class="form-control" name="asistencia" id="asistencia">
-                                                    <option value="0">seleccione una opcion</option>                                                        <option value="0">N/A</option>
-                                                    <!--<option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}" required></option> -->
+                                                    <option value="0">seleccione una opcion</option>
                                                     <option th:each="asistencia : ${itemsCombo}" th:value="${asistencia.descripcion}" th:text="${asistencia.descripcion}"
-                                                            required></option>
+                                                            th:selected="${posicion.posicionDto.asistencia==asistencia.descripcion}" required></option>
+
+
 
                                                 </select>
                                             </td>

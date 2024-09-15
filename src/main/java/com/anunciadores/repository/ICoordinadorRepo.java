@@ -20,4 +20,11 @@ public interface ICoordinadorRepo extends JpaRepository<Coordinador, Integer>{
             "where c.persona.id = :idPersona " +
             " and c.fechaServicio = :fechaServicio ")
     public Optional<Coordinador> findByIdPersonaAndIdPersona(@Param("fechaServicio") Date fechaServicio, @Param("idPersona") int idPersona);
+
+    @Query("select c from Coordinador c " +
+            "WHERE c.fechaServicio  BETWEEN :fechaInicial AND :fechaFinal " +
+            "and c.persona.id =:idPersona " +
+            "order by c.fechaServicio asc")
+    public List <Coordinador> buscarServicioCoordinadorMes(@Param("fechaInicial")Date fechaInicial, @Param("fechaFinal")Date fechaFinal,@Param("idPersona")int idPersona);
+
 }

@@ -33,7 +33,7 @@ public interface IServicioService {
 
 	public List<PersonaDto> getPeopleWithoutMinisterio(int idMinisterio);
 
-	public void saveProgramacion(ServicioDto servidores, Date fechaServicio);
+	public void saveProgramacion(ServicioDto servidores, Date fechaServicio,int idMinisterio);
 	public void saveCoordinado(CoordinadorDTO cordinador);
 	public void saveCoordinadorEntity(Coordinador cordinador);
 
@@ -56,7 +56,7 @@ public interface IServicioService {
 	public List<ServicioListResponseDto>findProgramacionByDate(Date fechaActual);
 	public List<ServicioListResponseDto>findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio);
 
-	public  List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual);
+	public  List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual) throws ParseException;
 	public  List<ItemCombo> findItemsCombo();
 
 	void agregarPersonaAMinisterio(int idPersona, int idMinisterio);

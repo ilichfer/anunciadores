@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -130,6 +132,7 @@ public class ServicioServiceImpl implements IServicioService {
 		for (MinisterioDto min: posiciones) {
 			for (int i = 0; i < servicio.size(); i++) {
 				if (servicio.get(i).getIdPosicion() == min.getPosicionDto().getId() ) {
+					min.getPosicionDto().setAsistencia(servicio.get(i).getAsistencia());
 					listaResponse.add(min);
 				}
 			}
@@ -149,7 +152,7 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
-	public void saveProgramacion(ServicioDto servidores, Date fechaServicio) {
+	public void saveProgramacion(ServicioDto servidores, Date fechaServicio,int idMinisterio) {
 
 		List<Servicio> progServicio = new ArrayList<>();
 		try {
@@ -157,7 +160,7 @@ public class ServicioServiceImpl implements IServicioService {
 
 		for (int i = 0; i < servidores.getPosicion().size(); i++) {
 			Servicio servicio = new Servicio();
-			List<PosicionesMinisterio> posicionEntity = posicionesRepository.findMinisterioByName(servidores.getPosicion().get(i));
+			List<PosicionesMinisterio> posicionEntity = posicionesRepository.findMinisterioByName(servidores.getPosicion().get(i),idMinisterio);
 			servicio.setIdPosicion(posicionEntity.get(0).getId());
 			int posicion = Integer.parseInt(servidores.getEncargado().get(i));
 			servicio.setIdPersona(Integer.parseInt(servidores.getEncargado().get(i)));
@@ -268,7 +271,7 @@ public class ServicioServiceImpl implements IServicioService {
 			servicioRepository.deleteByFechaServicioAndIdMinisterio(fechaServicio,idMinisterio);
 			for (int i = 0; i < servidores.getPosicion().size(); i++) {
 				Servicio servicio = new Servicio();
-				List<PosicionesMinisterio> posicionEntity = posicionesRepository.findMinisterioByName(servidores.getPosicion().get(i));
+				List<PosicionesMinisterio> posicionEntity = posicionesRepository.findMinisterioByName(servidores.getPosicion().get(i),idMinisterio);
 				servicio.setFechaServicio(fechaServicio);
 				servicio.setIdMinisterio(idMinisterio);
 				servicio.setIdPersona(Integer.parseInt(servidores.getEncargado().get(i)));
@@ -379,9 +382,10 @@ public class ServicioServiceImpl implements IServicioService {
 
 	@Override
 	public List<ServicioListResponseDto> findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio) {
+		List<ServicioListResponseDto> ListServiceDto = new ArrayList<>();
 		List<Object> obj = new ArrayList<>();
 		List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
-		obj = servicioRepository.findProgramacionByDateAndMinistery(fechaActual, idMinisterio);
+		obj = servicioRepository.findProgramacionByDateAndidMinistery(fechaActual, idMinisterio);
 		for (int i = 0; i < 6; i++) {
 
 				obj.forEach(O -> {
@@ -396,14 +400,23 @@ public class ServicioServiceImpl implements IServicioService {
 				break;
 			}
 		ListServicioDto.size();
-		return null;
+		ListServiceDto = buscarMinistarios(ListServicioDto);
+		return ListServiceDto;
 	}
 
 	@Override
-	public List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual) {
+	public List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		List<ServicioListResponseDto> ListServiceDto = new ArrayList<>();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
+		String fechaActualStr = nowInBogota.format(formatter);
+
+
 		try {
-		LocalDate fechaActualizada = LocalDate.now();
+			Date fechaActual1 = sdf.parse(fechaActualStr);
+			LocalDate fechaActualizada = nowInBogota.toLocalDate();
+
 
 		List<Object> obj = new ArrayList<>();
 		List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
@@ -458,29 +471,52 @@ public class ServicioServiceImpl implements IServicioService {
 
 	@Override
 	public List<ServicioResponseDto> buscarProgramacionMes(int idPersona) throws ParseException {
+		List<ServicioResponseDto> listaRespuestas = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaActual = sdf.format(new Date());
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate ld = LocalDate.parse(fechaActual, dtf);
-		int monthDays = ld.lengthOfMonth();
-		int yearDays  = ld.lengthOfYear();
-		int year = ld.getYear();
-		int month = ld.getMonthValue();
+		int mes=0;
+		try {
+			for ( int i = 0; i < 2; i++) {
 
-		System.out.printf("Mes % 4d de %d tiene %d días%nAño %d tiene %d días",
-				month,year,monthDays,
-				year,yearDays);
+				if (i > 0) {
+					ld = ld.plusDays(1);
+				}
+				int monthDays = ld.lengthOfMonth();
+				int yearDays = ld.lengthOfYear();
+				int year = ld.getYear();
+				int month = ld.getMonthValue();
 
-		String fechainicial= year+"-"+month+"-1";
-		String fechaFinal= year+"-"+month+"-"+monthDays;
+				System.out.printf("Mes % 4d de %d tiene %d días%nAño %d tiene %d días",
+						month, year, monthDays,
+						year, yearDays);
 
-		Date date1 = sdf.parse(fechainicial);
-		Date date2 = sdf.parse(fechaFinal);
+				String fechainicial = year + "-" + month + "-1";
+				String fechaFinal = year + "-" + month + "-" + monthDays;
 
-		List<Servicio> servicio = servicioRepository.BuscarServicioMes(date1,date2,idPersona);
-		List<ServicioResponseDto> listaRespuestas = new ArrayList<>();
-		servicio.forEach(s->listaRespuestas.add(buildServicioResponseDto(s)));
+				Date date1 = sdf.parse(fechainicial);
+				Date date2 = sdf.parse(fechaFinal);
 
+				if(month>mes) {
+					List<Servicio> servicio = servicioRepository.BuscarServicioMes(date1, date2, idPersona);
+					if (!servicio.isEmpty()) {
+						servicio.forEach(s -> listaRespuestas.add(buildServicioResponseDto(s)));
+					}
+					List<Coordinador> listaCoordinador = coordinadorRepo.buscarServicioCoordinadorMes(date1, date2, idPersona);
+					if (!listaCoordinador.isEmpty()) {
+						listaCoordinador.forEach(c -> listaRespuestas.add(buildServicioCoordinadorResponseDto(c)));
+					}
+					mes = month;
+				}
+
+				if(!listaRespuestas.isEmpty()){
+					listaRespuestas.sort(Comparator.comparing(ServicioResponseDto::getFechaServcio));
+				}
+			}
+		}catch (Exception e){
+
+		}
 		return listaRespuestas;
 	}
 
@@ -491,7 +527,19 @@ public class ServicioServiceImpl implements IServicioService {
 		serv.setFechaServcio(sdf.format(servicio.getFechaServicio()));
 		serv.setEncargado(personaRepository.findById(servicio.getIdPersona()).get().getNombre());
 		serv.setPosicion(posicionesRepository.findById(servicio.getIdPosicion()).get().getNombrePosicion());
-		serv.setNombreMinisterio(ministerioRepository.findById(servicio.getIdMinisterio()).get().getNombre());
+		Optional<Ministerio> ministerio = ministerioRepository.findById(servicio.getIdMinisterio());
+		serv.setNombreMinisterio(ministerio.get().getNombre());
+		serv.setIdMinisterio(ministerio.get().getId());
+		return serv;
+	}
+
+	private ServicioResponseDto buildServicioCoordinadorResponseDto(Coordinador coordinador){
+		ServicioResponseDto serv = new ServicioResponseDto();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		serv.setFechaServcio(sdf.format(coordinador.getFechaServicio()));
+		serv.setEncargado(coordinador.getPersona().getNombre());
+		serv.setPosicion("Coordinador");
+		serv.setNombreMinisterio("Coordinador");
 		return serv;
 	}
 

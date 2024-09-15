@@ -517,6 +517,7 @@ public class PersonaServiceImpl implements IPersonaService {
 				permisoInicial.setEstado(estadoInicial);
 			}
 			permisoInicial.setNombreBotonMenu(boton.getNombreBotonMenu());
+			permisoInicial.setMenu(boton);
 			listPermisosIniciales.add(permisoInicial);
 		}
 		return listPermisosIniciales;

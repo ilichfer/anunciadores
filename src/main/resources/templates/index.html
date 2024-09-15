@@ -130,13 +130,9 @@
                                                      th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio == null}" >
                                                      <h6 >persona asignada 3 campos</h6>
                                                  </td>
-                                                 <td colspan="1" style="vertical-align : middle;text-align:center;"
+                                                 <td colspan="2" style="vertical-align : middle;text-align:center;"
                                                      th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio != null}" >
                                                      <h6 >persona asignada + boton</h6>
-                                                 </td>
-                                                 <td colspan="1" style="vertical-align : middle;text-align:center;"
-                                                     th:if="${coordinador != null} and ${coordinador.notasServicio != null}" >
-                                                     <button>boton prueba</button>
                                                  </td>
                                                  <td colspan="3"  style="vertical-align : middle;text-align:center;"
                                                      th:if="${coordinador == null}" >

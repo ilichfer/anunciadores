@@ -1,6 +1,7 @@
 package com.anunciadores.controller;
 
 import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -199,7 +200,7 @@ public class personaController {
 
 	@GetMapping("/consutarDoc")
 	public ResponseEntity<PersonaDto> consutarDoc(@RequestParam int doc, HttpServletResponse response,
-													Model model) throws JsonMappingException, JsonProcessingException {
+													Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		PersonaDto person = new PersonaDto();
 		String fechaCoor= null;
 		person = personaService.buscarByDocumento(doc);

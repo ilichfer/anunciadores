@@ -7,8 +7,8 @@
     var persona = localStorage.getItem("persona");
     if (persona == null) {
 
-  const response = await fetch("http://localhost:5000/consutarDoc?doc="+documento);
-  //const response = await fetch("https://anunciaig.com/consutarDoc?doc="+documento);
+  //const response = await fetch("http://localhost:5000/consutarDoc?doc="+documento);
+  const response = await fetch("https://anunciaig.com/consutarDoc?doc="+documento);
   const datos = await response.json();
   // Fuerzo artificialmente a que dure más para que se pueda observar el Spinner
   await accionAsincrona();

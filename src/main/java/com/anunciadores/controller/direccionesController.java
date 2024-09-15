@@ -100,7 +100,7 @@ public class direccionesController {
 	}
 	
 	@GetMapping("/redirectDashboard")
-	public String login(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
+	public String login(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		VersiculoDto dia =bibliaService.findVerseDay();
 		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
 		model.addAttribute("dia", dia);

@@ -61,6 +61,8 @@ public class PersonaConsolidacionDto implements Serializable {
 	private Boolean consolidacion;
 	private List<AsignacionConsolidacionDto> asignacion;
 
+	private Integer tamanoLista;
+
 	public int getId() {
 		return id;
 	}
@@ -283,5 +285,13 @@ public class PersonaConsolidacionDto implements Serializable {
 
 	public void setAsignacion(List<AsignacionConsolidacionDto> asignacion) {
 		this.asignacion = asignacion;
+	}
+
+	public Integer getTamanoLista() {
+		return tamanoLista;
+	}
+
+	public void setTamanoLista(Integer tamanoLista) {
+		this.tamanoLista = tamanoLista;
 	}
 }

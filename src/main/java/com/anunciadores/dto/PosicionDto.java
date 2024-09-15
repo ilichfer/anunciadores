@@ -21,6 +21,7 @@ public class PosicionDto implements Serializable {
 	String nombrePosicion;
 
 	PersonaDto personaDto;
+	String asistencia;
 	private int idMinisterio;
 
 	public int getId() {
@@ -53,6 +54,14 @@ public class PosicionDto implements Serializable {
 
 	public void setIdMinisterio(int idMinisterio) {
 		this.idMinisterio = idMinisterio;
+	}
+
+	public String getAsistencia() {
+		return asistencia;
+	}
+
+	public void setAsistencia(String asistencia) {
+		this.asistencia = asistencia;
 	}
 }
 

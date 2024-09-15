@@ -10,11 +10,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Anuncia 2- visualizar TDC</title>
+    <title>Anuncia 2- servicio persona</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="css/image.css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -50,20 +49,51 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Visualizar </h1>
-                    <p>Tiempo Con Dios de: <span th:text="${persona.nombre}"></span> <span th:text="${persona.apellido}"> </p>
-                    <p class="mb-4">registro del dia <span th:text="${tcd.fechaCreacion}"></span>.</p>
-                    <div th:if="${tcd.imagen == true}"  class="image-container">
-                        <img  th:src="@{'data:image/jpeg;base64,'+${tcd.tdc}}" width="150%" height="80%" />
-                    </div>
-                    <div th:if="${tcd.pdf  == true}">
-                        <embed  th:src="@{'data:application/pdf;base64,'+${tcd.tdc}}" type="application/pdf" width="100%" height="600px"/>
-                    </div>
+                    <h1 class="h3 mb-2 text-gray-800">Busqueda de programacion</h1>
+                    <p class="mb-4">Para servidores.</p>
 
-                </div>
+                    <!-- Data servicio -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary"> Programacion de Servidores</h6>
+                            </div>
 
-                <div align="center" class="center-block">
-                    <a class="btn btn-warning container"  th:href="@{/listarTdc}" type="submit" data-toggle="tooltip" data-placement="right" title="Regresar" style="width:70%"> Regresar </a>
+                            <div class="card-body">
+                                <div class="table-responsive" th:if="${programacionMin == null}">
+                                    <p class="m-0 font-weight-bold text-primary">no se encontro programacion registrada para la fecha: <span th:text=${fechaBuscada}></span></p>
+                                </div>
+                                <div class="table-responsive" th:if="${programacionMin != null}">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>ministerio</th>
+                                            <th>fecha</th>
+                                            <th>posicion</th>
+                                            <th>encargado</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <div th:remove="tag" th:each="prog:${programacionMin}">
+                                            <tr>
+
+                                                <td class="m-0 font-weight-bold text-primary" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista > 1}" style="vertical-align : middle;text-align:center;"></td>
+                                                <td th:rowspan="${prog.tamanoLista}" th:text="${prog.fechaServcio}" th:if="${prog.tamanoLista > 1}" style="vertical-align : middle;text-align:center;"></td>
+                                            </tr>
+                                            <tr th:each="article,stats:${prog.servicioDTO}">
+                                                <td th:text="${article.posicion}"></td>
+                                                <td th:text="${article.encargado}"></td>
+                                            </tr>
+
+                                        </div>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+
+                        </div>
+
                 </div>
 
 

@@ -62,38 +62,41 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>Asignar</th>
                                             <th>Nombre Servidor</th>
                                             <th>Telefono Servidor</th>
                                             <th>persona asignada</th>
                                             <th>telefono</th>
                                             <th>Horario ADC</th>
                                             <th>Horario Sugerido</th>
-
-                                            <th>asignar</th>
-
                                         </tr>
                                     </thead>
 
                                     <tbody>
+                                    <div th:remove="tag" th:each="persona:${personas}">
+                                        <tr>
+                                            <td th:rowspan="${persona.tamanoLista}"  style="vertical-align : middle;text-align:center;">
+                                                <div>
+                                                    <a th:href="@{/asignarPadre(id=${persona.id})}" th:if="${persona.tamanoLista > 1}" class="btn btn-primary" style="vertical-align : middle;text-align:center;"
+                                                       type="submit"  data-toggle="tooltip" data-placement="right" title="Asignar" >Asignar
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td th:rowspan="${persona.tamanoLista}" th:text="${persona.nombre} " style="vertical-align : middle;text-align:center;">persona</td>
+                                            <td th:rowspan="${persona.tamanoLista}" th:text="${persona.telefono}" style="vertical-align : middle;text-align:center;">telefono</td>
 
-                                        <tr th:each="persona, itemStat : ${personas}">
-                                            <td th:text="${persona.nombre} "><span th:text="${persona.apellido}"></span>persona</td>
-                                            <td th:text="${persona.telefono}">telefono</td>
-                                            <div th:remove="tag" th:each="asig:${persona.asignacion}">
+                                        </tr>
+                                        <tr th:each="asig,stats:${persona.asignacion}">
                                             <td th:text="${asig.nombre}">N/A</td>
                                             <td th:text="${asig.telefono}">N/A</td>
                                             <td th:text="${asig.horarioConsolidacionSugerido}">N/A</td>
                                             <td th:text="${asig.horarioConsolidacionPersona}">N/A</td>
-                                            </div>
-                                            <td >
-                                                <a class="btn btn-success btn-circle btn-sm" th:href="@{/asignarPadre(id=${persona.id})}"
-                                                   type="submit"  data-toggle="tooltip" data-placement="right" title="Asignar Encargado" >
-                                                    <i class="fas fa-phone-volume"></i>
-                                                </a>
-											</td>
                                         </tr>
 
+                                    </div>
                                     </tbody>
+
+
                                 </table>
                             </div>
                         </div>
