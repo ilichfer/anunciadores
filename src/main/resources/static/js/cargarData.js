@@ -21,9 +21,13 @@
           localStorage.setItem("nombre",datos.nombre),
           localStorage.setItem("apellido",datos.apellido),
           localStorage.setItem("id",datos.id)
-          console.log(JSON.stringify(datos.permisosMenu));
+          console.log(JSON.stringify(datos.mensajes));
           localStorage.setItem("permisosMenu",JSON.stringify(datos.permisosMenu))
           localStorage.setItem("coordinadorActual",JSON.stringify(datos.coordinadorActual))
+          localStorage.setItem("mensajes",JSON.stringify(datos.mensajes))
+          if(datos.mensajes.length >0){
+          $('#mensajesModal').modal('show');
+          }
         } else {
           alert("no se encontro informacion de este usuario")
         }
@@ -63,10 +67,12 @@ document.getElementById("idProgramacion").value = localStorage.getItem('id');
 document.getElementById("id").style.display = "none";
 document.getElementById("idHistorico").value = localStorage.getItem('id');
 document.getElementById("idCoordinador").value = localStorage.getItem('id');
-document.getElementById("idHistorico").style.display = "none";
 document.getElementById("idCursoUser").value = localStorage.getItem('id');
 document.getElementById("idPCurso").value = localStorage.getItem('id');
 document.getElementById("idPersonaConsolidacion").value = localStorage.getItem('id');
+document.getElementById("idPersonaSugerencia").value = localStorage.getItem('id');
+document.getElementById("idPersonaMensajes").value = localStorage.getItem('id');
+document.getElementById("idPMensajes").value = localStorage.getItem('id');
 
 /* datos usuario
 document.getElementById("idUser").value = localStorage.getItem('id');

@@ -4,25 +4,25 @@ package com.anunciadores.controller;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.anunciadores.dto.*;
 import com.anunciadores.model.Coordinador;
 import com.anunciadores.model.Ministerio;
 import com.anunciadores.service.interfaces.*;
+import com.anunciadores.util.UtilDate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,6 +57,9 @@ public class direccionesController {
 
 	@Autowired
 	private ICombos combosService;
+
+	@Autowired
+	private UtilDate utilDate;
 	
 	List<Persona> personasList;
 
@@ -102,14 +105,23 @@ public class direccionesController {
 	@GetMapping("/redirectDashboard")
 	public String login(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		VersiculoDto dia =bibliaService.findVerseDay();
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(utilDate.cargarfechaActualBogotaDate());
 		model.addAttribute("dia", dia);
+		List<PersonaDto> listadoCumpleañosMes = personaService.findBirthdayByMonth();
+		List<PersonaDto> listadoCumpleañosDiario =	personaService.getBirthDay(listadoCumpleañosMes);
+		model.addAttribute("cumpleanos", listadoCumpleañosMes);
+		if (!listadoCumpleañosDiario.isEmpty()){
+			model.addAttribute("cumpleanosDiario", listadoCumpleañosDiario);
+		}else {
+			model.addAttribute("cumpleanosDiario", null);
+		}
 		if(listProgramacionMinisterio.size()>0) {
 			Coordinador cor = servicioService.findCoordinador(listProgramacionMinisterio);
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
 			model.addAttribute("coordinador", cor);
 			model.addAttribute("fechaCoordinador",cor != null?  dt1.format(cor.getFechaServicio()): null);
+
 		}else{
 			model.addAttribute("programacionMin", null);
 		}
@@ -143,7 +155,9 @@ public class direccionesController {
 	
 	@GetMapping("/redirectLogin")
 	public String redirectLogin(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
-			Model model) {
+								Model model, HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session=request.getSession();
+		session.invalidate();
 		return "login";
 	}
 	@GetMapping("/redirectSeguimiento")

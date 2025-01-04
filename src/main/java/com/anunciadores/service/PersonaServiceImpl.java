@@ -4,14 +4,23 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.anunciadores.dto.MinisterioDto;
+import com.anunciadores.dto.ServicioResponseDto;
+import com.anunciadores.mapper.mapperMensaje;
 import com.anunciadores.model.*;
 import com.anunciadores.repository.*;
+import com.anunciadores.util.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +56,9 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private IPermisosRepo permisosRepo;
+
+	@Autowired
+	private IMensajesRepo mensajesRepo;
 	@Autowired
 	private ICoordinadorRepo coordinadorRepo;
 
@@ -78,6 +90,12 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private InscripcionActividadRepo inscripcionActividadRepository;
+
+	@Autowired
+	private mapperMensaje mapperMensaje;
+
+	@Autowired
+	private UtilDate utilDate;
 	
 	List<Persona> listPersonas;
 	List<PersonaDto> listPersonasDto;
@@ -307,7 +325,7 @@ public class PersonaServiceImpl implements IPersonaService {
 						personadto.setUser(true);
 						personadto.setPermisosMenu(contruirPermisosServidor( menuList));
 					}
-
+					personadto.setMensajes(mapperMensaje.listEntityToMensajesDTO(mensajesRepo.mesajesSinLeerByIdPersona(personadto.getId())));
 				}
 			}else {
 				personadto = new PersonaDto();
@@ -483,6 +501,38 @@ public class PersonaServiceImpl implements IPersonaService {
 	}
 
 	@Override
+	public List<PersonaDto> findBirthdayByMonth() {
+		List<PersonaDto> listDto = new ArrayList<>();
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
+		String fechaActual = nowInBogota.format(formatter);
+
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate ld = LocalDate.parse(fechaActual, dtf);
+
+		int month = ld.getMonthValue();
+		Integer diaactual = ld.getDayOfMonth();
+		List<Object> obj = new ArrayList<>();
+		List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
+		obj = personaRepository.buscarCumpleaños(month);
+		obj.forEach(p -> listDto.add(mapCumplePersonaDto(p,diaactual.toString() )));
+		return listDto;
+	}
+
+	@Override
+	public List<PersonaDto> getBirthDay (List<PersonaDto> listDto){
+		List<PersonaDto> listcCumpleActual = new ArrayList<>();
+
+		for (PersonaDto dto:listDto ) {
+			if (dto.isCumpleActual()){
+				listcCumpleActual.add(dto);
+			}
+		}
+		return listcCumpleActual;
+	}
+
+	@Override
 	public void findUsuariosRol(int idPersona,int idRolNuevo) {
 		List<RolPersona> rol = new ArrayList<>();
 		rol = rolesPersonaRepository.findRolByidPersona(idPersona);
@@ -550,6 +600,21 @@ public class PersonaServiceImpl implements IPersonaService {
 			List<Rol> roles = rolesDao.buscarRoles(persona.getId());
 			roles.forEach(r -> dto.setRolUnico(r) );
 			dto.setRoles(roles);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	private PersonaDto mapCumplePersonaDto(Object obj, String dia){
+		PersonaDto dto = new PersonaDto();
+		Object[] object = (Object[]) obj;
+		try {
+			dto.setNombre(object[0].toString());
+			dto.setApellido(object[1].toString());
+			dto.setFechanacimiento(object[2].toString());
+			dto.setCumpleActual(dia.equals(object[2].toString())?true: false);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

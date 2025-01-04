@@ -91,7 +91,7 @@
                                         <tr th:each="tdc, itemStat : ${listaTdc}">
                                             <td th:text="${tdc.nombredocumento}">nombre</td>
                                             <td th:text="${tdc.fechaCreacion}">fecha</td>
-                                            <td th:text="${tdc.persona.nombre}">persona</td>
+                                            <td th:text="${tdc.persona.nombre} + ' ' + ${tdc.persona.apellido}">persona</td>
                                             <td >
                                             <a th:href="@{/viewImageFilter(idTdc=${tdc.id})}"
                                                class="btn btn-primary btn-circle btn-sm" type="submit"  data-toggle="tooltip" data-placement="right" title="Inscritos al Curso">

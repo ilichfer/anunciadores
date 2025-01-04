@@ -1,18 +1,19 @@
 package com.anunciadores.controller;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.anunciadores.dto.*;
 import com.anunciadores.model.*;
 import com.anunciadores.repository.*;
 import com.anunciadores.service.interfaces.*;
+import com.anunciadores.util.UtilDate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.slf4j.Logger;
@@ -75,6 +76,9 @@ public class personaController {
 
 	@Autowired
 	private RolesRepoImpl rolesDao;
+
+	@Autowired
+	private UtilDate utilDate;
 
 	List<Persona> personasList;
 	List<PersonaDto> personasListDto;
@@ -204,7 +208,7 @@ public class personaController {
 		PersonaDto person = new PersonaDto();
 		String fechaCoor= null;
 		person = personaService.buscarByDocumento(doc);
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(utilDate.cargarfechaActualBogotaDate());
 		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 		if(listProgramacionMinisterio.size()>0) {
 			person.setCoordinadorActual(servicioService.validateCoordinadorByFechaAndIdPersona(listProgramacionMinisterio.get(0).getFechaServcio(),person.getId()));
@@ -307,11 +311,20 @@ public class personaController {
 	}
 	
 	@PostMapping("/login2")
-	public String login2(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
+	public String login2(@ModelAttribute Persona persona, HttpServletResponse response, HttpServletRequest request, Model model) throws JsonMappingException, JsonProcessingException {
 		try {
 		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
 		VersiculoDto dia = bibliaService.findVerseDay();
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(Date.valueOf(LocalDate.now()));
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(utilDate.cargarfechaActualBogotaDate());
+		List<PersonaDto> listadoCumpleañosMes = personaService.findBirthdayByMonth();
+		List<PersonaDto> listadoCumpleañosDiario =	personaService.getBirthDay(listadoCumpleañosMes);
+		model.addAttribute("cumpleanos", listadoCumpleañosMes);
+		if (!listadoCumpleañosDiario.isEmpty()){
+			model.addAttribute("cumpleanosDiario", listadoCumpleañosDiario);
+		}else {
+			model.addAttribute("cumpleanosDiario", null);
+		}
+
 		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 		if(listProgramacionMinisterio.size()>0) {
 			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);
@@ -322,6 +335,8 @@ public class personaController {
 		}else{
 			model.addAttribute("programacionMin", null);
 		}
+			HttpSession misession = request.getSession(true);
+			misession.setAttribute("idPersona", per.getId());
 
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String jsonPersona = ow.writeValueAsString(per);
@@ -366,25 +381,50 @@ public class personaController {
 		return "personasCurso";
 	}
 
-	@GetMapping("/notasPersonasCurso")
-	public String notasPersonasCurso(@RequestParam int idCurso, @RequestParam String nombreCurso, @RequestParam Integer valorCurso, Model model) {
-		personasList = personaService.findAllByCurso(idCurso);
-		//	List<PersonaDto> listPersonasConsolidacion = personaService.buscarConsolidacion(personasList, idCurso);
+	@GetMapping("/notasCurso")
+	public String notasCurso(@RequestParam int idCurso, @RequestParam String nombreCurso, Model model) {
+		List<PersonaDto> personasListDTO = new ArrayList<>();
+		personasListDTO =  cursoService.buscarNotasXPersonas(idCurso,personaService.findAllByCurso(idCurso));
 		Curso cursoMostrar = new Curso();
 		cursoMostrar = cursoService.findCursoById(idCurso);
 		boolean consolidacion =false;
 		if (cursoMostrar.getNombreCurso().contentEquals("padres espirituales")) {
 			consolidacion =true;
 		}
-		//model.addAttribute("personas", listPersonasConsolidacion);
+		model.addAttribute("personas", personasListDTO);
 		model.addAttribute("idCurso", idCurso);
 		model.addAttribute("nombreCurso", nombreCurso);
-		model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
-		model.addAttribute("titulo", "Lista de Personas inscritas");
+		model.addAttribute("msj", "Notas de personas inscritas al curso: " + nombreCurso);
+		model.addAttribute("titulo", "Tabla de notas");
 		model.addAttribute("add", false);
 		model.addAttribute("delete", true);
 		model.addAttribute("consolidacion", consolidacion);
-		return "personasCurso";
+		return "notasPersonasCurso";
+	}
+
+	@GetMapping("/registrarNotasPersona")
+	public String registrarNotasPersona(@RequestParam int idCurso, @RequestParam int idPersona, Model model) {
+		personasList = personaService.findAllByCurso(idCurso);
+		//	List<PersonaDto> listPersonasConsolidacion = personaService.buscarConsolidacion(personasList, idCurso);
+		Curso cursoMostrar = new Curso();
+		Persona persona = personaRepoImpl.findById(idPersona).get();
+		cursoMostrar = cursoService.findCursoById(idCurso);
+		NotasCurso notas = cursoService.findNotasByCurso(idCurso,idPersona);
+		if(notas == null){
+			notas = new NotasCurso();
+		}
+
+		boolean consolidacion =false;
+		if (cursoMostrar.getNombreCurso().contentEquals("padres espirituales")) {
+			consolidacion =true;
+		}
+		//model.addAttribute("personas", listPersonasConsolidacion);
+		model.addAttribute("idCurso", idCurso);
+		model.addAttribute("curso", cursoMostrar);
+		model.addAttribute("persona", persona);
+		//model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
+		model.addAttribute("nota",notas );
+		return "register-notas-curso";
 	}
 
 	@GetMapping("/buscarPersonasSinCurso")
@@ -442,8 +482,27 @@ public class personaController {
 			@RequestParam String nombreCurso, Model model) {
 		personaService.agregarPersonaCurso(idPersona, idCurso);
 		personasList = personaService.findAllByCurso(idCurso);
-		List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList,0);
-		model.addAttribute("personas", listPersonasConsolidacion);
+		//List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList,0);
+		model.addAttribute("personas", personasList);
+		model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
+		model.addAttribute("titulo", "Lista de Personas inscritas");
+		model.addAttribute("add", false);
+		model.addAttribute("delete", true);
+		model.addAttribute("idCurso", idCurso);
+		model.addAttribute("consolidacion", false);
+		return "personasCurso";
+	}
+
+	@PostMapping("/agregarListaPersonasCurso")
+	public String agregarListaPersonasCurso(@RequestParam(required = false) List<Integer> idPersonas, @RequestParam int idCurso,
+											@RequestParam String nombreCurso, Model model) {
+		if( idPersonas == null || idPersonas.isEmpty()){
+			return "redirect:/buscarPersonasSinCurso?idCurso="+idCurso+"&nombreCurso="+nombreCurso;
+		}
+		idPersonas.forEach(idp ->personaService.agregarPersonaCurso(idp, idCurso));
+		personasList = personaService.findAllByCurso(idCurso);
+		//List<PersonaDto> listPersonasConsolidacion= personaService.buscarConsolidacion(personasList,0);
+		model.addAttribute("personas", personasList);
 		model.addAttribute("msj", "Personas inscritas al curso: " + nombreCurso);
 		model.addAttribute("titulo", "Lista de Personas inscritas");
 		model.addAttribute("add", false);

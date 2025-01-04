@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.anunciadores.dto.HistoricoNotasDto;
+import com.anunciadores.model.NotasCurso;
 import com.anunciadores.service.interfaces.IPersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +79,31 @@ public class CursoController {
 		return url;
 	}
 
+	@PostMapping("/saveNotasCurso")
+	public String saveNotasCurso(@ModelAttribute NotasCurso notasCurso,@RequestParam int idPersona,@RequestParam int idCurso,  Model model) throws ParseException, JsonMappingException, JsonProcessingException {
+		StringBuilder url = new StringBuilder();
+		url.append("redirect:/notasCurso?idCurso=");
+		if (notasCurso != null) {
+			notasCurso.setPersona(personaService.findPersonaById(idPersona));
+			notasCurso.setCurso(cursoService.findCursoById(idCurso));
+
+			NotasCurso notas = cursoService.saveNotasCurso(notasCurso);
+			CursosList = cursoService.findAll();
+			model.addAttribute("idCurso", idCurso);
+			url.append(idCurso);
+			url.append("&nombreCurso=Curso%20pruebas%20");
+
+		}
+		return url.toString();
+	}
+
+	@PostMapping("/historicoNotas")
+	public String historicoNotas(@ModelAttribute HistoricoNotasDto idHistorico, Model model) throws ParseException, JsonMappingException, JsonProcessingException {
+			List<NotasCurso> historicoNotas = cursoService.findHistoricoNotas(idHistorico.getIdHistorico());
+			model.addAttribute("historicoNotas", historicoNotas.isEmpty()?null:historicoNotas);
+		return "historicoNotas";
+	}
+
 	@GetMapping("/eliminarCurso")
 	public String deleteProductoById(@ModelAttribute Curso curso, HttpServletResponse response, Model model)
 			throws ParseException {
@@ -144,6 +171,15 @@ public class CursoController {
 		CursosList = cursoService.findAll();
 		model.addAttribute("cursos", CursosList);
 		return "cursos";
+	}
+
+	@GetMapping("/redirectNotasCurso")
+	public String redirectNotasCurso(@RequestParam int idCurso,  Model model) throws ParseException, JsonMappingException, JsonProcessingException {
+		StringBuilder url = new StringBuilder();
+		url.append("redirect:/notasCurso?idCurso=");
+		url.append(idCurso);
+		url.append("&nombreCurso=Curso%20pruebas%20");
+		return url.toString();
 	}
 
 }

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -9,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Anuncia 2- Personas</title>
+    <title>Anuncia 2- Cursos</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -48,76 +49,73 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">[[${msj}]]</h1>
-                    <p class="mb-4">Tabla de personas registradas al curso.</p>
+                    <h1 class="h3 mb-2 text-gray-800">Nuevo mensaje</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">[[${titulo}]]</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Nuevo mensaje</h6>
                         </div>
-                        <form method="POST" th:action="@{/agregarListaPersonasCurso}">
+
+                        <form method="POST" th:action="@{/enviarMensaje}">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <input class="form-control" type="text" th:value="${{idCurso}}" name="idCurso" id="idCurso" style="display:none">
-                                <input class="form-control" type="text" th:value="${{nombreCurso}}" name="nombreCurso" id="nombreCurso" style="display:none">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Documento agregar persona</th>
-                                            <th>Tipo Documento</th>
-                                            <th>Nombre</th>
-                                            <th>Apellido</th>
-                                            <th>Telefono</th>
-                                            <th>Fecha Nacimiento</th>
-                                            <th>Acciones</th>
+                                            <th>Remitente</th>
+                                            <th>destinatario</th>
+
+<!--                                              <th th:if="${admin != false}">Pagos</th> -->
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        <tr th:each="persona, itemStat : ${personas}">
-                                            <td th:text="${persona.documento}">documento</td>
-                                            <td th:text="${persona.tipodocumento}">tipodocumento</td>
-                                            <td th:text="${persona.nombre}">persona</td>
-                                            <td th:text="${persona.apellido}">apellido</td>
-                                            <td th:text="${persona.telefono}">telefono</td>
-                                            <td th:text="${persona.fechanacimiento}">fechanacimiento</td>
+                                        <tr>
                                             <td >
-                                                <input type="checkbox"  th:value="${persona.id}" name="idPersonas"
-                                                       id="idPersonas" />
+                                                <input class="form-control" type="text" th:value="${{persona.id}}" name="remitente" id="remitente" style="display:none">
+                                                <span  th:text=" 'De: ' + ${persona.nombre} + ' ' + ${persona.apellido}"></span>
+                                                </td>
+
+
+                                            <td>
+                                                <select class="form-control" name="destinatario" id="destinatario" required>
+                                                    <option value="">seleccione una opcion</option>
+                                                    <option value="0">todos</option>
+                                                    <!--<option th:each="servidor : ${servidores}" th:value="${servidor.id}" th:text="${servidor.nombre}" required></option> -->
+                                                    <option th:each="servidor : ${personas}" th:value="${servidor.id}" th:text="${servidor.nombre} + ' ' + ${servidor.apellido}" required></option>
+
+                                                </select>
                                             </td>
-
-                                            <td >
-                                            <a class="btn btn-danger btn-circle btn-sm" th:href="@{/eliminarPersonasCurso(idPersona=${persona.id},idCurso=${idCurso},nombreCurso=${nombreCurso})}" th:if="${delete != false}"
-                                              type="submit"  data-toggle="tooltip" data-placement="right" title="Eliminar del Curso">
-												<i class="fas fa-trash"></i>
-											</a>
-                                                <!--
-											<a class="btn btn-primary btn-circle btn-sm" th:href="@{/agregarPersonasCurso(idPersona=${persona.id},idCurso=${idCurso},nombreCurso=${nombreCurso})}" th:if="${add != false}"
-												type="submit"  data-toggle="tooltip" data-placement="right" title="Agregar al Curso" >
-												<i class="fas fa-plus-circle"></i>
-											</a>
-
-										-->
-											</td>
                                         </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                        <textarea class="form-control" name="descripcion" id="descripcion" rows="5"
+                                                  placeholder="Descripcion del mensaje"
+                                                  required="required"></textarea>
+                                        </td>
+                                    </tr>
+
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                            <div align="center" class="center-block" >
-                                <input type="submit" value="Agregar Estudiantes" class="btn btn-primary container" style="width:70%">
-                            </div>
-                        </form>
 
-                        <div align="center" class="center-block" >
-                            <a class="mb-2 btn btn-warning container" th:href="@{/listarCursos}"
-                               type="submit" data-toggle="tooltip" data-placement="right"
-                               title="Regresar" style="width:40%"> Regresar </a>
+                            </div>
+                            <div align="center" class="center-block" >
+                                <input type="submit" value="Enviar" class="btn btn-primary container" style="width:70%">
+                            </div>
+
+                            <hr>
+
+                            <div align="center" class="center-block" >
+                                <a class="mb-2 btn btn-warning container" th:href="@{/cargarMensajesP}"
+                                   type="submit" data-toggle="tooltip" data-placement="right"
+                                   title="Regresar" style="width:40%"> Regresar </a>
+                            </div>
                         </div>
-                    </div>
 
                 </div>
+
+                </form>
 
 
                 <style>
@@ -132,6 +130,7 @@
  <!-- Logout Modal-->
     <header th:replace="layout/modalSalir :: header"></header>
 
+
                 <!-- Bootstrap core JavaScript-->
                 <script src="vendor/jquery/jquery.min.js"></script>
                 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -143,6 +142,7 @@
                 <script src="js/sb-admin-2.min.js"></script>
     <!-- Cargar local Storage-->
     <script src="js/storage.js"></script>
+    <script src="js/cargarData.js"></script>
 
                 <!-- Page level plugins -->
                 <script src="vendor/datatables/jquery.dataTables.min.js"></script>

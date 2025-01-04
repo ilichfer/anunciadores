@@ -29,9 +29,10 @@ List<Persona> findPersonaByCurso(@Param("idcurso") Integer idcurso);
 @Query(nativeQuery = true,value = "select p.* from persona p "
         + "where id not in ("
         + "select i.id_persona from inscripciones i " +
-        "join curso c on i.id_curso = c.id " +
-        "where i.id_curso =:idcurso )"
-        + "and p.id in( select pr.id_persona from persona_rol pr)")
+        " join curso c on i.id_curso = c.id " +
+        " where i.id_curso =:idcurso )"
+        + "and p.id in( select pr.id_persona from persona_rol pr) " +
+        " order by p.nombre asc")
 List<Persona> findPersonaSinCurso(@Param("idcurso") Integer idcurso);
 
     @Modifying
@@ -73,4 +74,7 @@ List<Persona> buscarPersonaSinActividad(@Param("idActividad")Integer idActividad
             " join persona_mesa pm on m.id = pm.id_mesa" +
             " where m.id =:idMesa)")
     public List<Persona> buscarPersonaSinMesas(@Param("idMesa")Integer idMesa);
+
+    @Query(nativeQuery = true,value = "SELECT p.nombre, p.apellido, DAY(p.fechanacimiento) from persona p WHERE MONTH(fechanacimiento) =:mes order by day( p.fechanacimiento) asc ")
+    List<Object> buscarCumpleaños(@Param("mes")int mes);
 }

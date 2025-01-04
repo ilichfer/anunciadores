@@ -7,7 +7,7 @@ import com.anunciadores.model.Tdc;
 import com.anunciadores.service.interfaces.ICursoService;
 import com.anunciadores.service.interfaces.IPersonaService;
 import com.anunciadores.service.interfaces.ITdcService;
-import com.anunciadores.util.JWTUtil;
+import com.anunciadores.util.UtilDate;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Date;
-import java.time.LocalDate;
+import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,12 +37,15 @@ import java.util.List;
 public class TdcController {
 	@Autowired
 	private ITdcService tdcService;
-	
+
 	@Autowired
 	private ICursoService cursoService;
 
 	@Autowired
 	private IPersonaService personaService;
+
+	@Autowired
+	private UtilDate utilDate;
 
 	List<Pago> pagoList;
 
@@ -100,14 +103,13 @@ public class TdcController {
 			String fechaformat2 = nowInBogota.format(formatter2);
 			model.addAttribute("fecha", fechaformat2);
 		if (tdcService.getTdcByFechaAndPersona(fechafinal, persona.getId())) {
-			//String encodedString = Base64.getEncoder().encodeToString(file.getBytes());
 
 			picture.setFechaCreacion(fechafinal);
 			picture.setIdPersona(persona.getId());
 			picture.setNombredocumento("TCD_" + fechafinal);
 			log.debug("se va a guardar imagen debug");
 			log.info("se va a guardar imagen info");
-			tdcService.save(picture);
+			tdcService.save(fechafinal,picture);
 			model.addAttribute("message", "su Imagen ha sido cargada correctamente");
 			model.addAttribute("msg", null);
 		}else {
@@ -126,11 +128,11 @@ public class TdcController {
 
 
 
-	@GetMapping("/listarTdc") public String getdcById( Model model) {
-		List<TdcDto> listaTdc =	tdcService.getTdcByFecha(Date.valueOf(LocalDate.now()));
+	@GetMapping("/listarTdc") public String getdcById( Model model) throws ParseException {
+		List<TdcDto> listaTdc =	tdcService.getTdcByFecha(utilDate.cargarfechaActualBogotaDate());
 		model.addAttribute("listaTdc", listaTdc);
 		return "listarTdc";
-	}
+}
 
 	@GetMapping("/consutarPdf")
 	public ResponseEntity<Object> consutarEmail(HttpServletResponse response,Model model)  {

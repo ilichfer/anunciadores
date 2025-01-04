@@ -45,8 +45,6 @@ public class ServicioController {
 	@Autowired
 	private IPersonaService personaService;
 
-
-
 	private Date cargarfechaActualBogota() throws ParseException {
 		Date actualDate ;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -56,9 +54,6 @@ public class ServicioController {
 		actualDate = sdf.parse(fechaActualStr);
 		return  actualDate;
 	}
-
-
-
 
 	@GetMapping("/consultarProgramacion")
 	public String consultarProgramacion(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
@@ -80,9 +75,11 @@ public class ServicioController {
 	}
 
 	@GetMapping("/consultarMiProgramacion")
-	public String consultarMiProgramacion(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
+	public String consultarMiProgramacion(@RequestParam String fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		String url = "buscarServicioPersona";
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateAndMinisterio(fecha,idMinisterio);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date fechaD = sdf.parse(fecha);
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateAndMinisterio(fechaD,idMinisterio);
 		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 		if(listProgramacionMinisterio.size()>0) {
 			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);
@@ -98,35 +95,34 @@ public class ServicioController {
 	}
 
 	@GetMapping("/editarProgramacion")
-	public String editarProgramacion(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
+	public String editarProgramacion(@RequestParam String fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		String url = "editar_programacion";
-		List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fecha,idMinisterio);
-
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String fechaComoCadena = sdf.format(fecha);
+		Date fechaD = sdf.parse(fecha);
+		List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fechaD,idMinisterio);
+
 
 
 		model.addAttribute("listaPosiciones", ministerios);
 		model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
 		model.addAttribute("servidores", servicioService.findPersonaByidMnisterio(idMinisterio));
-		model.addAttribute("fecha", fechaComoCadena );
+		model.addAttribute("fecha", fecha );
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		return url;
 	}
 
 	@GetMapping("/registrarAsistencia")
-	public String registrarAsistencia(@RequestParam Date fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
+	public String registrarAsistencia(@RequestParam String fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		String url = "register_asistencia";
-		List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fecha,idMinisterio);
-
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String fechaComoCadena = sdf.format(fecha);
+		Date fechaD = sdf.parse(fecha);
+		List<MinisterioDto>  ministerios = servicioService.getPositionByidMinisterioAndPerson(fechaD,idMinisterio);
 
-		ministerios = servicioService.limpiarListaPosiciones(ministerios,fecha,idMinisterio);
+		ministerios = servicioService.limpiarListaPosiciones(ministerios,fechaD,idMinisterio);
 		model.addAttribute("listaPosiciones", ministerios);
 		model.addAttribute("ministerio", servicioService.findByidMnisterio(idMinisterio));
 		model.addAttribute("servidores", servicioService.findPersonaByidMnisterioAsistencia(idMinisterio));
-		model.addAttribute("fecha", fechaComoCadena );
+		model.addAttribute("fecha", fecha );
 		model.addAttribute("itemsCombo", servicioService.findItemsCombo() );
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		return url;
@@ -186,10 +182,10 @@ public class ServicioController {
 
 
 	@GetMapping("/editarCoordinador")
-	public String editarCoordinador(@RequestParam Date fecha, @RequestParam int idPersona, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
+	public String editarCoordinador(@RequestParam String fecha, @RequestParam int idPersona, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		String url = "editar-coordinador";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String fechaComoCadena = sdf.format(fecha);
+		String fechaComoCadena = fecha;
 
 		List<Persona>  personasList= personaService.findAllUsuarios();
 		model.addAttribute("personas", personasList);
@@ -199,9 +195,11 @@ public class ServicioController {
 	}
 
 	@PostMapping("/buscarProgramacionByFecha")
-	public String buscarProgramacionByFecha(@RequestParam Date fecha, Model model) {
+	public String buscarProgramacionByFecha(@RequestParam String fecha, Model model) throws ParseException {
 		String url = "buscarServicio";
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDate(fecha);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date fechaD = sdf.parse(fecha);
+		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDate(fechaD);
 		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 		if(listProgramacionMinisterio.size()>0) {
 			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);

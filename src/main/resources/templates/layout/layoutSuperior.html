@@ -111,14 +111,12 @@
 
                         <!-- Nav Item - Messages -->
                         <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a id="idPMensajes" class="nav-link dropdown-toggle" th:href="@{/cargarMensajesP}">
                                 <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">1</span>
                             </a>
+
                             <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <!--<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
                                     Centro de Mensajes
@@ -133,7 +131,7 @@
                                         <div class="text-truncate">Hola! Bienvenido al nuevo sistemas de anunciadores de cristo.</div>
                                         <div class="small text-gray-500">Pastor cesar </div>
                                     </div>
-                                </a>
+                                </a>-->
 <!--                                 <a class="dropdown-item d-flex align-items-center" href="#"> -->
 <!--                                     <div class="dropdown-list-image mr-3"> -->
 <!--                                         <img class="rounded-circle" src="img/undraw_profile_2.svg" -->
@@ -170,9 +168,11 @@
 <!--                                         <div class="small text-gray-500">Chicken the Dog · 2w</div> -->
 <!--                                     </div> -->
 <!--                                 </a> -->
-                                <a class="dropdown-item text-center small text-gray-500" href="#">leer mas mensajes</a>
-                            </div>
+                               <!--  <a id="idPMensajes" class="dropdown-item text-center small text-gray-500" th:href="@{/cargarMensajesP}">leer mas mensajes</a>-->
+                            <!--  </div>-->
                         </li>
+
+
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 

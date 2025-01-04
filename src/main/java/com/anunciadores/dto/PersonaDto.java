@@ -45,6 +45,7 @@ public class PersonaDto implements Serializable {
     
     private List<Rol> roles;
 	private List<PermisosMenu> permisosMenu;
+	private List<MensajesDTO> mensajes;
 
 
 	private Rol rolUnico;
@@ -53,6 +54,8 @@ public class PersonaDto implements Serializable {
     private boolean coordinadorActual;
     private Date fechaCoordinador;
     private boolean validarPago;
+    private boolean cumpleActual;
+	private NotasCursoDTO notas;
 
       public PersonaDto() {
     }
@@ -219,5 +222,29 @@ public class PersonaDto implements Serializable {
 
 	public void setFechaCoordinador(Date fechaCoordinador) {
 		this.fechaCoordinador = fechaCoordinador;
+	}
+
+	public boolean isCumpleActual() {
+		return cumpleActual;
+	}
+
+	public void setCumpleActual(boolean cumpleActual) {
+		this.cumpleActual = cumpleActual;
+	}
+
+	public NotasCursoDTO getNotas() {
+		return notas;
+	}
+
+	public void setNotas(NotasCursoDTO notas) {
+		this.notas = notas;
+	}
+
+	public List<MensajesDTO> getMensajes() {
+		return mensajes;
+	}
+
+	public void setMensajes(List<MensajesDTO> mensajes) {
+		this.mensajes = mensajes;
 	}
 }

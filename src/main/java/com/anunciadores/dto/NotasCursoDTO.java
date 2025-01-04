@@ -1,4 +1,4 @@
-package com.anunciadores.model;
+package com.anunciadores.dto;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -6,11 +6,12 @@ package com.anunciadores.model;
  */
 
 
-import java.io.Serializable;
+import com.anunciadores.model.Curso;
+import com.anunciadores.model.Persona;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
-
-import com.sun.istack.NotNull;
+import java.io.Serializable;
 
 
 /**
@@ -18,41 +19,20 @@ import com.sun.istack.NotNull;
  * @author valbuena
  */
 
-@Entity
-@Table(name = "notas_curso")
 
-public class NotasCurso implements Serializable {
+
+public class NotasCursoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-    
-    @Id
-	@Basic(optional = false)
-	@NotNull
 
-    @Column(name = "id")
     private double id;
-
-	@OneToOne
-	@JoinColumn(
-			name = "id_curso",
-			referencedColumnName = "id")
 	private Curso curso;
-
-	@OneToOne
-	@JoinColumn(
-			name = "id_persona",
-			referencedColumnName = "id")
-    private Persona persona;
-	@Column(name = "nota_maestro")
     private double notaMaestro;
-	@Column(name = "nota_asistencia")
     private double notaAsistencia;
-	@Column(name = "nota_practica")
     private double notaPractica;
-	@Column(name = "nota_examen_final")
 	private double notaExamenFinal;
 
-	@Column(name = "nota_final")
 	private double notaFinal;
+	private int colorCelda;
 
 	public double getId() {
 		return id;
@@ -68,14 +48,6 @@ public class NotasCurso implements Serializable {
 
 	public void setCurso(Curso curso) {
 		this.curso = curso;
-	}
-
-	public Persona getPersona() {
-		return persona;
-	}
-
-	public void setPersona(Persona persona) {
-		this.persona = persona;
 	}
 
 	public double getNotaMaestro() {
@@ -116,5 +88,13 @@ public class NotasCurso implements Serializable {
 
 	public void setNotaFinal(double notaFinal) {
 		this.notaFinal = notaFinal;
+	}
+
+	public int getColorCelda() {
+		return colorCelda;
+	}
+
+	public void setColorCelda(int colorCelda) {
+		this.colorCelda = colorCelda;
 	}
 }

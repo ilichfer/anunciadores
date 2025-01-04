@@ -11,6 +11,7 @@
 <body>
 
 <header th:fragment="header">
+    <meta http-equiv="refresh" content="#{facesContext.externalContext.sessionMaxInactiveInterval};url=#{request.contextPath}/404.html"/>
 <!-- Sidebar -->
 <div id="admin">
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -58,8 +59,9 @@
                             <input class="form-control" type="text" name="id" id="idProgramacion" style="display:none">
                             <input type="submit" value="Mi programacion" class="collapse-item" style="border-style: hidden;width: 90%;text-align:left;">
                         </form>
+                        <!--<a id="idPMensajes" class="collapse-item" th:href="@{/cargarMensajesP}" >mensajes</a>
 
-                        <!--<a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>-->
+                        <a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>-->
                     </div>
                     <div id="menuCoordinador" class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Agregar informe</h6>
@@ -97,9 +99,9 @@
                             <input class="form-control" type="text" name="id" id="idPCurso" style="display:none">
                             <input type="submit" value="cursos activos" class="btn collapse-item" style="border-style: hidden;width: 90%;text-align:left;text-align:left">
                         </form>
-                        <form >
-                            <input class="form-control" type="text" name="id" id="idHistorico" style="display:none">
-                            <input type="submit" value="historico notas" class="btn collapse-item" style="border-style: hidden;width: 90%;text-align:left;" disabled>
+                        <form method="POST" th:action="@{/historicoNotas}"   >
+                            <input class="form-control" type="text" name="idHistorico" id="idHistorico" style="display:none">
+                            <input type="submit" value="historico notas" class="btn collapse-item" style="border-style: hidden;width: 90%;text-align:left;" >
                         </form>
                         <h6 class="collapse-header">Administrar Cursos:</h6>
                         <a id="subMenuListarCursos" class="collapse-item" th:href="@{/listarCursos}" >Gestionar cursos</a>

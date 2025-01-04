@@ -50,11 +50,13 @@ public interface IPersonaService {
 	//List<PersonaDto> findCursoValorByPersona(List<Persona> personas);
 
 	public List<PersonaDto> findAllUsuariosRol();
+	public List<PersonaDto> findBirthdayByMonth();
 
 	public void findUsuariosRol(int idPersona,int idRolNuevo);
 
 	List<EstudioPersona> findEstudiosPersona (int idPersona);
 
 	public EstudioPersona saveEstudio(EstudioPersona estudio);
-	
+
+	public List<PersonaDto> getBirthDay (List<PersonaDto> listDto);
 }

@@ -53,103 +53,176 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Inicio</h1>
-                        <!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generar Reporte</a>-->
+
+                        <form method="POST" th:action="@{/sugerencia}">
+                            <input class="form-control" type="text" name="idPersonaSugerencia" id="idPersonaSugerencia" style="display:none">
+                            <button class="btn btn-primary btn-icon-split"
+                               id="idPersonaSugerencia2" >
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </span>
+                                <span class="text">Sugerencias</span>
+                            </button>
+                        </form>
+
+
                     </div>
                     
-                        <div class="row">
+                    <div class="row">
+                        <div class="col-lg-8">
 
                             <!-- Area Chart -->
-                            <div class="col-xl-8 col-lg-7">
-                                  <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Versiculo del Dia</h6>
+
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Versiculo del Dia</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p th:text="${dia.reference}" />
+                                    <p class="mb-0" th:text="${dia.content}" />
+                                </div>
+                            </div>
+
+                            <div class="card shadow mb-4" th:if="${cumpleanosDiario != null}">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">cumpleaños de hoy</h6>
+                                </div>
+
+                            <div class="card-body" >
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Persona</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                        <tr th:each="persona, itemStat : ${cumpleanosDiario}">
+                                            <td class="table-success" th:if="${persona.cumpleActual == true}" th:text="'Felicitamos en este día a ' + ${persona.nombre} + ' ' + ${persona.apellido}  + ' por tu cumpleaños, Que Dios bendiga tu vida, que veas el favor y la misericordia cada día de tu vida !!!'">persona</td>
+                                            <td th:if="${persona.cumpleActual == false}" th:text=" ${persona.nombre} + ' ' + ${persona.apellido}">persona</td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            </div>
+
+
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Proxima Programacion de Servidores</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive" th:if="${programacionMin == null}">
+                                        <p>no se encontro registrada la programacion para el siguiente servicio</p>
                                     </div>
-                                    <div class="card-body">
-                                        <p th:text="${dia.reference}" />
-                                        <p class="mb-0" th:text="${dia.content}" />
+                                    <div class="table-responsive" th:if="${programacionMin != null}">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                            <tr>
+                                                <th>ministerio</th>
+                                                <th>fecha</th>
+                                                <th>posicion</th>
+                                                <th>encargado</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <div th:remove="tag" th:each="prog:${programacionMin}">
+                                                <tr>
+                                                    <td class="servicioPendiente" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista < 2}" style="vertical-align : middle;text-align:center;"></td>
+                                                    <td class="m-0 font-weight-bold text-primary" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista > 1}" style="vertical-align : middle;text-align:center;"></td>
+                                                    <td th:rowspan="${prog.tamanoLista}" th:text="${prog.fechaServcio}"  style="vertical-align : middle;text-align:center;"></td>
+                                                </tr>
+                                                <tr th:each="article,stats:${prog.servicioDTO}">
+                                                    <td th:text="${article.posicion}"></td>
+                                                    <td th:text="${article.encargado}"></td>
+
+                                                </tr>
+                                            </div>
+                                            </tbody>
+
+                                            <tfoot>
+                                            <tr>
+
+
+                                                <td colspan="1" style="vertical-align : middle;text-align:center;" th:if="${coordinador == null}">
+                                                    <h6 class="servicioPendiente">Coordinador</h6>
+                                                </td>
+                                                <td colspan="1" style="vertical-align : middle;text-align:center;" th:if="${coordinador != null}">
+                                                    <h6 class="m-0 font-weight-bold text-primary">Coordinador</h6>
+                                                </td>
+                                                <td colspan="1"  style="vertical-align : middle;text-align:center;"
+                                                    th:text="${fechaCoordinador}" th:if="${coordinador != null}" >
+                                                    <h6 >persona asignada</h6>
+                                                </td>
+                                                <td colspan="2" style="vertical-align : middle;text-align:center;"
+                                                    th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio == null}" >
+                                                    <h6 >persona asignada 3 campos</h6>
+                                                </td>
+                                                <td colspan="2" style="vertical-align : middle;text-align:center;"
+                                                    th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio != null}" >
+                                                    <h6 >persona asignada + boton</h6>
+                                                </td>
+                                                <td colspan="3"  style="vertical-align : middle;text-align:center;"
+                                                    th:if="${coordinador == null}" >
+                                                    <h6 >no se encontro registrado coordinador para esta fecha</h6>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+
+
+                                        </table>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
 
-                    <div class="row">
+                        <div class="col-lg-4">
 
-                        <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Proxima Programacion de Servidores</h6>
+
+                            <div class="card shadow mb-5">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">personas que cumplen años este mes</h6>
+                                    <div class="dropdown no-arrow">
+
+                                    </div>
                                 </div>
+
                                 <div class="card-body">
-                                     <div class="table-responsive" th:if="${programacionMin == null}">
-                                         <p>no se encontro registrada la programacion para el siguiente servicio</p>
-                                     </div>
-                                     <div class="table-responsive" th:if="${programacionMin != null}">
-                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                             <thead>
-                                             <tr>
-                                                 <th>ministerio</th>
-                                                 <th>fecha</th>
-                                                 <th>posicion</th>
-                                                 <th>encargado</th>
-                                             </tr>
-                                             </thead>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                            <tr>
+                                                <th>Persona</th>
+                                                <th>dia de cumpleaños</th>
+                                            </tr>
+                                            </thead>
 
-                                             <tbody>
-                                             <div th:remove="tag" th:each="prog:${programacionMin}">
-                                             <tr>
-                                                 <td class="servicioPendiente" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista < 2}" style="vertical-align : middle;text-align:center;"></td>
-                                                 <td class="m-0 font-weight-bold text-primary" th:rowspan="${prog.tamanoLista}" th:text="${prog.nombreMinisterio}" th:if="${prog.tamanoLista > 1}" style="vertical-align : middle;text-align:center;"></td>
-                                                 <td th:rowspan="${prog.tamanoLista}" th:text="${prog.fechaServcio}"  style="vertical-align : middle;text-align:center;"></td>
-                                             </tr>
-                                             <tr th:each="article,stats:${prog.servicioDTO}">
-                                                 <td th:text="${article.posicion}"></td>
-                                                 <td th:text="${article.encargado}"></td>
+                                            <tbody>
 
-                                             </tr>
-                                             </div>
-                                             </tbody>
+                                            <tr th:each="persona, itemStat : ${cumpleanos}">
+                                                <td class="table-success" th:if="${persona.cumpleActual == true}" th:text="'Felicitamos en este día a ' + ${persona.nombre} + ' ' + ${persona.apellido}  + ' por su cumpleaños'">persona</td>
+                                                <td th:if="${persona.cumpleActual == false}" th:text=" ${persona.nombre} + ' ' + ${persona.apellido}">persona</td>
+                                                <td class="table-success" th:if="${persona.cumpleActual == true}" th:text="${persona.fechanacimiento}">fecha</td>
+                                                <td th:if="${persona.cumpleActual == false}" th:text="${persona.fechanacimiento}">fecha</td>
+                                            </tr>
 
-                                             <tfoot>
-                                             <tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
 
+                            </div>
+                        </div>
+                    </div>
 
-                                                 <td colspan="1" style="vertical-align : middle;text-align:center;" th:if="${coordinador == null}">
-                                                     <h6 class="servicioPendiente">Coordinador</h6>
-                                                 </td>
-                                                 <td colspan="1" style="vertical-align : middle;text-align:center;" th:if="${coordinador != null}">
-                                                     <h6 class="m-0 font-weight-bold text-primary">Coordinador</h6>
-                                                 </td>
-                                                 <td colspan="1"  style="vertical-align : middle;text-align:center;"
-                                                     th:text="${fechaCoordinador}" th:if="${coordinador != null}" >
-                                                     <h6 >persona asignada</h6>
-                                                 </td>
-                                                 <td colspan="2" style="vertical-align : middle;text-align:center;"
-                                                     th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio == null}" >
-                                                     <h6 >persona asignada 3 campos</h6>
-                                                 </td>
-                                                 <td colspan="2" style="vertical-align : middle;text-align:center;"
-                                                     th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio != null}" >
-                                                     <h6 >persona asignada + boton</h6>
-                                                 </td>
-                                                 <td colspan="3"  style="vertical-align : middle;text-align:center;"
-                                                     th:if="${coordinador == null}" >
-                                                     <h6 >no se encontro registrado coordinador para esta fecha</h6>
-                                                 </td>
-                                             </tr>
-                                             </tfoot>
-
-
-                                          </table>
-                                      </div>
-                                  </div>
-
-                             </div>
-                         </div>
-
-                     </div>
 
                      <!-- Content Row -->
                     <div class="row" id="admin">
@@ -320,7 +393,7 @@
                     <div class="row" >
 
                         <!-- Content Column -->
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-lg-7">
 
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
@@ -360,6 +433,7 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
                             <!-- Color System 
                             <div class="row">
@@ -431,7 +505,8 @@
 
                         </div>-->
 
-                        <div class="col-lg-6 mb-4">
+
+                        <div class="col-lg-5">
 
                             <!-- Illustrations -->
                             <div class="card shadow mb-4">
@@ -451,15 +526,18 @@
 <!--                                         unDraw &rarr;</a> -->
                                 </div>
                             </div>
+                        </div>
 
+                            <div class="col-lg-12">
                             <!-- Approach -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p>Anuncia 2 es una plataforma para gestionar personal, actividades... Etc .</p>
-                                    <p class="mb-0">A medida que pase el tiempo se estara ajustando funcionalidades para un mejor uso.</p>
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Anuncia 2 es una plataforma para gestionar personal, actividades... Etc .</p>
+                                        <p class="mb-0">A medida que pase el tiempo se estara ajustando funcionalidades para un mejor uso.</p>
+                                    </div>
                                 </div>
                             </div>
 
@@ -469,14 +547,13 @@
                 </div>
                 <!-- /.container-fluid -->
 
-            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Anunciadores 2023</span>
+                        <span>Copyright &copy; Anunciadores de cristo 2024</span>
                     </div>
                 </div>
             </footer>
@@ -495,6 +572,7 @@
 
     <!-- Logout Modal-->
     <header th:replace="layout/modalSalir :: header"></header>
+        <header th:replace="layout/modalMensajes :: header"></header>
 
         <style>
 

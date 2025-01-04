@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Anuncia 2- Cursos</title>
+    <title>Anuncia 2- Mensajes</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -50,40 +50,38 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Cursos</h1>
-                    <p class="mb-4">Tabla de cursos en los que se encuentra activo.</p>
+                    <h1 class="h3 mb-2 text-gray-800">Bandeja de Mensajes</h1>
+
+                    <div class="card-body">
+                        <h4 class="card-title" >
+                            <a class="btn btn-primary" href="nuevoMensaje">Nuevo mensaje</a>
+                        </h4>
+                    </div>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Lista de Cursos</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Mensajes recibidos</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr >
-                                            <th>nombre curso</th>
-                                            <th>fecha inicio</th>
-                                            <th>fecha fin</th>
-                                            <th>Profesor</th>
-                                            <th>valor</th>
-                                            <th  >Acciones</th>
+                                            <th>Remitente</th>
+                                            <th>fecha</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        <tr th:each="curso, itemStat : ${cursos}">
-                                            <td th:text="${curso.nombreCurso}">nombreCurso</td>
-                                            <td th:text="${curso.fechaInicio}">fechaInicio</td>
-                                            <td th:text="${curso.fechaFin}">fechaFin</td>
-                                            <td th:if="${curso.profesor !=null}" th:text="${curso.profesorDto.nombre}">fechaFin</td>
-                                            <td th:if="${curso.profesor ==null}" >N/A</td>
-                                            <td th:text="${curso.valorTotal}">valor</td>
+                                        <tr th:each="mensaje, itemStat : ${mensajes}">
+                                            <td th:text="${mensaje.remitente.nombre}+ ' ' + ${mensaje.remitente.apellido}">remitente</td>
+                                            <td th:text="${mensaje.fechaMostrar}">FechaMostrar</td>
 
-                                            <td th:if="${curso.notas == true}">
-                                                <a class="btn btn-primary" th:href="@{/notasCurso(idCurso=${curso.id},nombreCurso=${curso.nombreCurso})}"
-                                                   type="submit" data-toggle="tooltip" data-placement="right" title="registrar notas" >registrar notas
-                                                </a>
+                                            <td>
+                                                    <a class="btn btn-primary" th:href="@{/leerMensaje(idMensaje=${mensaje.id})}"
+                                                       type="submit" data-toggle="tooltip" data-placement="right" title="registrar notas" >Leer
+                                                    </a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -116,16 +114,16 @@
 
                 <!-- Custom scripts for all pages-->
                 <script src="js/sb-admin-2.min.js"></script>
-    <!-- Cargar local Storage-->
-<!--     <script src="js/storage.js"></script> -->
-    <script src="js/cargarData.js"></script>
+
+                <!-- <script th:inline="javascript"> -->
+                <script src="js/storage.js"></script>
+                <script src="js/cargarData.js"></script>
 
                 <!-- Page level plugins -->
                 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
                 <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-                <!-- Page level custom scripts 
-    <script src="js/demo/datatables-demo.js"></script>-->
+
 
 </body>
 

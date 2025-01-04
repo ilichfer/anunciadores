@@ -13,7 +13,7 @@ import java.util.List;
 
 
 public interface ITdcService {
-	public Tdc save(Tdc tdc);
+	public Tdc save(Date fechaCreacion, Tdc tdc);
 
 	public Tdc getById(int id);
 

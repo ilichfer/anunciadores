@@ -50,42 +50,38 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Cursos</h1>
-                    <p class="mb-4">Tabla de cursos en los que se encuentra activo.</p>
+                    <h1 class="h3 mb-2 text-gray-800">historico de Notas</h1>
+                    <p class="mb-4">Tabla de cursos realizados.</p>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Lista de Cursos</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Lista de cursos realizados</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
-                                        <tr >
-                                            <th>nombre curso</th>
-                                            <th>fecha inicio</th>
-                                            <th>fecha fin</th>
-                                            <th>Profesor</th>
-                                            <th>valor</th>
-                                            <th  >Acciones</th>
-                                        </tr>
+                                    <tr>
+                                        <th>Curso</th>
+                                        <th>fecha</th>
+                                        <th>nota del maestro (30%)</th>
+                                        <th>nota asistencia (20%)</th>
+                                        <th>nota practica (20%)</th>
+                                        <th>nota examen final (30%)</th>
+                                        <th>nota Final</th>
+                                    </tr>
                                     </thead>
 
                                     <tbody>
-                                        <tr th:each="curso, itemStat : ${cursos}">
-                                            <td th:text="${curso.nombreCurso}">nombreCurso</td>
-                                            <td th:text="${curso.fechaInicio}">fechaInicio</td>
-                                            <td th:text="${curso.fechaFin}">fechaFin</td>
-                                            <td th:if="${curso.profesor !=null}" th:text="${curso.profesorDto.nombre}">fechaFin</td>
-                                            <td th:if="${curso.profesor ==null}" >N/A</td>
-                                            <td th:text="${curso.valorTotal}">valor</td>
-
-                                            <td th:if="${curso.notas == true}">
-                                                <a class="btn btn-primary" th:href="@{/notasCurso(idCurso=${curso.id},nombreCurso=${curso.nombreCurso})}"
-                                                   type="submit" data-toggle="tooltip" data-placement="right" title="registrar notas" >registrar notas
-                                                </a>
-                                            </td>
-                                        </tr>
+                                    <tr th:each="historico, itemStat : ${historicoNotas}">
+                                        <td th:text="${historico.curso.nombreCurso}">documento</td>
+                                        <td th:text="${historico.curso.fechaFin}">tipodocumento</td>
+                                        <td th:text="${historico.notaMaestro}">notaMaestro</td>
+                                        <td th:text="${historico.notaAsistencia}">notaAsistencia</td>
+                                        <td th:text="${historico.notaPractica}">notaPractica</td>
+                                        <td th:text="${historico.notaExamenFinal}">notaExamenFinal</td>
+                                        <td th:text="${historico.notaFinal}">notaFinal</td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>

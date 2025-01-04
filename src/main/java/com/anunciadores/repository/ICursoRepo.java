@@ -18,6 +18,17 @@ public interface ICursoRepo extends JpaRepository<Curso, Integer>{
             "join inscripciones ins on p.id = ins.id_persona " +
             "WHERE p.id  = ?1 )")
     List<Curso> findByActivos(int idPersona);
+    @Query(nativeQuery = true,value = "SELECT c.* FROM persona p  "
+            + " join inscripciones ins on p.id = ins.id_persona"
+            + " join curso c on ins.id_curso = c.id "
+            + " where p.id= ?1 " )
+    List<Curso> cursosByIdPersona(int idPersona);
+
+
+    @Query(nativeQuery = true,value = "SELECT c.* FROM persona p " +
+            " join curso c on p.id  = c.profesor " +
+            " where p.id= ?1 " )
+    List<Curso> cursosByIdProfesor(int idPersona);
 
 
 

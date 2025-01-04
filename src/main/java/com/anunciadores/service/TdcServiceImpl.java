@@ -1,6 +1,7 @@
 package com.anunciadores.service;
 
 import com.anunciadores.controller.TdcController;
+import com.anunciadores.dto.ServicioResponseDto;
 import com.anunciadores.dto.TdcDto;
 import com.anunciadores.dto.TdcReporteDto;
 import com.anunciadores.model.*;
@@ -10,14 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TdcServiceImpl implements ITdcService {
@@ -31,11 +31,19 @@ public class TdcServiceImpl implements ITdcService {
 	private IPersonaRepo personaRepository;
 
 	@Override
-	public Tdc save(Tdc tdc) {
+	@Transactional
+	public Tdc save(Date fechaCreacion, Tdc tdc) {
 		try {
-			Tdc newtdc =  TdcRepository.save(tdc);
+			List<Tdc> tdcDto = TdcRepository.findAllByDateAndPersona(fechaCreacion, tdc.getIdPersona());
+			if (tdcDto.isEmpty() || tdcDto.size() <= 0  ){
+				Tdc newtdc =  TdcRepository.save(tdc);
+			}else{
+				throw new RuntimeException();
+			}
+
 		}catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException();
 		}
 
 		return tdc;

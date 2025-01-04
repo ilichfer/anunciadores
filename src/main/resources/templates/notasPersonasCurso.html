@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -56,65 +57,34 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">[[${titulo}]]</h6>
                         </div>
-                        <form method="POST" th:action="@{/agregarListaPersonasCurso}">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <input class="form-control" type="text" th:value="${{idCurso}}" name="idCurso" id="idCurso" style="display:none">
-                                <input class="form-control" type="text" th:value="${{nombreCurso}}" name="nombreCurso" id="nombreCurso" style="display:none">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Documento agregar persona</th>
-                                            <th>Tipo Documento</th>
                                             <th>Nombre</th>
-                                            <th>Apellido</th>
-                                            <th>Telefono</th>
-                                            <th>Fecha Nacimiento</th>
+                                            <th>nota final</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         <tr th:each="persona, itemStat : ${personas}">
-                                            <td th:text="${persona.documento}">documento</td>
-                                            <td th:text="${persona.tipodocumento}">tipodocumento</td>
-                                            <td th:text="${persona.nombre}">persona</td>
-                                            <td th:text="${persona.apellido}">apellido</td>
-                                            <td th:text="${persona.telefono}">telefono</td>
-                                            <td th:text="${persona.fechanacimiento}">fechanacimiento</td>
+                                            <td th:text="${persona.nombre} + ' ' + ${persona.apellido}"></td>
+                                            <td  th:if="${persona.notas.colorCelda == 1}" th:text="${persona.notas.notaFinal}" class="alert alert-success">excelente</td>
+                                            <td th:if="${persona.notas.colorCelda == 2}" th:text="${persona.notas.notaFinal}" class="alert alert-danger">perdio</td>
+                                            <td th:if="${persona.notas.colorCelda == 3}" th:text="${persona.notas.notaFinal}" >normal</td>
                                             <td >
-                                                <input type="checkbox"  th:value="${persona.id}" name="idPersonas"
-                                                       id="idPersonas" />
-                                            </td>
-
-                                            <td >
-                                            <a class="btn btn-danger btn-circle btn-sm" th:href="@{/eliminarPersonasCurso(idPersona=${persona.id},idCurso=${idCurso},nombreCurso=${nombreCurso})}" th:if="${delete != false}"
-                                              type="submit"  data-toggle="tooltip" data-placement="right" title="Eliminar del Curso">
-												<i class="fas fa-trash"></i>
-											</a>
-                                                <!--
-											<a class="btn btn-primary btn-circle btn-sm" th:href="@{/agregarPersonasCurso(idPersona=${persona.id},idCurso=${idCurso},nombreCurso=${nombreCurso})}" th:if="${add != false}"
-												type="submit"  data-toggle="tooltip" data-placement="right" title="Agregar al Curso" >
-												<i class="fas fa-plus-circle"></i>
-											</a>
-
-										-->
-											</td>
+                                                <a class="btn btn-primary" th:href="@{/registrarNotasPersona(idCurso=${idCurso},idPersona=${persona.id})}"
+                                                   type="submit" data-toggle="tooltip" data-placement="right" title="registrar notas" >registrar notas
+                                                </a>
+											</td> 
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                            <div align="center" class="center-block" >
-                                <input type="submit" value="Agregar Estudiantes" class="btn btn-primary container" style="width:70%">
-                            </div>
-                        </form>
 
-                        <div align="center" class="center-block" >
-                            <a class="mb-2 btn btn-warning container" th:href="@{/listarCursos}"
-                               type="submit" data-toggle="tooltip" data-placement="right"
-                               title="Regresar" style="width:40%"> Regresar </a>
-                        </div>
                     </div>
 
                 </div>
@@ -143,6 +113,7 @@
                 <script src="js/sb-admin-2.min.js"></script>
     <!-- Cargar local Storage-->
     <script src="js/storage.js"></script>
+     <script src="js/cargarData.js"></script>
 
                 <!-- Page level plugins -->
                 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
@@ -150,7 +121,9 @@
 
                 <!-- Page level custom scripts 
     <script src="js/demo/datatables-demo.js"></script>-->
-
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

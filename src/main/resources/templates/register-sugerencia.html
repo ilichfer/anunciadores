@@ -31,54 +31,39 @@
                 <!-- Nested Row within Card Body -->
                 <div class="row">
                     <div class="col-lg-5 d-none d-lg-block bg-register-image">
-                        <img height="100%" width="80%" alt="logo" src="img/logo.jpeg"></div>
+                        <img height="80%" width="100%" alt="logo" src="img/logo.jpeg"></div>
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">registro informe Coordinadores</h1>
+                                <h1 class="h4 text-gray-900 mb-4">registro de Sugerencias</h1>
                             </div>
-                            <form method="POST" th:action="@{/guardarInforme}" th:object="${Coordinador}">
+                            <form method="POST" th:action="@{/saveSugerencia}" >
 
                                 <div class="form-group"  style="display:none;">
                                     <input type="text" class="form-control form-control-user" name="idPersona" id="idPersona"
-                                           th:value="${persona.id}" readonly>
+                                           th:value="${idPersona}" readonly>
                                 </div>
-                                <div class="form-group" style="display:none;">
-                                    <input type="text" class="form-control form-control-user" name="id" id="id"
-                                           th:value="${coordinador.id}" readonly>
-                                </div>
+
+
                                 <div class="form-group" >
-                                    <label for="nombreCor">nombre Coordinador</label>
-                                    <input type="text" class="form-control form-control-user" id="nombreCor"
-                                           th:value="${persona.nombre}" readonly>
-                                </div>
-                                <div class="form-group" >
-                                    <label for="fechaServCoord">fecha servicio</label>
-                                    <input type="text" class="form-control form-control-user" name="fechaServCoord" id="fechaServCoord"
-                                           th:value="${fechaServicio}" readonly>
+                                    <label for="fechaRegistro">fecha Registro</label>
+                                    <input type="text" class="form-control form-control-user" name="fechaRegistro" id="fechaRegistro"
+                                           th:value="${fechaRegistro}" readonly>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="notasServicio">descripcion del informe</label>
-                                    <textarea class="form-control" name="notasServicio" id="notasServicio" rows="5"
-                                              placeholder="Descripcion del informe"
+                                    <textarea class="form-control" name="descripcion" id="descripcion" rows="5"
+                                              placeholder="Descripcion de la sugerencia"
                                               required="required"></textarea>
                                 </div>
 
-
-                                <!--	<div class="form-check">
-                                    	<input type="checkbox" class="form-check-input" name="check" 
-                                    	id="check"  />
-                                    	<label lass="form-check-input" for="checkbox">Requiere seccion de comentarios</label>
-                                	</div> -->
-                               
-                                <input type="submit" value="Guardar informe" class="btn btn-primary container">
+                                <input type="submit" value="Guardar Sugerencia" class="btn btn-primary container">
                                 <hr>
                                 
                             </form>
                         </div>
                         <div align="center" class="center-block" >
-                            <a class="mb-2 btn btn-warning container" th:href="@{/crearInforme}"
+                            <a class="mb-2 btn btn-warning container" th:href="@{/redirectDashboard}"
                                type="submit" data-toggle="tooltip" data-placement="right"
                                title="Regresar" style="width:70%"> Regresar </a>
                         </div>
