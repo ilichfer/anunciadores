@@ -104,7 +104,7 @@ public class direccionesController {
 	
 	@GetMapping("/redirectDashboard")
 	public String login(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
-		VersiculoDto dia =bibliaService.findVerseDay();
+		VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(utilDate.cargarfechaActualBogotaDate());
 		model.addAttribute("dia", dia);
 		List<PersonaDto> listadoCumpleañosMes = personaService.findBirthdayByMonth();

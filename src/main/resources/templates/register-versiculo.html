@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Anuncia2 - Registro de versiculos</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image">
+                        <img height="100%" width="120%" alt="logo" src="img/logo.jpeg"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Registro de versiculo semanal</h1>
+                            </div>
+                            <form method="POST" th:action="@{/saveVersiculo}">
+
+                                <div class="text-center" th:if="${msj != null}">
+                                    <label class="alert alert-danger" th:text="${msj}"></label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="idlibro"><span>libro</span></label>
+                                    <select class="form-control" name="idlibro" id="idlibro" th:onchange="updateCaps(this.value)" required>
+                                        <option value="">seleccione una opcion</option>
+                                        <option   th:each="lib : ${libros}" th:value="${lib.id}"  th:text="${lib.name}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" >
+                                    <label for="capitulos">Capitulo:</label>
+                                    <select class="form-control" name="capitulos" id="capitulos"  th:onchange="updateVersos(this.value)" required>
+                                        <option value="">Seleccione un libro primero</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" >
+                                    <label for="versiculos">Versiculo:</label>
+                                    <select class="form-control" name="versiculos" id="versiculos" th:onchange="findVerso(this.value)" required>
+                                        <option value="">Seleccione un capitulo primero</option>
+                                    </select>
+                                </div>
+
+
+                                <div class="form-group" align="center">
+                                    <label for="message">versiculo</label>
+                                    <textarea class="form-control" name="message" id="message" rows="5" readonly ></textarea>
+                                </div>
+
+                                <div class="form-group" align="center">
+                                    <input class="form-control" name="title" id="title" style="text-align: center"  readonly/>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="fechaInicio">fecha inicio</label>
+                                        <input type="date" class="form-control form-control-user" name="fechaInicio"
+                                            id="fechaInicio" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="fechaFin">fecha fin</label>
+                                        <input type="date" class="form-control form-control-user" name="fechaFin"
+                                               id="fechaFin" required>
+                                    </div>
+                                </div>
+
+
+
+
+                                <!--	<div class="form-check">
+                                    	<input type="checkbox" class="form-check-input" name="check"
+                                    	id="check"  />
+                                    	<label lass="form-check-input" for="checkbox">Requiere seccion de comentarios</label>
+                                	</div> -->
+
+                                <input type="submit" value="Guardar" class="btn btn-primary container">
+                                <hr>
+
+                            </form>
+                        </div>
+                        <div align="center" class="center-block" >
+                            <a class="mb-2 btn btn-warning container" th:href="@{/redirectDashboard}"
+                               type="submit" data-toggle="tooltip" data-placement="right"
+                               title="Regresar" style="width:70%"> Regresar </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        async function updateCaps(libroSeleccionado) {
+            const capitulos = document.getElementById('capitulos');
+            capitulos.innerHTML = '<option>Cargando...</option>';
+            try {
+                const response = await fetch(`/capitulosFind?lib=${libroSeleccionado}`);
+
+                if (response.ok) {
+                    const capsEncontrados = await response.json();
+                    capitulos.innerHTML = '<option value="">Seleccione un capitulo</option>';
+                    capsEncontrados.forEach(subcategory => {
+                        const option = document.createElement('option');
+                        option.value = subcategory.id;  // Suponiendo que tienes una clave `id`
+                        option.textContent = subcategory.number;  // Suponiendo que tienes una clave `name`
+                        capitulos.appendChild(option);
+                    });
+                } else {
+                    capitulos.innerHTML = '<option>Error cargando subcategorías</option>';
+                }
+            } catch (error) {
+                capitulos.innerHTML = '<option>Error de conexión</option>';
+            }
+        }
+    </script>
+
+    <script>
+        async function updateVersos(capituloSeleccionado) {
+            const versiculos = document.getElementById('versiculos');
+            versiculos.innerHTML = '<option>Cargando...</option>';
+            try {
+                const response = await fetch(`/versiculosrests?capSelecionado=${capituloSeleccionado}`);
+
+                if (response.ok) {
+                    const versosEncontrados = await response.json();
+                    versiculos.innerHTML = '<option value="">Seleccione un versiculo</option>';
+                    versosEncontrados.forEach(subcategory => {
+                        const option = document.createElement('option');
+                        option.value = subcategory.id;  // Suponiendo que tienes una clave `id`
+                        option.textContent = subcategory.reference;  // Suponiendo que tienes una clave `name`
+                        versiculos.appendChild(option);
+                    });
+                } else {
+                    versiculos.innerHTML = '<option>Error cargando versiculos</option>';
+                }
+            } catch (error) {
+                versiculos.innerHTML = '<option>Error de conexión</option>';
+            }
+        }
+    </script>
+
+    versiculorests
+
+    <script>
+        async function findVerso(versoSeleccionado) {
+            //const versiculos = document.getElementById('versiculos');
+            //versiculos.innerHTML = '<option>Cargando...</option>';
+             document.getElementById("message").textContent = "versiculo selecionado: " + versoSeleccionado;
+            try {
+                const response = await fetch(`/versiculorests?verSelecionado=${versoSeleccionado}`);
+
+                if (response.ok) {
+
+                    const versoEncontrado = await response.json();
+
+                    document.getElementById("title").value = versoEncontrado.reference;
+
+                   document.getElementById("message").value = versoEncontrado.content;
+                } else {
+                    versiculos.innerHTML = '<option>Error cargando versiculos</option>';
+                }
+            } catch (error) {
+                versiculos.innerHTML = '<option>Error de conexión</option>';
+            }
+        }
+    </script>
+
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+    <!-- Cargar local Storage-->
+    <script src="js/storage.js"></script>
+
+        <!-- scripts for all pages-->
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>

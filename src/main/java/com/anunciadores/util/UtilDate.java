@@ -36,4 +36,11 @@ public class UtilDate {
 
     }
 
+    public Date convertStringToDate(String fecha) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaDate = sdf.parse(fecha);
+        return fechaDate;
+
+    }
+
 }

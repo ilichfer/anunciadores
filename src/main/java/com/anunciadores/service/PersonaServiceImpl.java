@@ -20,6 +20,7 @@ import com.anunciadores.dto.ServicioResponseDto;
 import com.anunciadores.mapper.mapperMensaje;
 import com.anunciadores.model.*;
 import com.anunciadores.repository.*;
+import com.anunciadores.service.interfaces.IMenuService;
 import com.anunciadores.util.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,8 +75,8 @@ public class PersonaServiceImpl implements IPersonaService {
 	@Autowired
 	private IEstudiosPersonaRepo estudiosPersonaRepository;
 
-	//@Autowired
-	//private PersonaRepoImpl daoPersona;
+	@Autowired
+	private IMenuService menuService;
 
 	@Autowired
 	private InscripcionRepo inscripcionesRepository;
@@ -312,8 +313,9 @@ public class PersonaServiceImpl implements IPersonaService {
 
 				for (com.anunciadores.model.Rol rolAsignado : roles) {
 					if (rolAsignado.getDescripcion().equalsIgnoreCase("ADMINISTRADOR")) {
-						permisos = permisosRepo.findByIdPersona(personadto.getId());
-						compararPermisos(permisos,personadto.getId());
+						//permisos = permisosRepo.findByIdPersona(personadto.getId());
+						//compararPermisos(permisos,personadto.getId());
+						permisos = menuService.findAllPermisosMenu(personadto.getId());
 						personadto.getRoles().add(rolAsignado);
 						personadto.setAdmin(true);
 						personadto.setUser(false);

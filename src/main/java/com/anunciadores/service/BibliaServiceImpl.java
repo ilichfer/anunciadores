@@ -1,11 +1,15 @@
 package com.anunciadores.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 
-import com.anunciadores.controller.ServicioController;
+import com.anunciadores.dto.*;
+import com.anunciadores.model.VersiculoSemanal;
+import com.anunciadores.repository.IVersiculoRepo;
+import com.anunciadores.util.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.anunciadores.client.BibliaFeingClient;
-import com.anunciadores.dto.BibliaDto;
-import com.anunciadores.dto.CapituloDto;
-import com.anunciadores.dto.CapitulosDto;
-import com.anunciadores.dto.LibroDto;
-import com.anunciadores.dto.LibrosDto;
-import com.anunciadores.dto.VersiculoDto;
-import com.anunciadores.dto.VersiculoResponseDto;
-import com.anunciadores.dto.VersiculosDto;
-import com.anunciadores.dto.VersionBiblesDto;
 import com.anunciadores.service.interfaces.IBibliaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -43,6 +38,14 @@ public class BibliaServiceImpl implements IBibliaService {
 
 	@Autowired
 	BibliaFeingClient bibliaFeingClient;
+
+	@Autowired
+	IVersiculoRepo versiculoRepo;
+
+	@Autowired
+	UtilDate utilDate;
+
+
 
 	private Logger LOGGER = LoggerFactory.getLogger(BibliaServiceImpl.class);
 
@@ -125,14 +128,17 @@ public class BibliaServiceImpl implements IBibliaService {
 			VersiculosDto versiculos = findIdVerses(versionesbiblia.getData().get(0).getId(), capitulo.getId());
 
 			int ver = Ramdom(versiculos.getData().size());
+
 			VersiculoDto Versiculo = versiculos.getData().get(ver);
 
 			VersiculoResponseDto pasaje = findVerse(versionesbiblia.getData().get(0).getId(), Versiculo.getId());
-			*/
+*/
 
 			VersiculoDto pasajeError = new VersiculoDto();
 			pasajeError.setContent("[27] Yo soy el Señor, Dios de toda la humanidad. ¿Hay algo imposible para mí?");
 			pasajeError.setReference("Jeremías 32:27");
+
+
 
 			return pasajeError;
 		} catch (Exception e) {
@@ -144,6 +150,55 @@ public class BibliaServiceImpl implements IBibliaService {
 			pasajeError.setReference("Jeremías 32:27");
 			throw new RuntimeException("[findVerseDay]"+e.getMessage());
 		}
+	}
+
+	@Override
+	public LibrosDto findAllBooks() throws JsonMappingException, JsonProcessingException {
+		VersionBiblesDto versionesbiblia = bibliaFeingClient.buscarBiblia(token);
+		LibrosDto librosDto = findBook(versionesbiblia.getData().get(0).getId());
+		return librosDto;
+	}
+
+	@Override
+	public VersiculoSaveDto saveVerseWeek(VersiculoSaveDto VersiculoSave) throws JsonProcessingException, ParseException {
+		VersiculoSemanal verSemanal = new VersiculoSemanal();
+		verSemanal.setCitaBiblica(VersiculoSave.getTitle());
+		verSemanal.setVersiculoTexto(VersiculoSave.getMessage());
+		verSemanal.setFechaInicio(utilDate.convertStringToDate(VersiculoSave.getFechaInicio()));
+		verSemanal.setFechaFin(utilDate.convertStringToDate(VersiculoSave.getFechaFin()));
+		Optional<VersiculoSemanal>  verSave = Optional.of(versiculoRepo.save(verSemanal));
+		if (verSave.isPresent()){
+			return VersiculoSave;
+		}else {
+			throw new RuntimeException();
+		}
+	}
+
+	@Override
+	public VersiculoSaveDto buscarVersiculoSemanal() throws ParseException {
+		Date fechaActual = utilDate.cargarfechaActualBogotaDate();
+		ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
+		VersiculoSaveDto response = new VersiculoSaveDto();
+
+		try {
+			LocalDate fechaActualizada = nowInBogota.toLocalDate();
+			for (int i = 0; i < 8; i++) {
+				Optional<VersiculoSemanal> vSemanal= versiculoRepo.findByFechaFin(fechaActual);
+				if (!vSemanal.isPresent()) {
+					fechaActualizada = fechaActualizada.plusDays(1);
+					fechaActual = java.sql.Date.valueOf(fechaActualizada);
+				} else {
+					response.setTitle(vSemanal.get().getCitaBiblica());
+					response.setMessage(vSemanal.get().getVersiculoTexto());
+					response.setFechaInicio(utilDate.convertDateToString(vSemanal.get().getFechaInicio()));
+					response.setFechaFin(utilDate.convertDateToString(vSemanal.get().getFechaFin()));
+					break;
+				}
+			}
+		}catch (Exception e){
+			throw e;
+		}
+		return response;
 	}
 
 	public int libRamdom() {

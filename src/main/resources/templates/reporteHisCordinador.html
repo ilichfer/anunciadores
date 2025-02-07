@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Anuncia 2- Cursos</title>
+    <title>Anuncia 2- historico</title>
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -49,26 +49,33 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Lista TCD Por Dia</h1>
-                    <p class="mb-4">Tabla de Tiempo con Dios registrados en el sistema.</p>
+                    <h1 class="h3 mb-2 text-gray-800">Historico reportes cordinadores</h1>
+                    <p class="mb-4">Tabla de reportes de cordinadores.</p>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Lista de TCD</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Historico</h6>
                         </div>
 
-                        <form method="POST" th:action="@{/buscarTdcByFecha}">
+                        <form method="POST" th:action="@{/buscarInformesByRangoFecha}">
 
                             <div class="form-group row" style="margin:10px">
-                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                    <label for="fecha"> fecha de busqueda</label>
-                                    <input type="date" class="form-control form-control-user" name="fecha"
-                                           id="fecha" placeholder="fecha de busqueda" required>
+                                <div class="col-sm-6 mb-3 mb-sm-0 align-items-center">
+                                    <label for="fechaInicio"> fecha incio </label>
+                                    <input type="date" class="form-control form-control-user" name="fechaInicio"
+                                           id="fechaInicio" required>
+                                </div>
+
+                                <div class="col-sm-6 mb-3 mb-sm-0 align-items-center">
+                                    <label for="fechaFin"> fecha fin</label>
+                                    <input type="date" class="form-control form-control-user" name="fechaFin"
+                                           id="fechaFin" required>
                                 </div>
                             </div>
-
-                            <input type="submit" value="Buscar TDC" class="btn btn-primary container">
+                            <div align="center" class="center-block" style="margin:30px">
+                                <input type="submit" value="Buscar" class="btn btn-primary container">
+                            </div>
                             <hr>
 
                         </form>
@@ -78,26 +85,22 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>nombre</th>
-                                            <th>fecha registrada</th>
-                                            <th>responsable</th>
-                                            <th>visualizar</th>
+                                            <th>cordinador</th>
+                                            <th>reporte</th>
+                                            <th>fecha</th>
 
 <!--                                              <th th:if="${admin != false}">Pagos</th> -->
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        <tr th:each="tdc, itemStat : ${listaTdc}">
-                                            <td th:text="${tdc.nombredocumento}">nombre</td>
-                                            <td th:text="${tdc.fechaCreacion}">fecha</td>
-                                            <td th:text="${tdc.persona.nombre} + ' ' + ${tdc.persona.apellido}">persona</td>
-                                            <td >
-                                            <a th:href="@{/viewImageFilter(idTdc=${tdc.id})}"
-                                               class="btn btn-primary btn-circle btn-sm" type="submit"  data-toggle="tooltip" data-placement="right" title="Inscritos al Curso">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            </td>
+                                        <tr th:each="reporte, itemStat : ${reportes}">
+                                            <td th:text="${reporte.persona.nombre}">nombre</td>
+                                            <td th:if="${reporte.notasServicio != null}" th:text="${reporte.notasServicio}">notasServicio</td>
+                                            <td th:if="${reporte.notasServicio == null}">N/A </td>
+                                            <td th:text="${reporte.fechaServicio}">cantidad Entregados</td>
+
+
                                             
                                         </tr>
                                     </tbody>

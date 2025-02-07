@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -220,6 +222,24 @@ public class ServicioServiceImpl implements IServicioService {
 			LOGGER.error("[findCoordinador] " + e.getMessage());
 			throw new RuntimeException("[findCoordinador] " +e.getMessage());
 		}
+		return cor;
+	}
+
+	@Override
+	public Coordinador findCoordinadorAdministrator(HttpServletRequest request) {
+		HttpSession misession = request.getSession();
+		Coordinador cor = new Coordinador();
+		Integer menuCordinador= 9;
+		Integer idpersona = (int) misession.getAttribute("idPersona");
+		try {
+			Persona per = personaRepository.findPersonaAndIdMenu(idpersona,menuCordinador);
+			cor.setId(per.getId());
+			cor.setPersona(per);
+		}catch (Exception e){
+			e.getMessage();
+		}
+
+
 		return cor;
 	}
 

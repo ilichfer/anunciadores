@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -236,7 +237,7 @@ public class ServicioController {
 	}
 
 	@GetMapping("/crearInforme")
-	public String crearInforme( Model model) throws ParseException {
+	public String crearInforme(Model model, HttpServletRequest request) throws ParseException {
 		String url = "asistenciaProgramacion";
 		Date actualDate = cargarfechaActualBogota();
 		model.addAttribute("fechaActual", actualDate);
@@ -248,11 +249,14 @@ public class ServicioController {
 		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
 
 		if(listProgramacionMinisterio.size()>0) {
-			cor =servicioService.findCoordinador(listProgramacionMinisterio);
+			cor = servicioService.findCoordinador(listProgramacionMinisterio);
+			if (cor == null){
+				cor = servicioService.findCoordinadorAdministrator(request);
+			}
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			model.addAttribute("programacionMin", listProgramacionMinisterio);
 			model.addAttribute("coordinador", cor);
-			model.addAttribute("fechaCoordinador", cor != null?  dt1.format(cor.getFechaServicio()): null);
+			model.addAttribute("fechaCoordinador", cor.getFechaServicio() != null?  dt1.format(cor.getFechaServicio()): null);
 		}else{
 			model.addAttribute("programacionMin", null);
 		}
@@ -265,13 +269,14 @@ public class ServicioController {
 		model.addAttribute("msj", "personasList");
 		model.addAttribute("persona", per!=null?per:null);
 		model.addAttribute("coordinador", cor);
-		model.addAttribute("fechaServicio", cor != null?  dt1.format(cor.getFechaServicio()): null);
+		model.addAttribute("fechaServicio", cor.getFechaServicio() != null?  dt1.format(cor.getFechaServicio()): null);
 		return url;
 	}
 
 	@PostMapping("/redirectCrearInforme")
-	public String redirectCrearInforme(@ModelAttribute Persona persona, Model model) throws ParseException {
+	public String redirectCrearInforme(@ModelAttribute Persona persona, Model model, HttpServletRequest request) throws ParseException {
 			String url = "register-informCoordinador";
+			Date fechaProgramacion= new Date();
 			Date actualDate = cargarfechaActualBogota();
 			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 			//Persona per  = personaService.findPersonaById(persona.getId());
@@ -279,11 +284,16 @@ public class ServicioController {
 			List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(actualDate);
 			if(listProgramacionMinisterio.size()>0) {
 				cor =servicioService.findCoordinador(listProgramacionMinisterio);
+				if (cor == null){
+					cor = servicioService.findCoordinadorAdministrator(request);
+				}
+				String fechaStr = listProgramacionMinisterio.get(0).getFechaServcio();
+				fechaProgramacion = dt1.parse(fechaStr);
 			}
 			model.addAttribute("msj", "personasList");
 			model.addAttribute("persona", cor.getPersona());
 			model.addAttribute("coordinador", cor);
-			model.addAttribute("fechaServicio", dt1.format(cor.getFechaServicio()));
+			model.addAttribute("fechaServicio",cor.getFechaServicio()!=null?  dt1.format(cor.getFechaServicio()):dt1.format(fechaProgramacion));
 			return url;
 		}
 
@@ -297,6 +307,11 @@ public class ServicioController {
 		servicioService.saveCoordinadorEntity(cordinador);
 		model.addAttribute("msj", "personasList");
 		return url;
+	}
+
+	@GetMapping("/redirectHisCordindor")
+	public String redirectHisCordindor(@RequestParam(name = "name", required = false, defaultValue = "World") String name,Model model) {
+		return "reporteHisCordinador";
 	}
 
 

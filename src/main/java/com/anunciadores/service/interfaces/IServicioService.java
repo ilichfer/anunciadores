@@ -6,6 +6,7 @@ import com.anunciadores.model.Ministerio;
 import com.anunciadores.model.Persona;
 import com.anunciadores.model.Servicio;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,7 @@ public interface IServicioService {
 	public void saveCoordinadorEntity(Coordinador cordinador);
 
 	public Coordinador findCoordinador(List<ServicioListResponseDto> listProgramacionMinisterio );
+	public Coordinador findCoordinadorAdministrator(HttpServletRequest request);
 	public Coordinador findCoordinadorByFecha(Date fechaServicio );
 	public Coordinador findCoordinadorByFechaAndIdPersona(String fechaServicio, int idPersona );
 	public Boolean validateCoordinadorByFechaAndIdPersona(String fechaServicio, int idPersona );

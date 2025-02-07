@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +47,9 @@ public class personaController {
 
 	@Autowired
 	private IPersonaService personaService;
-	
+	@Autowired
+	private IMenuService menuService;
+
 	@Autowired
 	private UsuarioService usuarioService;
 	
@@ -73,6 +76,8 @@ public class personaController {
 
 	@Autowired
 	private IPermisosRepo permisosMenuRepo;
+	@Autowired
+	private IParamMenuRepo paramMenuRepo;
 
 	@Autowired
 	private RolesRepoImpl rolesDao;
@@ -147,9 +152,9 @@ public class personaController {
 
 	@PostMapping("/save")
 	public String save(@ModelAttribute Persona persona, HttpServletResponse response, Model model)
-			throws JsonMappingException, JsonProcessingException {
+			throws JsonMappingException, JsonProcessingException, ParseException {
 		PersonaDto per = personaService.buscarEmail(persona.getEmail());
-		VersiculoDto dia = bibliaService.findVerseDay();
+		VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 		String url = "redirect:/404.html";
 		model.addAttribute("dia", dia);
 		if (per == null || per.getEmail() == null) {
@@ -220,10 +225,10 @@ public class personaController {
 	}
 
 	@GetMapping("/cargarMenu")
-	public String cargarMenu(@RequestParam String email, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
+	public String cargarMenu(@RequestParam String email, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		
 		PersonaDto per = personaService.buscarEmail(email);
-		VersiculoDto dia =bibliaService.findVerseDay();
+		VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 		model.addAttribute("persona", per);
 		model.addAttribute("admin", per.isAdmin());
 		model.addAttribute("user", per.isUser());
@@ -240,9 +245,9 @@ public class personaController {
 	
 	@PostMapping("/saveAsistente")
 	public String saveAsistente(@ModelAttribute Persona persona, HttpServletResponse response, Model model)
-			throws JsonMappingException, JsonProcessingException {
+			throws JsonMappingException, JsonProcessingException, ParseException {
 		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
-		VersiculoDto dia = bibliaService.findVerseDay();
+		VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 		String url = "registerAsistente";
 		model.addAttribute("dia", dia);
 		model.addAttribute("msj", "ya existe un asistente con el mismo numero de documento");
@@ -255,9 +260,9 @@ public class personaController {
 	}
 	@PostMapping("/saveAsistenteConsolidacion")
 	public String saveAsistenteConsolidacion(@ModelAttribute Persona persona,@ModelAttribute Consolidacion consolidacion, HttpServletResponse response, Model model)
-			throws JsonMappingException, JsonProcessingException {
+			throws JsonMappingException, JsonProcessingException, ParseException {
 		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
-		VersiculoDto dia = bibliaService.findVerseDay();
+		VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 		String url = "registerAsistenteConsolidacion";
 		model.addAttribute("dia", dia);
 		model.addAttribute("msj", "ya existe un asistente con el mismo numero de documento");
@@ -288,9 +293,9 @@ public class personaController {
 	}
 
 	@PostMapping("/access")
-	public String login(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException {
+	public String login(@ModelAttribute Persona persona, HttpServletResponse response, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		PersonaDto per = personaService.buscarEmail(persona.getEmail());
-		VersiculoDto dia =bibliaService.findVerseDay();
+		VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 //		model.addAttribute("persona", per);
 		model.addAttribute("dia", dia);
 		model.addAttribute("msj", " el usuario o contraseña es incorrecto");
@@ -310,11 +315,11 @@ public class personaController {
 		return "login";
 	}
 	
-	@PostMapping("/login2")
+	@PostMapping("login2")
 	public String login2(@ModelAttribute Persona persona, HttpServletResponse response, HttpServletRequest request, Model model) throws JsonMappingException, JsonProcessingException {
 		try {
 		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
-		VersiculoDto dia = bibliaService.findVerseDay();
+		VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(utilDate.cargarfechaActualBogotaDate());
 		List<PersonaDto> listadoCumpleañosMes = personaService.findBirthdayByMonth();
 		List<PersonaDto> listadoCumpleañosDiario =	personaService.getBirthDay(listadoCumpleañosMes);
@@ -528,11 +533,11 @@ public class personaController {
 
 	@GetMapping("/")
 	public String inicio(Model model, @AuthenticationPrincipal User user)
-			throws JsonMappingException, JsonProcessingException {
+			throws JsonMappingException, JsonProcessingException, ParseException {
 		
 
 		if (user!= null) {
-			VersiculoDto dia = bibliaService.findVerseDay();
+			VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 			model.addAttribute("dia", dia);
 //	        var personas = personaService.findAll();
 //	        log.info("ejecutando el controlador Spring MVC");
@@ -585,7 +590,7 @@ public class personaController {
 		Persona persona = personaService.findPersonaById(personaDto.getId());
 		List<Rol> roles = rolesPersonaRepo.findAll();
 		List<Rol> rolActual = rolesDao.buscarRoles(personaDto.getId());
-		List<PermisosMenu> permisosMenu = permisosMenuRepo.findByIdPersona(persona.getId());
+		List<PermisosMenu> permisosMenu = menuService.findAllPermisosMenu(persona.getId());
 		model.addAttribute("persona", persona);
 		model.addAttribute("roles", roles);
 		model.addAttribute("idRol", !roles.isEmpty() && roles.get(0).getDescripcion().equals(descripcionRol)?roles.get(0):roles.get(1));
@@ -597,15 +602,24 @@ public class personaController {
 
 	@GetMapping("/actualizarPermiso")
 	public String actualizarPermiso(@ModelAttribute PermisosMenu permisos,@RequestParam int idPersona, @RequestParam String descRol, Model model) {
-		PermisosMenu menuUpdate = permisosMenuRepo.findByIdPersonaAndNombreBotonMenu(permisos.getIdPersona(), permisos.getNombreBotonMenu());
-		menuUpdate.setEstado(permisos.getEstado());
-		PermisosMenu permisoActual = permisosMenuRepo.save(menuUpdate);
-
+		Optional<PermisosMenu> menuUpdate = permisosMenuRepo.findByIdPersonaAndNombreBotonMenu(permisos.getIdPersona(), permisos.getNombreBotonMenu());
+		if(menuUpdate.isPresent()) {
+			menuUpdate.get().setEstado(permisos.getEstado());
+			PermisosMenu permisoActual = permisosMenuRepo.save(menuUpdate.get());
+		}else{
+			PermisosMenu pemNew = new PermisosMenu();
+			pemNew.setIdPersona(permisos.getIdPersona());
+			pemNew.setMenu(permisos.getMenu());
+			pemNew.setEstado(permisos.getEstado() );
+			pemNew.setNombreBotonMenu(permisos.getNombreBotonMenu());
+			pemNew.setMenu(paramMenuRepo.findByNombreBotonMenu(permisos.getNombreBotonMenu()));
+			PermisosMenu permisoActual = permisosMenuRepo.save(pemNew);
+		}
 
 		Persona persona = personaService.findPersonaById(idPersona);
 		List<Rol> roles = rolesPersonaRepo.findAll();
 		List<Rol> rolActual = rolesDao.buscarRoles(idPersona);
-		List<PermisosMenu> permisosMenu = permisosMenuRepo.findByIdPersona(persona.getId());
+		List<PermisosMenu> permisosMenu = menuService.findAllPermisosMenu(persona.getId());
 		model.addAttribute("persona", persona);
 		model.addAttribute("roles", roles);
 		model.addAttribute("idRol", roles.get(0));

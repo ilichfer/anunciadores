@@ -75,11 +75,11 @@
 
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Versiculo del Dia</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Versiculo semanal</h6>
                                 </div>
-                                <div class="card-body">
-                                    <p th:text="${dia.reference}" />
-                                    <p class="mb-0" th:text="${dia.content}" />
+                                <div class="card-body" th:if="${dia.title != null}">
+                                    <p th:text="${dia.title}" />
+                                    <p class="mb-0" th:text="${dia.message}" />
                                 </div>
                             </div>
 
@@ -160,11 +160,11 @@
                                                     <h6 >persona asignada</h6>
                                                 </td>
                                                 <td colspan="2" style="vertical-align : middle;text-align:center;"
-                                                    th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio == null}" >
+                                                    th:text="${coordinador.persona.nombre + ' ' + coordinador.persona.apellido}" th:if="${coordinador != null} and ${coordinador.notasServicio == null}" >
                                                     <h6 >persona asignada 3 campos</h6>
                                                 </td>
                                                 <td colspan="2" style="vertical-align : middle;text-align:center;"
-                                                    th:text="${coordinador.persona.nombre}" th:if="${coordinador != null} and ${coordinador.notasServicio != null}" >
+                                                    th:text="${coordinador.persona.nombre + ' ' + coordinador.persona.apellido}" th:if="${coordinador != null} and ${coordinador.notasServicio != null}" >
                                                     <h6 >persona asignada + boton</h6>
                                                 </td>
                                                 <td colspan="3"  style="vertical-align : middle;text-align:center;"

@@ -64,8 +64,15 @@
                         <a class="collapse-item" th:href="@{/buscarConsolidacion}">servidores Consolidacion</a>-->
                     </div>
                     <div id="menuCoordinador" class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Agregar informe</h6>
-                        <a id="idCoordinador" class="collapse-item" th:href="@{/crearInforme}" >informe coordinador</a>
+                        <h6 class="collapse-header">Cordinador</h6>
+                        <a id="idCoordinador" class="collapse-item" th:href="@{/crearInforme}" >crear informe </a>
+                        <a id="menuHisCordinador" class="collapse-item" th:href="@{/redirectHisCordindor}" style="display:none">historico informes</a>
+                    </div>
+
+                    <div id="menuVersiculo" class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Versiculo semanal</h6>
+                        <a id="idversiculo" class="collapse-item" th:href="@{/buscarVersiculo}" >versiculo semanal</a>
+                        <a id="reporteSemanal" class="collapse-item" >reporte versiculos</a>
                     </div>
 
                 </div>

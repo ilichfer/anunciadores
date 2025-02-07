@@ -53,6 +53,7 @@ if (admin != "true" && coordinadorActual == "false") {
 document.getElementById("menuCoordinador").style.display = "none";
 }else{
 document.getElementById("menuCoordinador").style.display = "block";
+document.getElementById("menuHisCordinador").style.display = "block";
 }
 /*Mostrar datos almacenados*/      
 

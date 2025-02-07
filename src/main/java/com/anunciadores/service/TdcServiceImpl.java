@@ -7,18 +7,25 @@ import com.anunciadores.dto.TdcReporteDto;
 import com.anunciadores.model.*;
 import com.anunciadores.repository.*;
 import com.anunciadores.service.interfaces.ITdcService;
+import com.anunciadores.util.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 import java.util.List;
 
+@Configuration
+@EnableScheduling
 @Service
 public class TdcServiceImpl implements ITdcService {
 
@@ -29,6 +36,9 @@ public class TdcServiceImpl implements ITdcService {
 
 	@Autowired
 	private IPersonaRepo personaRepository;
+
+	@Autowired
+	private UtilDate utilDate;
 
 	@Override
 	@Transactional
@@ -148,6 +158,26 @@ public class TdcServiceImpl implements ITdcService {
 		graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
 		graphics2D.dispose();
 		return resizedImage;
+	}
+
+
+
+	@Scheduled(fixedRate = 1000)
+	public void buscarTDCRepetidos() throws ParseException {
+		Date fechaactual = utilDate.cargarfechaActualBogotaDate();
+
+		System.out.println(
+				"Fixed rate task - " + System.currentTimeMillis() / 1000);
+
+		List<Persona> listP = personaRepository.findUsuarios();
+		for (Persona p:listP) {
+			List<Tdc> tdcPersona = 	TdcRepository.findAllByDateAndPersona(fechaactual, p.getId());
+			if(tdcPersona.size() > 1){
+				for (int i = 1; i < tdcPersona.size() ; i++) {
+					TdcRepository.delete(tdcPersona.get(i));
+				}
+			}
+		}
 	}
 
 }
