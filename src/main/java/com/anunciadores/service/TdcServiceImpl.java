@@ -162,12 +162,9 @@ public class TdcServiceImpl implements ITdcService {
 
 
 
-	@Scheduled(fixedRate = 1000)
+	@Scheduled(fixedRate = 21600000) // 6 horas en milisegundos
 	public void buscarTDCRepetidos() throws ParseException {
 		Date fechaactual = utilDate.cargarfechaActualBogotaDate();
-
-		System.out.println(
-				"Fixed rate task - " + System.currentTimeMillis() / 1000);
 
 		List<Persona> listP = personaRepository.findUsuarios();
 		for (Persona p:listP) {

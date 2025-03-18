@@ -1,9 +1,11 @@
 package com.anunciadores.service;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.anunciadores.dto.*;
@@ -176,25 +178,40 @@ public class BibliaServiceImpl implements IBibliaService {
 
 	@Override
 	public VersiculoSaveDto buscarVersiculoSemanal() throws ParseException {
-		Date fechaActual = utilDate.cargarfechaActualBogotaDate();
-		ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
 		VersiculoSaveDto response = new VersiculoSaveDto();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaActual = sdf.format( utilDate.cargarfechaActualBogotaDate());
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate ld = LocalDate.parse(fechaActual, dtf);
+
+		StringBuilder fechaIni = new StringBuilder();
+		StringBuilder fechaFin = new StringBuilder();
+
+		fechaIni.append(ld.getYear()+"-");
+		String mes = String.valueOf(ld.getMonthValue());
+
+		fechaIni.append(mes.length()<2? "0"+ld.getMonthValue()+"-":  ld.getMonthValue()+"-");
+		String dia = String.valueOf(ld.getDayOfMonth());
+		fechaIni.append(dia.length()<2? "0"+ld.getDayOfMonth():  ld.getDayOfMonth());
+
+		fechaFin.append(ld.getYear()+"-");
+		fechaFin.append(mes.length()<2? "0"+ld.getMonthValue()+"-":  ld.getMonthValue()+"-");
+		String diafin = String.valueOf(ld.lengthOfMonth());
+		fechaFin.append(diafin.length()<2? "0"+ld.lengthOfMonth():  ld.lengthOfMonth());
+
+		Date ini = utilDate.convertStringToDate(fechaIni.toString());
+		Date fin = utilDate.convertStringToDate(fechaFin.toString());
 
 		try {
-			LocalDate fechaActualizada = nowInBogota.toLocalDate();
-			for (int i = 0; i < 8; i++) {
-				Optional<VersiculoSemanal> vSemanal= versiculoRepo.findByFechaFin(fechaActual);
-				if (!vSemanal.isPresent()) {
-					fechaActualizada = fechaActualizada.plusDays(1);
-					fechaActual = java.sql.Date.valueOf(fechaActualizada);
-				} else {
+				Optional<VersiculoSemanal> vSemanal= versiculoRepo.findByFechaFinBetween(ini,fin);
+				if (vSemanal.isPresent()) {
+
 					response.setTitle(vSemanal.get().getCitaBiblica());
 					response.setMessage(vSemanal.get().getVersiculoTexto());
 					response.setFechaInicio(utilDate.convertDateToString(vSemanal.get().getFechaInicio()));
 					response.setFechaFin(utilDate.convertDateToString(vSemanal.get().getFechaFin()));
-					break;
 				}
-			}
+
 		}catch (Exception e){
 			throw e;
 		}

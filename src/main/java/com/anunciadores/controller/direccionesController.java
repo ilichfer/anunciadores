@@ -245,4 +245,10 @@ public class direccionesController {
 						   Model model) {
 		return "register-ministerio";
 	}
+
+	@GetMapping("/loginInicio")
+	public String defectDetails() {
+		return "ingreso";
+	}
+
 }

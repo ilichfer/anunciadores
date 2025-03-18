@@ -25,7 +25,7 @@
           localStorage.setItem("permisosMenu",JSON.stringify(datos.permisosMenu))
           localStorage.setItem("coordinadorActual",JSON.stringify(datos.coordinadorActual))
           localStorage.setItem("mensajes",JSON.stringify(datos.mensajes))
-          if(datos.mensajes.length >0){
+          if(datos.mensajes!= null && datos.mensajes.length >0){
           $('#mensajesModal').modal('show');
           }
         } else {
@@ -138,6 +138,7 @@ function consultarPermisosAdmin(permisosMenu){
 let perm=[];
 perm=JSON.parse(permisosMenu);
  var existe=false;
+ if(perm != null && perm.length > 0){
     for (i=0; i < perm.length; i++) {
         console.log("estado "+perm[i].estado);
         console.log("nombreBotonMenu "+perm[i].nombreBotonMenu);
@@ -149,6 +150,7 @@ perm=JSON.parse(permisosMenu);
                          }
                      }
             }
+         }
         //perm[i].estado == 'true'?document.getElementById(perm[i].nombreBotonMenu).style.display = "block":document.getElementById(perm[i].nombreBotonMenu).style.display = "none";
 
     }

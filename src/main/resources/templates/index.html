@@ -52,7 +52,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Inicio</h1>
+                        <h1 class="h3 mb-0 text-gray-900">Inicio</h1>
 
                         <form method="POST" th:action="@{/sugerencia}">
                             <input class="form-control" type="text" name="idPersonaSugerencia" id="idPersonaSugerencia" style="display:none">
@@ -75,7 +75,7 @@
 
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Versiculo semanal</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Versiculo mensual</h6>
                                 </div>
                                 <div class="card-body" th:if="${dia.title != null}">
                                     <p th:text="${dia.title}" />
