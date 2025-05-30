@@ -62,6 +62,9 @@ public interface IServicioService {
 	public  List<ItemCombo> findItemsCombo();
 
 	void agregarPersonaAMinisterio(int idPersona, int idMinisterio);
+
+	public void agregarPersonasAMinisterio(List<Long> listaPersonas, int idMinisterio);
+
 	List<ServicioResponseDto> buscarProgramacionMes(int idPersona) throws ParseException;
 
 	void savePosicion(PosicionDto posicionDto);

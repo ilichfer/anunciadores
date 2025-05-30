@@ -59,6 +59,11 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
+                                <form method="POST" th:action="@{/agregarPersonasAMinisterio}" >
+                                    <div class="form-group" style="display:none;">
+                                        <input type="text" class="form-control form-control-user" name="idMinisterio" id="idMinisterio"
+                                               th:value="${idMinisterio}" readonly>
+                                    </div>
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
@@ -74,24 +79,31 @@
 
                                     <tbody>
                                         <tr th:each="persona, itemStat : ${personas}">
+
                                             <td th:text="${persona.documento}">documento</td>
                                             <td th:text="${persona.tipodocumento}">tipodocumento</td>
                                             <td th:text="${persona.nombre}">persona</td>
                                             <td th:text="${persona.apellido}">apellido</td>
                                             <td th:text="${persona.telefono}">telefono</td>
                                             <td th:text="${persona.fechanacimiento}">fechanacimiento</td>
-                                            <td >
 
-                                                <a class="btn btn-primary btn-circle btn-sm"
-                                                   th:href="@{/agregarPersonasAMinisterio(idPersona=${persona.id},idMinisterio=${idMinisterio},nombreMinisterio=${nombreMinisterio})}"
-                                                   th:if="${add != false}" type="submit" data-toggle="tooltip"
-                                                   data-placement="right" title="Agregar al Ministerio">
-                                                    <i class="fas fa-plus-circle"></i>
-                                                </a>
-											</td>
+                                            <td>
+                                                <input type="checkbox"
+                                                       th:value="${persona.id}"
+                                                       name="categoriasSeleccionadas" id="categoriasSeleccionadas"/>
+                                            </td>
 
-                                            
-<!--                                                 <form action="#" th:action="@{/eliminarPersonasCurso(idPersona=${persona.id},idCurso=${idCurso},nombreCurso=${nombreCurso})}" th:if="${delete != false}" method="POST"> -->
+
+                                                <!--                                                 <a class="btn btn-primary btn-circle btn-sm"
+                                                                                                   th:href="@{/agregarPersonasAMinisterio(idPersona=${persona.id},idMinisterio=${idMinisterio},nombreMinisterio=${nombreMinisterio})}"
+                                                                                                   th:if="${add != false}" type="submit" data-toggle="tooltip"
+                                                                                                   data-placement="right" title="Agregar al Ministerio">
+                                                                                                    <i class="fas fa-plus-circle"></i>
+                                                                                                </a> -->
+
+
+
+                                                <!--                                                 <form action="#" th:action="@{/eliminarPersonasCurso(idPersona=${persona.id},idCurso=${idCurso},nombreCurso=${nombreCurso})}" th:if="${delete != false}" method="POST"> -->
 <!--                                                     <button class="btn btn-info btn-circle btn-sm" type="submit"  data-toggle="tooltip" data-placement="right" title="Eliminar del Curso"> -->
 <!--                                                         <i class="fas fa-trash"></i> -->
 <!--                                                     </button> -->
@@ -109,6 +121,11 @@
                                         </tr>
                                     </tbody>
                                 </table>
+
+                                <div align="center" class="center-block" >
+                                    <input type="submit" value="Guardar" class="btn btn-primary container">
+                                </div>
+                                </form>
                             </div>
                         </div>
                         <div align="center" class="center-block" >

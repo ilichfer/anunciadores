@@ -1,10 +1,7 @@
 package com.anunciadores.controller;
 
 
-import com.anunciadores.dto.MinisterioDto;
-import com.anunciadores.dto.PersonaDto;
-import com.anunciadores.dto.PosicionDto;
-import com.anunciadores.dto.ServicioDto;
+import com.anunciadores.dto.*;
 import com.anunciadores.model.Coordinador;
 import com.anunciadores.model.Ministerio;
 import com.anunciadores.model.Persona;
@@ -286,13 +283,13 @@ public class programacionController {
 		return "personasSinMinisterio";
 	}
 
-	@GetMapping("/agregarPersonasAMinisterio")
-	public String agregarPersonasAMinisterio(@RequestParam int idPersona, @RequestParam int idMinisterio,
-									   @RequestParam String nombreMinisterio, Model model) {
-		servicioService.agregarPersonaAMinisterio(idPersona, idMinisterio);
+	@PostMapping("/agregarPersonasAMinisterio")
+	public String agregarPersonasAMinisterio(@RequestParam int idMinisterio, @RequestParam List<Long> categoriasSeleccionadas, Model model) {
+
+		servicioService.agregarPersonasAMinisterio(categoriasSeleccionadas,idMinisterio);
 		List<PersonaDto> personasList = servicioService.findPersonaByidMnisterio(idMinisterio);
 		model.addAttribute("personas", personasList);
-		model.addAttribute("msj", "Personas inscritas al Ministerio: " + nombreMinisterio);
+		model.addAttribute("msj", "Personas inscritas al Ministerio: " + "nombreMinisterio");
 		model.addAttribute("titulo", "Lista de Personas inscritas");
 		model.addAttribute("add", false);
 		model.addAttribute("delete", true);

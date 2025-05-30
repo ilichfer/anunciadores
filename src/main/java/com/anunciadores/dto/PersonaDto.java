@@ -56,8 +56,17 @@ public class PersonaDto implements Serializable {
     private boolean validarPago;
     private boolean cumpleActual;
 	private NotasCursoDTO notas;
+	private Boolean selecionado;
 
-      public PersonaDto() {
+	public Boolean getSelecionado() {
+		return selecionado;
+	}
+
+	public void setSelecionado(Boolean selecionado) {
+		this.selecionado = selecionado;
+	}
+
+	public PersonaDto() {
     }
 
 	public int getId() {
@@ -131,6 +140,8 @@ public class PersonaDto implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+
 
 
 	public PersonaDto(int id, String nombre, String apellido, Integer documento, String telefono, String fechanacimiento, String tipodocumento, String email, String password, boolean consolidacion, List<Rol> roles, List<PermisosMenu> permisosMenu, Rol rolUnico, boolean admin, boolean user, boolean validarPago) {

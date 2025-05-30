@@ -4,6 +4,7 @@ import com.anunciadores.dto.*;
 import com.anunciadores.enums.ECombos;
 import com.anunciadores.mapper.mapperParametros;
 import com.anunciadores.model.*;
+import com.anunciadores.model.PersonaMinisterio;
 import com.anunciadores.repository.*;
 import com.anunciadores.service.interfaces.IServicioService;
 import org.slf4j.Logger;
@@ -490,6 +491,22 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
+	public void agregarPersonasAMinisterio(List<Long> listaPersonas, int idMinisterio) {
+		try {
+			listaPersonas.forEach(p ->{
+				PersonaMinisterio personaSave = new PersonaMinisterio();
+				personaSave.setIdMinisterio(idMinisterio);
+				personaSave.setIdPersona(p.intValue());
+				personaMinisterioRepoSitory.save(personaSave);
+			});
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	public List<ServicioResponseDto> buscarProgramacionMes(int idPersona) throws ParseException {
 		List<ServicioResponseDto> listaRespuestas = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -501,7 +518,7 @@ public class ServicioServiceImpl implements IServicioService {
 			for ( int i = 0; i < 2; i++) {
 
 				if (i > 0) {
-					ld = ld.plusDays(1);
+					ld = ld.plusMonths(1);
 				}
 				int monthDays = ld.lengthOfMonth();
 				int yearDays = ld.lengthOfYear();
