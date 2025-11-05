@@ -24,6 +24,8 @@ public interface IPersonaService {
 
 	public String delete(Persona persona);
 
+	public String habilitar(Persona persona);
+
 	public PersonaDto buscarByDocumento(Integer doc);
 	
 	public PersonaDto buscarEmail(String email);

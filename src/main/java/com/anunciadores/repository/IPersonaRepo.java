@@ -14,6 +14,15 @@ public interface IPersonaRepo extends JpaRepository<Persona, Integer>{
 
     Persona findByEmail(String email);
     Persona findByNombre(String nombre);
+    @Query(value = "SELECT * FROM persona WHERE id_telegram = :idTelegram LIMIT 1", nativeQuery = true)
+    Optional<Persona> findFirstByIdTelegram(@Param("idTelegram") String idTelegram);
+
+    @Query(nativeQuery = true,value = "select p.* from persona p "
+            + "WHERE p.celular = :celular " +
+            " and p.id_telegram is null ")
+    Optional<List<Persona>> findByCelular(@Param("celular") String celular);
+
+    Optional<List<Persona>> findByIdTelegram(String idTelegram);
 
    // @Query(nativeQuery = false,value = "select p from Persona p "
     //        + "where p.documento =:doc")
@@ -42,11 +51,12 @@ void deletePersonaConCurso(@Param("idPersona") int idPersona,@Param("idCurso")  
     @Modifying
 @Query(nativeQuery = false,value = "delete from PersonaMinisterio pm where pm.idPersona =:idPersona  and pm.idMinisterio =:idMinisterio")
 void deletePersonaMinisterio(@Param("idPersona") int idPersona,@Param("idMinisterio")  int idMinisterio);
-@Query(nativeQuery = true,value = "select p.* from persona p "
-        + "WHERE p.id  in( "
-        + "select pr.id_persona from persona_rol pr) " +
+
+    @Query(nativeQuery = true,value = "select p.* from persona p "
+        + "WHERE p.estado = true " +
         " order by p.nombre asc")
 List<Persona> findUsuarios();
+
 @Query(nativeQuery = true,value = "select p.* from persona p " +
         "WHERE p.id not in(select pr.id_persona from persona_rol pr) " +
         "and  p.id not in(select c.id_persona_consolidar from inscripcion_consolidacion c) ")
@@ -84,4 +94,9 @@ List<Persona> buscarPersonaSinActividad(@Param("idActividad")Integer idActividad
             " where p.id = :idPersona" +
             " and pm.id_menu  = :idMenu", nativeQuery = true )
     Persona findPersonaAndIdMenu(@Param("idPersona")int idPersona,@Param("idMenu") int idMenu);
+
+    @Query(nativeQuery = true,value = "select p.* from persona p "
+            + "WHERE p.estado = false " +
+            " order by p.nombre asc")
+    List<Persona> findPeopleDisabled();
 }

@@ -26,6 +26,8 @@ public class ServicioResponseDto implements Serializable {
 	private String fechaServcio;
 	private String nombreMinisterio;
 	private Integer idMinisterio;
+	private String celular;
+	private String idNotificacionTelegram	;
 
 	private List<ItemCombo> asistenciaList;
 
@@ -86,6 +88,22 @@ public class ServicioResponseDto implements Serializable {
 	}
 
 	public ServicioResponseDto() {
+	}
+
+	public String getIdNotificacionTelegram() {
+		return idNotificacionTelegram;
+	}
+
+	public void setIdNotificacionTelegram(String idNotificacionTelegram) {
+		this.idNotificacionTelegram = idNotificacionTelegram;
+	}
+
+	public String getCelular() {
+		return celular;
+	}
+
+	public void setCelular(String celular) {
+		this.celular = celular;
 	}
 }
 

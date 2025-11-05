@@ -49,52 +49,34 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Administrar roles</h1>
-                    <p class="mb-4">Tabla de usuarios.</p>
+                    <h1 class="h3 mb-2 text-gray-800">Administrar Oracion 24 Horas</h1>
 
                     <div class="card-body">
-                        <h4 class="card-title" >
-                            <a  class="btn btn-primary"  th:href="@{/getContactBdTelegram}">Telegram</a>
-                            <a  class="btn btn-primary"  th:href="@{/reserveslot}">reservar campo</a>
-                           </h4>
-                    </div>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Lista de usuarios</h6>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                    <tr>
-
-
-                                        <th>Nombre</th>
-                                        <th>Rol</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    <tr th:each="persona, itemStat : ${personas}">
-                                        <td th:text="${persona.nombre}">nombre</td>
-                                        <td th:text="${persona.rolUnico.descripcion}">rol</td>
-                                        <td >
-
-
-                                            <a class="btn btn-info  " th:href="@{/editarRol(id=${persona.id},descripcionRol=${persona.rolUnico.descripcion})}"  type="submit"  data-toggle="tooltip" data-placement="right" title="Editar Curso">
-                                                Asignar Permisos
-                                            </a>
-
-                                        </td>
-
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="dataTable" >
+                                <thead>
+                                <tr>
+                                    <th scope="col">Dia</th>
+                                    <th scope="col">Hora</th>
+                                    <th scope="col">Estado</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="slot : ${slots}">
+                                    <td class="m-0 font-weight-bold text-primary text-center" th:if="${slot.diaSiguiente == false}" th:text="'Jueves'"></td>
+                                    <td class="m-0 font-weight-bold text-secondary text-center" th:if="${slot.diaSiguiente == true}" th:text="'Viernes'"></td>
+                                    <td class="m-0 font-weight-bold text-primary" th:if="${slot.diaSiguiente == false}" th:text="${slot.startTime} + ' - ' + ${slot.startTime.plusMinutes(30)}"></td>
+                                    <td class="m-0 font-weight-bold text-secondary" th:if="${slot.diaSiguiente == true}" th:text="${slot.startTime} + ' - ' + ${slot.startTime.plusMinutes(30)}"></td>
+                                    <td th:classappend="${slot.reserved} ? 'reserved' : 'available'">
+                                        <span class="btn btn-danger" th:if="${slot.reserved}">Ocupado</span>
+                                        <form th:action="@{/reserve}" method="post" th:if="${!slot.reserved}">
+                                            <input type="hidden" th:name="slotId" th:value="${slot.id}" />
+                                            <button class="btn btn-success" type="submit">Reservar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -130,7 +112,7 @@
                 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
                 <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-                <!-- Page level custom scripts 
+                <!-- Page level custom scripts
     <script src="js/demo/datatables-demo.js"></script>-->
 
 </body>

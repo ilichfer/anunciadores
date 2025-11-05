@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
 
     @Modifying
-    @Query("select s.fechaServicio, concat(p.nombre,' ',p.apellido), pm.nombrePosicion, m.id, m.nombre from Servicio s " +
+    @Query("select s.fechaServicio, concat(p.nombre,' ',p.apellido), pm.nombrePosicion, m.id, m.nombre, p.idTelegram, p.celular from Servicio s " +
             "join Persona p on s.idPersona = p.id " +
             "join PosicionesMinisterio pm on s.idPosicion = pm.id " +
             "join Ministerio m on pm.idMinisterio = m.id " +
@@ -50,7 +50,7 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
             "            and m.id = :idMinisterio")
     public List<Object> findProgramacionByDateAndMinistery(@Param("fechaServicio") Date fechaServicio, @Param("idMinisterio") int idMinisterio);
 
-    @Query("select s.fechaServicio, concat(p.nombre,' ',p.apellido), pm.nombrePosicion, m.id, m.nombre from Servicio s " +
+    @Query("select s.fechaServicio, concat(p.nombre,' ',p.apellido), pm.nombrePosicion, m.id, m.nombre, p.idTelegram, p.celular from Servicio s " +
             "            join Persona p on s.idPersona = p.id " +
             "            join PosicionesMinisterio pm on s.idPosicion = pm.id " +
             "            join Ministerio m on pm.idMinisterio = m.id " +

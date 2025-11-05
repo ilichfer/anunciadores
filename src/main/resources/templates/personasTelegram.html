@@ -50,42 +50,19 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">[[${msj}]]</h1>
-                <p class="mb-4">Tabla de datos de las personas registradas en el sistema.</p>
+
+                <p class="mb-4">Tabla de datos de contactos actualizados en telegram.</p>
 
                 <div class="card-body">
-                    <h4 class="card-title">
-                        <a th:if="${usuario != false}" class="btn btn-primary" href="redirectUsuario">Registrar
-                            Persona</a>
-                        <a th:if="${asistente != false}" class="btn btn-primary" href="redirectAsistente">Registrar
-                            Asistente</a>
-
-                        <a class="btn btn-primary" href="disabledPeople">personas deshabilitadas</a>
+                    <h4 class="card-title" >
+                        <a  class="btn btn-primary"  th:href="@{/solicitarContactoTelegram}">Solicitar contacto telegram</a>
+                        <a  class="btn btn-primary" th:href="@{/actualizarIdNotificacionesTelegram}">actualizar id notificaciones telegram</a>
+                        <a class="btn btn-primary" th:href="@{/notificacionProgramacion}">lanzar notificaciones telegram</a>
                     </h4>
                 </div>
 
-                <div th:if="${usuario != false}" class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">busqueda de personas</h6>
-                    </div>
 
-                    <form method="POST" th:action="@{/buscarPersona}"
-                          class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="Personas">Personas</span>
-                            </div>
-                            <input list="items" name="nombre" id="nombre" type="text"
-                                   class="form-control bg-light border-0 small"
-                                   placeholder="Nombre de la Persona..." aria-label="Search"
-                                   aria-describedby="basic-addon2" required>
-                            <datalist id="items">
-                            </datalist>
-
-                            <button type="submit" class="btn btn-primary">Buscar</button>
-                        </div>
-                    </form>
-                </div>
+                <div th:if="${personas != null}" class="card shadow mb-4">
 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
@@ -97,36 +74,20 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
-                                    <th>Documento</th>
-                                    <th>Tipo Documento</th>
                                     <th>Nombre</th>
                                     <th>Apellido</th>
-                                    <th>Telefono</th>
-                                    <th>Email</th>
-                                    <th th:if="${admin != false}">Acciones</th>
+                                    <th>Celular</th>
+                                    <th>Telegram</th>
                                 </tr>
                                 </thead>
 
                                 <tbody>
                                 <tr th:each="persona, itemStat : ${personas}">
-                                    <td th:text="${persona.documento}">documento</td>
-                                    <td th:text="${persona.tipodocumento}">tipodocumento</td>
                                     <td th:text="${persona.nombre}">persona</td>
                                     <td th:text="${persona.apellido}">apellido</td>
-                                    <td th:text="${persona.telefono}">telefono</td>
-                                    <td th:text="${persona.email}">email</td>
-
-                                    <td th:if="${admin != false}">
-                                        <a class="btn btn-danger btn-circle btn-sm"
-                                           th:href="@{/eliminar(id=${persona.id})}">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                        <a class="btn btn-info btn-circle btn-sm"
-                                           th:href="@{/estudioPersona(id=${persona.id})}">
-                                            <i class="fas fa-graduation-cap"></i>
-                                        </a>
-
-                                    </td>
+                                    <td th:text="${persona.celular}">telefono</td>
+                                    <td th:if="${persona.idTelegram != null}" th:text="'✅'">Telegram</td>
+                                    <td th:if="${persona.idTelegram == null}" th:text="'❌'">Telegram</td>
 
                                 </tr>
                                 </tbody>
@@ -136,6 +97,57 @@
                 </div>
 
             </div>
+
+                <div th:if="${msj != null}" class="card shadow mb-4">
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h1 class="h3 mb-2 text-gray-800"></h1>
+                            <h6 class="m-0 font-weight-bold text-primary">[[${msj}]]</h6>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div th:if="${notificaciones != null}" class="card shadow mb-4">
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Lista de Personas notificadas</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>Ministerio</th>
+                                        <th>Posicion</th>
+                                        <th>Nombre</th>
+                                        <th>Telefono</th>
+                                        <th>Notificacion</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr th:each="nt, itemStat : ${notificaciones}">
+                                        <td th:text="${nt.nombreMinisterio}">ministerio</td>
+                                        <td th:text="${nt.posicion}">posicion</td>
+                                        <td th:text="${nt.encargado}">nombre</td>
+                                        <td th:text="${nt.celular}">telefono</td>
+                                        <td th:if="${nt.IdNotificacionTelegram != null}" th:text="'✅'">Telegram</td>
+                                        <td th:if="${nt.IdNotificacionTelegram == null}" th:text="'❌'">Telegram</td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
 
             <style>

@@ -117,13 +117,9 @@
                                     <td th:text="${persona.email}">email</td>
 
                                     <td th:if="${admin != false}">
-                                        <a class="btn btn-danger btn-circle btn-sm"
-                                           th:href="@{/eliminar(id=${persona.id})}">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                        <a class="btn btn-info btn-circle btn-sm"
-                                           th:href="@{/estudioPersona(id=${persona.id})}">
-                                            <i class="fas fa-graduation-cap"></i>
+
+                                        <a class="btn btn-success"
+                                           th:href="@{/habilitarPersona(id=${persona.id})}">activar
                                         </a>
 
                                     </td>

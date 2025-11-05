@@ -91,11 +91,18 @@ public class Persona implements Serializable {
 	private String fechaLlegadaAdc;
 	@Column(name = "fecha_bautizo")
 	private String fechaBautizo;
+
 	@Column(name = "fecha_bautizo_espiritu")
 	private String fechaBautizoEspiritu;
 
+	@Column(name = "id_telegram")
+	private String idTelegram;
+
 	@Column(name = "consolidacion")
 	private Boolean consolidacion;
+
+	@Column(name = "estado")
+	private Boolean estado;
 
       public Persona() {
     }
@@ -330,5 +337,21 @@ public class Persona implements Serializable {
 
 	public void setConsolidacion(Boolean consolidacion) {
 		this.consolidacion = consolidacion;
+	}
+
+	public Boolean getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
+	}
+
+	public String getIdTelegram() {
+		return idTelegram;
+	}
+
+	public void setIdTelegram(String idTelegram) {
+		this.idTelegram = idTelegram;
 	}
 }

@@ -216,7 +216,8 @@ public class ServicioServiceImpl implements IServicioService {
 						LOGGER.error("[findCoordinador] " + e.getMessage());
 						throw new RuntimeException("[findCoordinador] " +e.getMessage());
 					}
-					return coordinadorRepo.findByFechaServicio(fechaDate);
+					Coordinador cord = coordinadorRepo.findByFechaServicio(fechaDate);
+					return cord;
 				}
 			}
 		}catch (Exception e){
@@ -781,6 +782,8 @@ public class ServicioServiceImpl implements IServicioService {
 		servicioDto.setPosicion(object[2].toString());
 		servicioDto.setIdMinisterio(Integer.parseInt(object[3].toString()));
 		servicioDto.setNombreMinisterio(object[4].toString());
+		servicioDto.setIdNotificacionTelegram(object[5] != null?  object[5].toString():null);
+		servicioDto.setCelular(object[6] != null?  object[6].toString():null);
 		servicioDto.setAsistenciaList(mapperParametros.listEntitytoListDto(parametrosRepo.findByGrupo(ECombos.ASISTENCIA.toString())));
 		return  servicioDto;
 	}

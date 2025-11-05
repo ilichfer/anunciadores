@@ -16,13 +16,17 @@ public interface IMinisterioRepo extends JpaRepository<Ministerio, Integer>{
     @Modifying
     @Query("select p from Persona p " +
             "join PersonaMinisterio pm on p.id = pm.idPersona " +
-            "where pm.idMinisterio = :idMinisterio")
+            "where pm.idMinisterio = :idMinisterio " +
+            " and p.estado = true " +
+            " order by p.nombre asc ")
     public List<Persona> findPersonasByIdMinisterio(@Param("idMinisterio") int idMinisterio);
 
     @Modifying
     @Query("select p from Persona p  WHERE p.id not in("+
             " select pm.idPersona  from PersonaMinisterio pm"+
             " join Ministerio m on pm.idMinisterio  = m.id"+
-            " where m.id =:idMinisterio)")
+            " where m.id =:idMinisterio)" +
+            " and  p.estado = true" +
+            " order by p.nombre asc ")
     public List<Persona> findPeopleWithOutMinisterio(@Param("idMinisterio") int idMinisterio);
 }

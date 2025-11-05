@@ -244,3 +244,38 @@ INSERT INTO anunciadb.permisos_menu
 (id, estado, id_persona, nombre_boton_menu, id_menu)
 VALUES(57, 'true', 2, 'menuVersiculo', 10);
 
+
+-- GÉNERO
+INSERT INTO parametros (id, descripcion, grupo) VALUES
+(1, 'Masculino', 'GENERO'),
+(2, 'Femenino', 'GENERO'),
+(3, 'Otro', 'GENERO');
+
+-- ESTADO CIVIL
+INSERT INTO parametros (id, descripcion, grupo) VALUES
+(4, 'Soltero(a)', 'ESTADOCIVIL'),
+(5, 'Casado(a)', 'ESTADOCIVIL'),
+(6, 'Divorciado(a)', 'ESTADOCIVIL'),
+(7, 'Viudo(a)', 'ESTADOCIVIL');
+
+-- ESCOLARIDAD
+INSERT INTO parametros (id, descripcion, grupo) VALUES
+(8, 'Primaria', 'ESCOLARIDAD'),
+(9, 'Secundaria', 'ESCOLARIDAD'),
+(10, 'Preparatoria', 'ESCOLARIDAD'),
+(11, 'Universidad', 'ESCOLARIDAD'),
+(12, 'Posgrado', 'ESCOLARIDAD');
+
+-- DOCUMENTO
+INSERT INTO parametros (id, descripcion, grupo) VALUES
+(13, 'Cédula de ciudadanía', 'DOCUMENTO'),
+(14, 'Pasaporte', 'DOCUMENTO'),
+(15, 'Licencia de conducción', 'DOCUMENTO'),
+(16, 'Tarjeta de identidad', 'DOCUMENTO');
+
+-- ASISTENCIA
+INSERT INTO parametros (id, descripcion, grupo) VALUES
+(17, 'Presente', 'ASISTENCIA'),
+(18, 'Ausente', 'ASISTENCIA'),
+(19, 'Justificado', 'ASISTENCIA');
+

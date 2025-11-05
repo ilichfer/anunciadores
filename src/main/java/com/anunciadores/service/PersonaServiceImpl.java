@@ -140,17 +140,19 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Override
 	public String delete(Persona persona) {
-		List<RolPersona> listaRolPersona = rolesDao.buscarRolesPersona(persona.getId());
-		if (listaRolPersona != null) {
-			for (RolPersona rol : listaRolPersona) {
+		Persona personaSave = new Persona();
+		personaSave = personaRepository.findById(persona.getId()).get();
+		personaSave.setEstado(false);
+		personaRepository.save(personaSave);
+		return "asistente";
+	}
 
-				rolesPersonaRepository.delete(rol);
-				personaRepository.deleteById(persona.getId());
-				return "usuario";
-			}
-
-		}
-		personaRepository.deleteById(persona.getId());
+	@Override
+	public String habilitar(Persona persona) {
+		Persona personaSave = new Persona();
+		personaSave = personaRepository.findById(persona.getId()).get();
+		personaSave.setEstado(true);
+		personaRepository.save(personaSave);
 		return "asistente";
 	}
 

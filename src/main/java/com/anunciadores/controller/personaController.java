@@ -177,10 +177,11 @@ public class personaController {
 			return url;
 		}
 		if (per == null || per.getEmail() == null) {
+			persona.setEstado(true);
 			Persona personaSave = personaService.save(persona);
 			model.addAttribute("msj", null);
 			model.addAttribute("msjCreate", " usuario creado correctamente");
-			url = "login";
+			url = "ingreso";
 		}
 		return url;
 	}
@@ -278,11 +279,19 @@ public class personaController {
 	@GetMapping("/eliminar")
 	public String deleteProductoById(@ModelAttribute Persona persona, HttpServletResponse response, Model model) {
 		String retorno = personaService.delete(persona);
-		if (retorno.equalsIgnoreCase("usuario")) {
 			return "redirect:/listar";
-		}
-		return "redirect:/listarAsistentes";
+	}
 
+	@GetMapping("/habilitarPersona")
+	public String habilitarPersona(@ModelAttribute Persona persona, HttpServletResponse response, Model model) {
+		personaService.habilitar(persona);
+		personasList = personaRepoImpl.findPeopleDisabled();
+		model.addAttribute("personas", personasList);
+		model.addAttribute("msj", "Personas deshabilitadas ");
+		model.addAttribute("usuario", false);
+		model.addAttribute("asistente", true);
+		model.addAttribute("admin", true);
+		return "personasDeshabilitadas";
 	}
 
 	@GetMapping("/greeting")
@@ -642,6 +651,18 @@ public class personaController {
 		personasList = personaService.findAllUsuarios();
 
 		return new ResponseEntity<>(personasList,  HttpStatus.ACCEPTED);
+	}
+
+	@GetMapping("/disabledPeople")
+	public String disabledPeople(HttpServletResponse response, Model model) {
+		personasList = personaRepoImpl.findPeopleDisabled();
+		model.addAttribute("personas", personasList);
+		model.addAttribute("msj", "Personas deshabilitadas ");
+		model.addAttribute("habilitar", true);
+		model.addAttribute("usuario", false);
+		model.addAttribute("asistente", true);
+		model.addAttribute("admin", true);
+		return "personasDeshabilitadas";
 	}
 
 }

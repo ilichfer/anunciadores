@@ -14,7 +14,6 @@ import com.anunciadores.dto.VersionBiblesDto;
 @FeignClient(name = "biblia" ,url = "https://api.scripture.api.bible/v1/bibles", configuration = FeignClientConfiguration.class)
 public interface BibliaFeingClient {
 	
-	
 	@GetMapping("?language=spa")
 	public VersionBiblesDto buscarBiblia(@RequestHeader(value = "api-key", required = true) String token);
 	
@@ -29,6 +28,5 @@ public interface BibliaFeingClient {
 		
 	@GetMapping(value = "/{idBible}/verses/{idVerse}?content-type=text")
 	public VersiculoResponseDto buscarVersiculo(@PathVariable("idBible") String idBible,@PathVariable("idVerse") String idVerse,@RequestHeader(value = "api-key", required = true) String token);
-	
 
 }
