@@ -75,25 +75,7 @@ public class ServicioController {
 		return url;
 	}
 
-	@GetMapping("/consultarMiProgramacion")
-	public String consultarMiProgramacion(@RequestParam String fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
-		String url = "buscarServicioPersona";
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date fechaD = sdf.parse(fecha);
-		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateAndMinisterio(fechaD,idMinisterio);
-		//List<ServicioResponseDto> listProgramacion = servicioService.findProgramacionByDate(Date.valueOf(LocalDate.now()));
-		if(listProgramacionMinisterio.size()>0) {
-			Coordinador cor =servicioService.findCoordinador(listProgramacionMinisterio);
-			SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
-			model.addAttribute("programacionMin", listProgramacionMinisterio);
-			model.addAttribute("coordinador", cor);
-			model.addAttribute("fechaCoordinador", cor != null?  dt1.format(cor.getFechaServicio()): null);
-		}else{
-			model.addAttribute("programacionMin", null);
-		}
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		return url;
-	}
+
 
 	@GetMapping("/editarProgramacion")
 	public String editarProgramacion(@RequestParam String fecha, @RequestParam int idMinisterio, Model model) throws JsonMappingException, JsonProcessingException, ParseException {
@@ -304,7 +286,7 @@ public class ServicioController {
 		Persona per  = personaService.findPersonaById(idPersona);
 		cordinador.setPersona(per);
 		cordinador.setFechaServicio(dt1.parse(fechaServCoord));
-		servicioService.saveCoordinadorEntity(cordinador);
+		//servicioService.saveCoordinadorEntity(cordinador);
 		model.addAttribute("msj", "personasList");
 		return url;
 	}

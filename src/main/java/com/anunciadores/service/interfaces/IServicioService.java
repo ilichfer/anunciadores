@@ -35,8 +35,8 @@ public interface IServicioService {
 	public List<PersonaDto> getPeopleWithoutMinisterio(int idMinisterio);
 
 	public void saveProgramacion(ServicioDto servidores, Date fechaServicio,int idMinisterio);
-	public void saveCoordinado(CoordinadorDTO cordinador);
-	public void saveCoordinadorEntity(Coordinador cordinador);
+	public Boolean saveCoordinado(CoordinadorDTO cordinador) throws ParseException;
+	public Boolean saveCoordinadorEntity(CoordinadorDTO cordinador);
 
 	public Coordinador findCoordinador(List<ServicioListResponseDto> listProgramacionMinisterio );
 	public Coordinador findCoordinadorAdministrator(HttpServletRequest request);
@@ -47,6 +47,8 @@ public interface IServicioService {
 
 	void updateProgramacion(ServicioDto servidores, Date fechaServicio,int idMinisterio);
 
+	List<Persona> saveProgram(List<ServiceDTO> servicio );
+
 	void deleteProgramacion(Date fechaServicio);
 
 	public Optional<Persona> validarProgramacionByFecha(ServicioDto servidores, Date fechaServicio);
@@ -56,7 +58,7 @@ public interface IServicioService {
 	boolean validarActualizarProgramacionByFechaAndName(ServicioDto servidores, Date fechaServicio, int ministerio);
 
 	public List<ServicioListResponseDto>findProgramacionByDate(Date fechaActual);
-	public List<ServicioListResponseDto>findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio);
+	public List<ServicioResponseDto>findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio);
 
 	public  List<ServicioListResponseDto> findProgramacionByDateGroup(Date fechaActual) throws ParseException;
 	public  List<ItemCombo> findItemsCombo();
@@ -82,5 +84,9 @@ public interface IServicioService {
 	public List<MinisterioDto> getPositionInitial(List<MinisterioDto> idMinisterio);
 
 	public Persona getPersonDuplicate(ServicioDto servidores);
+
+	ProgramationDto findNextServices(Date fechaActual) throws ParseException;
+
+	ProgramationDto findServices(Date fechaActual) throws ParseException;
 
 }

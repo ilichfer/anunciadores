@@ -147,7 +147,7 @@ public class TdcController {
 		return "listarTdc";
 	}
 
-	@PostMapping("/buscarTdcByRangoFecha") public String buscarTdcByRangoFecha(@RequestParam Date fechaInicio,@RequestParam Date fechaFin, Model model) {
+	@PostMapping("/buscarTdcByRangoFecha") public String buscarTdcByRangoFecha(@RequestParam Date fechaInicio,@RequestParam Date fechaFin, Model model) throws ParseException {
 		if (fechaInicio != null && fechaFin !=null){
 		List<TdcReporteDto> listaTdc =	tdcService.findAllBetweenDates(fechaInicio,fechaFin);
 		model.addAttribute("listaTdc", listaTdc);

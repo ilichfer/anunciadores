@@ -47,6 +47,18 @@ public class Tdc implements Serializable {
 	Boolean pdf;
 	@Column(name = "imagen")
 	Boolean imagen;
+
+	@Column(name = "url_image")
+	String urlImage;
+
+	public String getUrlImage() {
+		return urlImage;
+	}
+
+	public void setUrlImage(String urlImage) {
+		this.urlImage = urlImage;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -29,4 +29,22 @@ public interface IMinisterioRepo extends JpaRepository<Ministerio, Integer>{
             " and  p.estado = true" +
             " order by p.nombre asc ")
     public List<Persona> findPeopleWithOutMinisterio(@Param("idMinisterio") int idMinisterio);
+
+    @Query("select  m.nombre, pm .nombrePosicion from Ministerio m " +
+            "join PosicionesMinisterio pm on m.id = pm.idMinisterio " +
+            "where m.id = :idMinisterio " +
+            "and pm.id = :posiciones ")
+    public Object findMnisteryAndPosition(@Param("idMinisterio") int idMinisterio, @Param("posiciones") int posiciones);
+
+    @Query("select m.nombre, pm from Ministerio m " +
+          " join PosicionesMinisterio pm on m.id = pm.idMinisterio ")
+    public List<Object> findMnisteryWithPositionS();
+
+    @Query("select m.nombre from Ministerio m  " +
+            "join PersonaMinisterio pm on m.id = pm.idMinisterio " +
+            "where pm.idPersona =:idPersona")
+    List<String> findNameMinisterio(@Param("idPersona") int idPersona);
+
+
+
 }

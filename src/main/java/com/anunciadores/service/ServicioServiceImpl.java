@@ -1,5 +1,6 @@
 package com.anunciadores.service;
 
+import com.anunciadores.controller.CordinadorController;
 import com.anunciadores.dto.*;
 import com.anunciadores.enums.ECombos;
 import com.anunciadores.mapper.mapperParametros;
@@ -7,6 +8,7 @@ import com.anunciadores.model.*;
 import com.anunciadores.model.PersonaMinisterio;
 import com.anunciadores.repository.*;
 import com.anunciadores.service.interfaces.IServicioService;
+import com.anunciadores.util.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,10 @@ public class ServicioServiceImpl implements IServicioService {
 
 	@Autowired
 	private mapperParametros mapperParametros;
+
+	@Autowired
+	private UtilDate utilDate;
+
 	@Override
 	public List<Ministerio> getAll() {
 		List<Ministerio> listaMinisterio= new ArrayList<>();
@@ -178,27 +184,39 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
-	public void saveCoordinado(CoordinadorDTO cordinador) {
+	public Boolean saveCoordinado(CoordinadorDTO cordinador) throws ParseException {
+		Boolean response = false;
+		Date fechaSave = utilDate.convertStringToDate(cordinador.getFechaString());
+
 		try {
 			Coordinador cor = new Coordinador();
-			Persona per = personaRepository.findById(cordinador.getIdPersona()).get();
-			if (cordinador.getId() != 0) {
-				cor.setId(cordinador.getId());
+			Optional<Coordinador> cord = coordinadorRepo.findByIdPersonaAndIdPersona(fechaSave,cordinador.getIdPersona());
+
+			if (!cord.isPresent()) {
+				cor.setPersona(personaRepository.findById(cordinador.getIdPersona()).get());
+				cor.setFechaServicio(utilDate.convertStringToDate(cordinador.getFechaString()));
+				coordinadorRepo.save(cor);
+				response= Boolean.TRUE;
 			}
-			cor.setPersona(per);
-			cor.setFechaServicio(cordinador.getFechaServcio());
-			coordinadorRepo.save(cor);
+
 		}catch (Exception e) {
 		throw e;
 		}
+		return response;
 	}
 
 	@Override
-	public void saveCoordinadorEntity(Coordinador cordinador) {
+	public Boolean saveCoordinadorEntity(CoordinadorDTO cordinador) {
 		try {
-			coordinadorRepo.save(cordinador);
+			Optional<Coordinador > CorOpt = coordinadorRepo.findByIdPersonaAndIdPersona(utilDate.convertStringToDate(cordinador.getFechaString()),cordinador.getPersona().getId());
+			if (CorOpt.isPresent()) {
+				CorOpt.get().setNotasServicio(cordinador.getNotasServicio());
+				coordinadorRepo.save(CorOpt.get());
+				return true;
+			}
+			return false;
 		}catch (Exception e) {
-			throw e;
+			return false;
 		}
 	}
 
@@ -246,7 +264,8 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
-	public Coordinador findCoordinadorByFecha(Date fechaServicio) {
+	public Coordinador
+	findCoordinadorByFecha(Date fechaServicio) {
 		return coordinadorRepo.findByFechaServicio(fechaServicio);
 	}
 
@@ -305,6 +324,55 @@ public class ServicioServiceImpl implements IServicioService {
 			e.printStackTrace();
 		}
 	}
+
+	@Transactional
+	@Override
+	public List<Persona> saveProgram(List<ServiceDTO> servicios) {
+	List<Persona> listmultipleAsiganacion = new ArrayList<>();
+		List<Servicio> progServicio = new ArrayList<>();
+		try {
+			List<Servicio> list= servicioRepository.findByFechaServicioAndIdMinisterio(utilDate.convertLocaldateToDate(servicios.get(0).getFechaServicio()), Integer.parseInt(servicios.get(0).getIdMinisterio()));
+	if(!list.isEmpty()) {
+		list.forEach(s -> servicioRepository.deleteById(s.getId()));
+	}
+	for (int i = 0; i < servicios.size(); i++) {
+				Servicio servicio = new Servicio();
+				List<PosicionesMinisterio> posicionEntity = posicionesRepository.findMinisterioByName(servicios.get(i).getIdPosicion(), Integer.parseInt(servicios.get(i).getIdMinisterio()));
+				servicio.setFechaServicio(utilDate.convertLocaldateToDate(servicios.get(i).getFechaServicio()));
+				servicio.setIdMinisterio(Integer.parseInt(servicios.get(i).getIdMinisterio()));
+				servicio.setIdPersona(Integer.parseInt(servicios.get(i).getIdPersona()));
+				servicio.setIdPosicion(Integer.parseInt(servicios.get(i).getIdPosicion()));
+				progServicio.add(servicio);
+
+		Optional<Persona> per = validarPersonaProgramanda(servicio.getIdPersona(), servicio.getFechaServicio());
+			if (per.isPresent())
+			{
+				listmultipleAsiganacion.add(per.get());
+			}
+	}
+			servicioRepository.saveAll(progServicio);
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return listmultipleAsiganacion;
+	}
+
+	private Optional<Persona> validarPersonaProgramanda(int idPersona, Date fechaServicio) {
+		try {
+				Optional<Servicio> programacion = 	servicioRepository.findProgramacionServidor(idPersona, fechaServicio);
+
+				if(programacion.isPresent()){
+					Optional<Persona> per=	personaRepository.findById(idPersona);
+					return per;
+				}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return Optional.empty();
+	}
+
+
 	@Override
 	public void deleteProgramacion(Date fechaServicio) {
 		try {
@@ -403,7 +471,7 @@ public class ServicioServiceImpl implements IServicioService {
 	}
 
 	@Override
-	public List<ServicioListResponseDto> findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio) {
+	public List<ServicioResponseDto> findProgramacionByDateAndMinisterio(Date fechaActual, int idMinisterio) {
 		List<ServicioListResponseDto> ListServiceDto = new ArrayList<>();
 		List<Object> obj = new ArrayList<>();
 		List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
@@ -422,8 +490,8 @@ public class ServicioServiceImpl implements IServicioService {
 				break;
 			}
 		ListServicioDto.size();
-		ListServiceDto = buscarMinistarios(ListServicioDto);
-		return ListServiceDto;
+		//ListServiceDto = buscarMinistarios(ListServicioDto);
+		return ListServicioDto;
 	}
 
 	@Override
@@ -703,6 +771,151 @@ public class ServicioServiceImpl implements IServicioService {
 			return p.get();
 		}
 			return new Persona();
+	}
+
+	@Override
+	public ProgramationDto findNextServices(Date fechaActual) throws ParseException {
+		ProgramationDto prog = new ProgramationDto();
+		List<MinistryDto> ministries= new ArrayList<>();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			List<ServicioListResponseDto> ListServiceDto = new ArrayList<>();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
+			String fechaActualStr = nowInBogota.format(formatter);
+
+			try {
+				Date fechaActual1 = sdf.parse(fechaActualStr);
+				LocalDate fechaActualizada = nowInBogota.toLocalDate();
+
+				List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
+				for (int i = 0; i < 6; i++) {
+					Optional<List<Integer>> listMinisterios = servicioRepository.findDistinctIdMinisterio(fechaActual);
+					if (!listMinisterios.isPresent() || listMinisterios.get().isEmpty()){
+						fechaActualizada = fechaActualizada.plusDays(1);
+						fechaActual = java.sql.Date.valueOf(fechaActualizada);
+					}else{
+						Date finalFechaActual = fechaActual;
+						listMinisterios.get().forEach(min -> {
+
+							DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            String fechaReactActualStr = null;
+                            try {
+                                fechaReactActualStr = utilDate.convertDateToStringWithFormat(finalFechaActual,"yyyy-MM-dd" );
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                            LocalDate ld = LocalDate.parse(fechaReactActualStr, dtf);
+							prog.setDate(ld);
+							Coordinador cord = coordinadorRepo.findByFechaServicio(finalFechaActual);
+							if (cord != null) {
+								CordinatorDto corDto = new CordinatorDto();
+								corDto.setName(cord.getPersona().getNombre());
+								corDto.setDate(ld);
+								corDto.setId(cord.getPersona().getId());
+;								prog.setCoordinator(corDto);
+
+
+							}
+
+							List<MinistryMember> menbers = new ArrayList<>();
+							List<Object> resp = servicioRepository.findMInisteriesAndpositions(finalFechaActual,min);
+							if(resp!= null && resp.size() > 0){
+								MinistryDto mDto = new MinistryDto();
+								resp.forEach(m -> menbers.add(mapPositionsDto(m)));
+								Map<String, List<MinistryMember>>hashMin = new HashMap<>();
+
+								mDto.setName(menbers.get(0).getMinistryName());
+								mDto.setId(min);
+								mDto.setPositions(menbers);
+								ministries.add(mDto);
+							}
+						});
+						break;
+					}
+				}
+
+				ListServiceDto = buscarMinistarios(ListServicioDto);
+			}catch (Exception e){
+				LOGGER.error("[findProgramacionByDateGroup] " + e.getMessage());
+				e.printStackTrace();
+				throw new RuntimeException("[findProgramacionByDateGroup]"+e);
+			}
+
+
+
+		prog.setMinistries(ministries);
+		return prog;
+	}
+
+	@Override
+	public ProgramationDto findServices(Date fechaActual) throws ParseException {
+		ProgramationDto prog = new ProgramationDto();
+		List<MinistryDto > ministries= new ArrayList<>();
+
+		try {
+
+			List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
+			for (int i = 0; i < 6; i++) {
+				Optional<List<Integer>> listMinisterios = servicioRepository.findDistinctIdMinisterio(fechaActual);
+				if (!listMinisterios.isPresent() || listMinisterios.get().isEmpty()){
+					return null;
+				}else{
+					Date finalFechaActual = fechaActual;
+					listMinisterios.get().forEach(min -> {
+
+						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        String fechaReactActualStr = null;
+                        try {
+                            fechaReactActualStr = utilDate.convertDateToStringWithFormat(finalFechaActual,"yyyy-MM-dd" );
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        LocalDate ld = LocalDate.parse(fechaReactActualStr, dtf);
+						prog.setDate(ld);
+						Coordinador cord = coordinadorRepo.findByFechaServicio(finalFechaActual);
+						if (cord != null) {
+							CordinatorDto corDto = new CordinatorDto();
+							corDto.setName(cord.getPersona().getNombre());
+							corDto.setDate(ld);
+							prog.setCoordinator(corDto);
+						}
+
+						List<MinistryMember> menbers = new ArrayList<>();
+						List<Object> resp = servicioRepository.findMInisteriesAndpositions(finalFechaActual,min);
+						if(resp!= null && resp.size() > 0){
+							MinistryDto mDto = new MinistryDto();
+							resp.forEach(m -> menbers.add(mapPositionsDto(m)));
+							Map<String, List<MinistryMember>>hashMin = new HashMap<>();
+
+							mDto.setName(menbers.get(0).getMinistryName());
+							mDto.setId(min);
+							mDto.setPositions(menbers);
+							ministries.add(mDto);
+						}
+					});
+					break;
+				}
+			}
+		}catch (Exception e){
+			LOGGER.error("[findProgramacionByDateGroup] " + e.getMessage());
+			e.printStackTrace();
+			throw new RuntimeException("[findProgramacionByDateGroup]"+e);
+		}
+		prog.setMinistries(ministries);
+		return prog;
+	}
+
+	private MinistryMember mapPositionsDto(Object obj) {
+		MinistryMember member = new MinistryMember();
+		Object[] object = (Object[]) obj;
+		member.setMinistryName(object[1].toString());
+		member.setPositionId((Integer) object[2]);
+		member.setPosition(object[3].toString());
+		member.setPersonName(object[4].toString());
+		member.setPersonId((Integer) object[5]);
+		return member;
+
 	}
 
 	private Optional<Persona> validarRepetido(String idUser, List<String> listUsers){

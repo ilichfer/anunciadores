@@ -330,11 +330,11 @@ public class personaController {
 		PersonaDto per = personaService.buscarByDocumento(persona.getDocumento());
 		VersiculoSaveDto dia = bibliaService.buscarVersiculoSemanal();
 		List<ServicioListResponseDto> listProgramacionMinisterio = servicioService.findProgramacionByDateGroup(utilDate.cargarfechaActualBogotaDate());
-		List<PersonaDto> listadoCumpleañosMes = personaService.findBirthdayByMonth();
-		List<PersonaDto> listadoCumpleañosDiario =	personaService.getBirthDay(listadoCumpleañosMes);
-		model.addAttribute("cumpleanos", listadoCumpleañosMes);
-		if (!listadoCumpleañosDiario.isEmpty()){
-			model.addAttribute("cumpleanosDiario", listadoCumpleañosDiario);
+		List<PersonaDto> listadoCumpleanosMes = personaService.findBirthdayByMonth();
+		List<PersonaDto> listadoCumpleanosDiario =	personaService.getBirthDay(listadoCumpleanosMes);
+		model.addAttribute("cumpleanos", listadoCumpleanosMes);
+		if (!listadoCumpleanosDiario.isEmpty()){
+			model.addAttribute("cumpleanosDiario", listadoCumpleanosDiario);
 		}else {
 			model.addAttribute("cumpleanosDiario", null);
 		}

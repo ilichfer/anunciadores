@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,5 +43,31 @@ public class UtilDate {
         return fechaDate;
 
     }
+
+    public String convertDateToStringWithFormat(Date fecha,String  format) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        String fechaString = sdf.format(fecha);
+        return fechaString;
+
+    }
+
+    public String cargarFechaBogotaConParametro(String format) throws ParseException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        ZonedDateTime nowInBogota = ZonedDateTime.now(ZoneId.of("America/Bogota"));
+        String fechaActualStr = nowInBogota.format(formatter);
+        return  fechaActualStr;
+    }
+
+    public Date convertLocaldateToDate(LocalDate local){
+    LocalDate localDate = local;
+
+    // Conversión
+    Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        System.out.println("LocalDate: " + localDate);
+        System.out.println("Date: " + date);
+        return date;
+}
+
 
 }

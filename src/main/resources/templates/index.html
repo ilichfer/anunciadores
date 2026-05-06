@@ -96,14 +96,18 @@
                                             <th>Persona</th>
                                         </tr>
                                         </thead>
-
                                         <tbody>
-
                                         <tr th:each="persona, itemStat : ${cumpleanosDiario}">
-                                            <td class="table-success" th:if="${persona.cumpleActual == true}" th:text="'Felicitamos en este día a ' + ${persona.nombre} + ' ' + ${persona.apellido}  + ' por tu cumpleaños, Que Dios bendiga tu vida, que veas el favor y la misericordia cada día de tu vida !!!'">persona</td>
-                                            <td th:if="${persona.cumpleActual == false}" th:text=" ${persona.nombre} + ' ' + ${persona.apellido}">persona</td>
-                                        </tr>
+                                            <td th:if="${persona.cumpleActual}"
+                                                th:data-es-cumple="${persona.cumpleActual}"
+                                                class="table-success"
+                                                th:text="'Felicitamos en este día a ' + ${persona.nombre} + ' ' + ${persona.apellido} + ' por su cumpleaños, Que Dios bendiga tu vida, que veas el favor y la misericordia cada día de tu vida !!!'">
+                                            </td>
 
+                                            <td th:unless="${persona.cumpleActual}"
+                                                th:text="${persona.nombre} + ' ' + ${persona.apellido}">
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -111,6 +115,11 @@
                             </div>
 
 
+
+                            <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+
+<!--   -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Proxima Programacion de Servidores</h6>
@@ -573,6 +582,7 @@
     <!-- Logout Modal-->
     <header th:replace="layout/modalSalir :: header"></header>
         <header th:replace="layout/modalMensajes :: header"></header>
+        <header th:replace="layout/asignacionModal :: header"></header>
 
         <style>
 
@@ -616,6 +626,8 @@
 <!-- <script th:inline="javascript"> -->
 <script src="js/storage.js"></script>
 <script src="js/cargarData.js"></script>
+
+
 
 </body>
 

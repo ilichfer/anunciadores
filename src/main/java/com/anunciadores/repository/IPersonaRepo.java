@@ -85,7 +85,7 @@ List<Persona> buscarPersonaSinActividad(@Param("idActividad")Integer idActividad
             " where m.id =:idMesa)")
     public List<Persona> buscarPersonaSinMesas(@Param("idMesa")Integer idMesa);
 
-    @Query(nativeQuery = true,value = "SELECT p.nombre, p.apellido, DAY(p.fechanacimiento) from persona p WHERE MONTH(fechanacimiento) =:mes order by day( p.fechanacimiento) asc ")
+    @Query(nativeQuery = true,value = "SELECT p.nombre, p.apellido, DAY(p.fechanacimiento) from persona p WHERE MONTH(fechanacimiento) =:mes and p.estado = 1 order by day( p.fechanacimiento) asc ")
     List<Object> buscarCumpleaños(@Param("mes")int mes);
 
 

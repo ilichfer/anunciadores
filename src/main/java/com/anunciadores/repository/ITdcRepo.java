@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface ITdcRepo extends JpaRepository<Tdc, Integer>{
 
@@ -25,6 +26,13 @@ public interface ITdcRepo extends JpaRepository<Tdc, Integer>{
             "GROUP BY t.idPersona "+
             "ORDER by p.nombre asc ")
     public List<Object> findAllBetweenDates(@Param("dateStart") Date dateStart,@Param("dateEnd") Date dateEnd);
+
+    @Query("select CONCAT(p.nombre ,' ', p.apellido)  , COUNT(t.idPersona), t.idPersona from Tdc t " +
+            "join Persona p on t.idPersona  = p.id " +
+            "where t.fechaCreacion BETWEEN :dateStart and :dateEnd " +
+            "and t.idPersona = :idPersona ")
+    public Optional<Object> findAllBetweenDatesAndPerson(@Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd, @Param("idPersona") Integer idPersona);
+
 
     @Modifying
     @Query("select t from Tdc t " +

@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.anunciadores.dto.MinisterioDto;
-import com.anunciadores.dto.ServicioResponseDto;
+import com.anunciadores.dto.*;
 import com.anunciadores.mapper.mapperMensaje;
 import com.anunciadores.model.*;
 import com.anunciadores.repository.*;
@@ -25,10 +24,10 @@ import com.anunciadores.util.UtilDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.anunciadores.dto.PersonaDto;
 import com.anunciadores.service.interfaces.ICursoService;
 import com.anunciadores.service.interfaces.IPagoService;
 import com.anunciadores.service.interfaces.IPersonaService;
@@ -60,6 +59,13 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private IMensajesRepo mensajesRepo;
+
+	@Autowired
+	private IServicioRepo servicioRepo;
+
+	@Autowired
+	private IMinisterioRepo ministerioRepo;
+
 	@Autowired
 	private ICoordinadorRepo coordinadorRepo;
 
@@ -83,7 +89,7 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private ConsolidacionRepoImpl consolidacionDao;
-	
+
 	@Autowired
 	private IPagoService pagoService;
 	@Autowired
@@ -97,7 +103,10 @@ public class PersonaServiceImpl implements IPersonaService {
 
 	@Autowired
 	private UtilDate utilDate;
-	
+
+	@Autowired
+	private JwtService jwtService;
+
 	List<Persona> listPersonas;
 	List<PersonaDto> listPersonasDto;
 
@@ -145,6 +154,17 @@ public class PersonaServiceImpl implements IPersonaService {
 		personaSave.setEstado(false);
 		personaRepository.save(personaSave);
 		return "asistente";
+	}
+
+	@Override
+	public Persona toggleActive(Integer idPersona, Boolean estado) {
+
+			Optional<Persona> personaSave ;
+			personaSave = personaRepository.findById(idPersona);
+			personaSave.get().setEstado(estado);
+			Persona personaUpdate = personaRepository.save(personaSave.get());
+			return personaUpdate;
+
 	}
 
 	@Override
@@ -204,10 +224,10 @@ public class PersonaServiceImpl implements IPersonaService {
 	@Override
 	public List<Persona> findAllByCurso(int idCurso) {
 		//listPersonas= daoPersona.buscarPersonaByCurso(idCurso);
-		listPersonas= personaRepository.findPersonaByCurso(idCurso);
+		listPersonas = personaRepository.findPersonaByCurso(idCurso);
 		return listPersonas;
 	}
-	
+
 	@Override
 	public List<Persona> buscarTodosSinCurso(int idCurso) {
 //		List<Persona> listaPersonas=  daoPersona.buscarPersonaSinCurso(idCurso);
@@ -224,7 +244,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		//daoPersona.eliminarPersonaConCurso(idPersona, idCurso);
 		try {
 			personaRepository.deletePersonaConCurso(idPersona, idCurso);
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -235,7 +255,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		//daoPersona.eliminarPersonaConCurso(idPersona, idCurso);
 		try {
 			personaRepository.deletePersonaMinisterio(idPersona, idMinisterio);
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -249,7 +269,7 @@ public class PersonaServiceImpl implements IPersonaService {
 			inscripcion.setIdCurso(idCurso);
 			inscripcion.setIdPersona(idPersona);
 
-			Inscripciones perInscrita= inscripcionesRepository.save(inscripcion);
+			Inscripciones perInscrita = inscripcionesRepository.save(inscripcion);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -298,16 +318,16 @@ public class PersonaServiceImpl implements IPersonaService {
 			//per = daoPersona.buscarByDocumento(doc);
 			per = personaRepository.findByDocumento(doc);
 			if (per != null && per.getDocumento() != null) {
-			personadto.setNombre(per.getNombre());
-			personadto.setApellido(per.getApellido());
-			personadto.setDocumento(per.getDocumento());
-			personadto.setTipodocumento(per.getTipodocumento());
-			personadto.setEmail(per.getEmail());
-			personadto.setId(per.getId());
-			personadto.setFechanacimiento(per.getFechanacimiento());
-			personadto.setTelefono(per.getTelefono());
-			personadto.setPassword(per.getPassword() != null ? per.getPassword() : "");
-			personadto.setRoles(new ArrayList<Rol>());
+				personadto.setNombre(per.getNombre());
+				personadto.setApellido(per.getApellido());
+				personadto.setDocumento(per.getDocumento());
+				personadto.setTipodocumento(per.getTipodocumento());
+				personadto.setEmail(per.getEmail());
+				personadto.setId(per.getId());
+				personadto.setFechanacimiento(per.getFechanacimiento());
+				personadto.setTelefono(per.getTelefono());
+				personadto.setPassword(per.getPassword() != null ? per.getPassword() : "");
+				personadto.setRoles(new ArrayList<Rol>());
 				List<RolPersona> rol = new ArrayList<>();
 
 				List<Rol> roles = rolesDao.buscarRoles(personadto.getId());
@@ -327,11 +347,14 @@ public class PersonaServiceImpl implements IPersonaService {
 						personadto.getRoles().add(rolAsignado);
 						personadto.setAdmin(false);
 						personadto.setUser(true);
-						personadto.setPermisosMenu(contruirPermisosServidor( menuList));
+						personadto.setPermisosMenu(contruirPermisosServidor(menuList));
 					}
 					personadto.setMensajes(mapperMensaje.listEntityToMensajesDTO(mensajesRepo.mesajesSinLeerByIdPersona(personadto.getId())));
+					// crear repository para consultat la fecha proxima de servicio  consuilatar con esa fecha si se tiene programcion asignada
+
+					personadto.setAsignacion(validateServiceByPersonAndDate(per.getId()));
 				}
-			}else {
+			} else {
 				personadto = new PersonaDto();
 			}
 
@@ -340,18 +363,18 @@ public class PersonaServiceImpl implements IPersonaService {
 			e.printStackTrace();
 			personadto = new PersonaDto();
 			personadto.setId(1);
-			throw new RuntimeException("[buscarByDocumento]"+e.getMessage());
+			throw new RuntimeException("[buscarByDocumento]" + e.getMessage());
 		}
 		return personadto;
 	}
 
 
-	private void compararPermisos (List<PermisosMenu> permisos, int idPersona){
+	private void compararPermisos(List<PermisosMenu> permisos, int idPersona) {
 		List<ParamMenu> menuList = paramMenuRepo.findAll();
-		List<PermisosMenu> permisosCompletos = contruirPermisosServidor( menuList);
+		List<PermisosMenu> permisosCompletos = contruirPermisosServidor(menuList);
 		List<PermisosMenu> permisosActivos = new ArrayList<>();
 
-		for (PermisosMenu min: permisosCompletos) {
+		for (PermisosMenu min : permisosCompletos) {
 			for (int i = 0; i < permisos.size(); i++) {
 				if (permisos.get(i).getMenu().getNombreBotonMenu() == min.getMenu().getNombreBotonMenu()) {
 					permisosActivos.add(min);
@@ -361,19 +384,19 @@ public class PersonaServiceImpl implements IPersonaService {
 
 		permisosCompletos.removeAll(permisosActivos);
 
-				if (!permisosCompletos.isEmpty()){
-					for (PermisosMenu permSave : permisosCompletos){
-						PermisosMenu perm = new PermisosMenu();
-						perm.setIdPersona(idPersona);
-						perm.setNombreBotonMenu(permSave.getMenu().getNombreBotonMenu());
-						perm.setEstado("false");
-						perm.setMenu(permSave.getMenu());
-						permisosRepo.save(perm);
-					}
-				}
+		if (!permisosCompletos.isEmpty()) {
+			for (PermisosMenu permSave : permisosCompletos) {
+				PermisosMenu perm = new PermisosMenu();
+				perm.setIdPersona(idPersona);
+				perm.setNombreBotonMenu(permSave.getMenu().getNombreBotonMenu());
+				perm.setEstado("false");
+				perm.setMenu(permSave.getMenu());
+				permisosRepo.save(perm);
+			}
+		}
 	}
 
-	private List<PermisosMenu> contruirPermisosServidor(List<ParamMenu> menuList){
+	private List<PermisosMenu> contruirPermisosServidor(List<ParamMenu> menuList) {
 		List<PermisosMenu> listPermisosIniciales = new ArrayList<>();
 		String estadoInicial = "false";
 
@@ -392,8 +415,8 @@ public class PersonaServiceImpl implements IPersonaService {
 	@Override
 	public Persona saveAsistente(Persona persona) {
 		persona.setPassword("");
-		persona.setDiscapacidad(persona.getDiscapacidad()!=null?persona.getDiscapacidad():false);
-		persona.setPerteneceMinoria(persona.getPerteneceMinoria()!=null?persona.getPerteneceMinoria():false);
+		persona.setDiscapacidad(persona.getDiscapacidad() != null ? persona.getDiscapacidad() : false);
+		persona.setPerteneceMinoria(persona.getPerteneceMinoria() != null ? persona.getPerteneceMinoria() : false);
 		return personaRepository.save(persona);
 	}
 
@@ -401,11 +424,11 @@ public class PersonaServiceImpl implements IPersonaService {
 	public Persona saveAsistenteConsolidacion(Persona persona, Consolidacion consolidacion) {
 		persona.setPassword("");
 		persona.setConsolidacion(true);
-		persona.setDiscapacidad(persona.getDiscapacidad()!=null?persona.getDiscapacidad():false);
-		persona.setPerteneceMinoria(persona.getPerteneceMinoria()!=null?persona.getPerteneceMinoria():false);
+		persona.setDiscapacidad(persona.getDiscapacidad() != null ? persona.getDiscapacidad() : false);
+		persona.setPerteneceMinoria(persona.getPerteneceMinoria() != null ? persona.getPerteneceMinoria() : false);
 		persona = personaRepository.save(persona);
 		consolidacion.setIdPersona(persona.getId());
-		consolidacion.setAceptaConsolidacion(persona.getConsolidacion()!=null?persona.getConsolidacion():false);
+		consolidacion.setAceptaConsolidacion(persona.getConsolidacion() != null ? persona.getConsolidacion() : false);
 		iConsolidacionRepo.save(consolidacion);
 		return persona;
 	}
@@ -413,7 +436,7 @@ public class PersonaServiceImpl implements IPersonaService {
 	@Override
 	public List<PersonaDto> buscarConsolidacion(List<Persona> listaPersonas, int idCurso) {
 		List<PersonaDto> listaPersonasConsolidacion = new ArrayList<>();
-		listaPersonas.forEach(p -> listaPersonasConsolidacion.add(agregarConsolidacion(p,idCurso)));
+		listaPersonas.forEach(p -> listaPersonasConsolidacion.add(agregarConsolidacion(p, idCurso)));
 		return listaPersonasConsolidacion;
 	}
 
@@ -440,15 +463,16 @@ public class PersonaServiceImpl implements IPersonaService {
 			curso = cursoService.findCursoById(idCurso);
 			int pagoTotal = 0;
 			int adeuda = 0;
-			
+
 			for (Pago pago : pagoList) {
-				pagoTotal = pagoTotal +pago.getValor();
+				pagoTotal = pagoTotal + pago.getValor();
 			}
 			if (pagoTotal >= curso.getValorTotal()) {
 				perConsolidacion.setValidarPago(true);
-			};
+			}
+			;
 		}
-		
+
 //		cosolidacionRepository.save(consolidacion);
 
 		return perConsolidacion;
@@ -470,7 +494,7 @@ public class PersonaServiceImpl implements IPersonaService {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Override
 	public Persona personaDtoToEntity(PersonaDto dto) {
 		Persona per = new Persona();
@@ -489,7 +513,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		}
 		return per;
 	}
-	
+
 	@Override
 	public Persona savePassword(Persona persona) {
 		persona.setPassword(encriptar(persona.getPassword()));
@@ -520,16 +544,16 @@ public class PersonaServiceImpl implements IPersonaService {
 		List<Object> obj = new ArrayList<>();
 		List<ServicioResponseDto> ListServicioDto = new ArrayList<>();
 		obj = personaRepository.buscarCumpleaños(month);
-		obj.forEach(p -> listDto.add(mapCumplePersonaDto(p,diaactual.toString() )));
+		obj.forEach(p -> listDto.add(mapCumplePersonaDto(p, diaactual.toString())));
 		return listDto;
 	}
 
 	@Override
-	public List<PersonaDto> getBirthDay (List<PersonaDto> listDto){
+	public List<PersonaDto> getBirthDay(List<PersonaDto> listDto) {
 		List<PersonaDto> listcCumpleActual = new ArrayList<>();
 
-		for (PersonaDto dto:listDto ) {
-			if (dto.isCumpleActual()){
+		for (PersonaDto dto : listDto) {
+			if (dto.isCumpleActual()) {
 				listcCumpleActual.add(dto);
 			}
 		}
@@ -537,16 +561,67 @@ public class PersonaServiceImpl implements IPersonaService {
 	}
 
 	@Override
-	public void findUsuariosRol(int idPersona,int idRolNuevo) {
+	public List<PersonaReactDto> findAllUsers() {
+		List<PersonaReactDto> listpersonResult = new ArrayList<>();
+		List<Persona> listp = personaRepository.findAll(Sort.by(Sort.Direction.ASC, "nombre"));
+		listp.forEach(p -> listpersonResult.add(mapPersonaReactDto(p)));
+		return listpersonResult;
+	}
+
+	@Override
+	public UserResponseDto getUsuarioDesdeToken(String token) {
+
+		// 1. Validar token
+		if (!jwtService.esTokenValido(token)) {
+			throw new RuntimeException("Token inválido o expirado");
+		}
+
+		// 2. Extraer cédula del token
+		String cedula = jwtService.getCedulaDesdeToken(token);
+
+		// 3. Buscar persona en BD
+		Persona persona = personaRepository.findByDocumento(Integer.parseInt(cedula));
+		if (persona == null) {
+			throw new RuntimeException("Usuario no encontrado");
+		}
+		UserResponseDto user = new UserResponseDto(persona);
+		user.setMinistry(ministerioRepo.findNameMinisterio(user.getId().intValue()));
+		// 4. Construir respuesta
+		return user;
+
+	}
+
+	private PersonaReactDto mapPersonaReactDto(Persona persona) {
+		PersonaReactDto dto = new PersonaReactDto();
+		try {
+			dto.setId(persona.getId());
+			dto.setName(persona.getNombre() + " " + persona.getApellido());
+			dto.setEmail(persona.getEmail());
+			dto.setPhone(persona.getTelefono());
+			dto.setActive(persona.getEstado());
+			List<Rol> roles = rolesDao.buscarRoles(persona.getId());
+			for (Rol rol : roles) {
+				if (rol.getDescripcion().equalsIgnoreCase("ADMINISTRADOR")) {
+					dto.setRole(rol.getDescripcion());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	@Override
+	public void findUsuariosRol(int idPersona, int idRolNuevo) {
 		List<RolPersona> rol = new ArrayList<>();
 		rol = rolesPersonaRepository.findRolByidPersona(idPersona);
 		RolPersona rolUpdate = rol.get(0);
 		rolUpdate.setIdRol(idRolNuevo);
 		rolesPersonaRepository.save(rolUpdate);
-		if(rolUpdate.getIdRol()==1){
-			List<PermisosMenu>listpermisos = permisosRepo.findByIdPersona(idPersona);
+		if (rolUpdate.getIdRol() == 1) {
+			List<PermisosMenu> listpermisos = permisosRepo.findByIdPersona(idPersona);
 			if (listpermisos.size() == 0) {
-				List<PermisosMenu> listRolsInicial= crearRolesPrimerVezAdmin(idPersona);
+				List<PermisosMenu> listRolsInicial = crearRolesPrimerVezAdmin(idPersona);
 				for (PermisosMenu permiso : listRolsInicial) {
 					permisosRepo.save(permiso);
 				}
@@ -567,7 +642,7 @@ public class PersonaServiceImpl implements IPersonaService {
 			//permisoInicial.setIdMenu(boton.getId());
 			if (boton.getNombreBotonMenu().equals("menuAdministrar")) {
 				permisoInicial.setEstado("false");
-			}else{
+			} else {
 				permisoInicial.setEstado(estadoInicial);
 			}
 			permisoInicial.setNombreBotonMenu(boton.getNombreBotonMenu());
@@ -589,7 +664,7 @@ public class PersonaServiceImpl implements IPersonaService {
 		return estudio;
 	}
 
-	private PersonaDto mapPersonaDto(Persona persona){
+	private PersonaDto mapPersonaDto(Persona persona) {
 		PersonaDto dto = new PersonaDto();
 		try {
 			dto.setNombre(persona.getNombre());
@@ -602,7 +677,7 @@ public class PersonaServiceImpl implements IPersonaService {
 			dto.setTelefono(persona.getTelefono());
 			dto.setPassword(persona.getPassword());
 			List<Rol> roles = rolesDao.buscarRoles(persona.getId());
-			roles.forEach(r -> dto.setRolUnico(r) );
+			roles.forEach(r -> dto.setRolUnico(r));
 			dto.setRoles(roles);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -610,14 +685,14 @@ public class PersonaServiceImpl implements IPersonaService {
 		return dto;
 	}
 
-	private PersonaDto mapCumplePersonaDto(Object obj, String dia){
+	private PersonaDto mapCumplePersonaDto(Object obj, String dia) {
 		PersonaDto dto = new PersonaDto();
 		Object[] object = (Object[]) obj;
 		try {
 			dto.setNombre(object[0].toString());
 			dto.setApellido(object[1].toString());
 			dto.setFechanacimiento(object[2].toString());
-			dto.setCumpleActual(dia.equals(object[2].toString())?true: false);
+			dto.setCumpleActual(dia.equals(object[2].toString()) ? true : false);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -625,5 +700,30 @@ public class PersonaServiceImpl implements IPersonaService {
 		return dto;
 	}
 
+	private List<AsignacionServicioDTO> validateServiceByPersonAndDate(int idPersona) {
+		List<AsignacionServicioDTO> asignacion = new ArrayList<>();
+		Optional<Date> fechaSiguiente = servicioRepo.findNextDateService();
+		Optional<List<Servicio>> ServiciosProximos = servicioRepo.findAllServiceByDateAndPerson(idPersona,fechaSiguiente.get());
+		if(ServiciosProximos.isPresent()) {
 
+			List<Servicio> listServices = ServiciosProximos.get();
+			listServices.forEach(serv ->{
+						AsignacionServicioDTO asig = new AsignacionServicioDTO();
+						Object objRepo = ministerioRepo.findMnisteryAndPosition(serv.getIdMinisterio(),serv.getIdPosicion());
+
+						Object[] object = (Object[]) objRepo;
+
+						try {
+							asig.setMInisterio(object[0].toString());
+							asig.setPosiciones(object[1].toString());
+							asignacion.add(asig);
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+			);
+		}
+		return asignacion;
+	}
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.anunciadores.dto.PersonaDto;
+import com.anunciadores.dto.PersonaReactDto;
+import com.anunciadores.dto.UserResponseDto;
 import com.anunciadores.model.Consolidacion;
 import com.anunciadores.model.EstudioPersona;
 import com.anunciadores.model.Pago;
@@ -23,6 +25,7 @@ public interface IPersonaService {
 	public Persona findPersonaByNombre(String nombre);
 
 	public String delete(Persona persona);
+	public Persona toggleActive(Integer idPersona, Boolean estado);
 
 	public String habilitar(Persona persona);
 
@@ -61,4 +64,8 @@ public interface IPersonaService {
 	public EstudioPersona saveEstudio(EstudioPersona estudio);
 
 	public List<PersonaDto> getBirthDay (List<PersonaDto> listDto);
+
+	public  List<PersonaReactDto> findAllUsers();
+
+	UserResponseDto getUsuarioDesdeToken(String token);
 }

@@ -40,7 +40,7 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
     @Query("select s from Servicio s " +
             "where s.idPersona = :idPersona " +
             "and s.fechaServicio = :fechaServicio")
-    public Optional<Servicio> findProgramacionPosition(@Param("idPersona") int idPersona, @Param("fechaServicio") Date fechaServicio);
+    public Optional<List<Servicio>> findAllServiceByDateAndPerson(@Param("idPersona") int idPersona, @Param("fechaServicio") Date fechaServicio);
 
     @Query("select p.id  , p.nombre,pm.id , pm.nombrePosicion from Servicio s " +
             "            join Persona p on s.idPersona = p.id " +
@@ -63,6 +63,8 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
     @Modifying
     public void deleteByFechaServicioAndIdMinisterio(@Param("fechaServicio") Date fechaServicio,int idMinisterio);
 
+
+    @Modifying
     public List<Servicio> findByFechaServicioAndIdMinisterio(@Param("fechaServicio") Date fechaServicio,int idMinisterio);
 
     @Query("select s from Servicio s " +
@@ -70,5 +72,28 @@ public interface IServicioRepo extends JpaRepository<Servicio, Integer>{
             "and s.idPersona =:idPersona " +
             "order by s.fechaServicio asc")
     public List<Servicio> BuscarServicioMes(@Param("fechaInicial")Date fechaInicial, @Param("fechaFinal")Date fechaFinal,@Param("idPersona")int idPersona);
+
+    @Query(value = "SELECT fecha_servicio " +
+            "FROM servicio " +
+            "ORDER BY ABS(TIMESTAMPDIFF(SECOND, fecha_servicio, NOW())) ASC " +
+            "LIMIT 1",nativeQuery = true)
+    public Optional<Date> findNextDateService();
+
+    @Query("SELECT DISTINCT s.idMinisterio FROM Servicio s" +
+            " where s.fechaServicio = :fecha ")
+    Optional<List<Integer>> findDistinctIdMinisterio(@Param("fecha")Date fechaInicial);
+
+    @Query(value = "select s.fecha_servicio,m.nombre ,pm.id ,pm.nombre_posicion, concat(p.nombre,' ',p.apellido), p.id as id_persona " +
+            "    from servicio s     \n" +
+            "    join persona p on s.id_Persona = p.id     \n" +
+            "    join posiciones_ministerios  pm on s.id_posicion = pm.id     \n" +
+            "    join ministerios  m on pm.id_Ministerio = m.id     \n" +
+            "    WHERE s.fecha_servicio = :fecha    \n" +
+            "    and m.id = :idMinisterio" ,nativeQuery = true)
+    public List<Object> findMInisteriesAndpositions( @Param("fecha")Date fechaInicial,@Param("idMinisterio")int idMinisterio);
+
+
+
+
 
 }

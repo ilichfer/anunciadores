@@ -1,7 +1,5 @@
 package com.anunciadores.service;
 
-import com.anunciadores.controller.TdcController;
-import com.anunciadores.dto.ServicioResponseDto;
 import com.anunciadores.dto.TdcDto;
 import com.anunciadores.dto.TdcReporteDto;
 import com.anunciadores.model.*;
@@ -21,6 +19,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
 
@@ -57,6 +59,23 @@ public class TdcServiceImpl implements ITdcService {
 		}
 
 		return tdc;
+	}
+
+	@Override
+	public Tdc saveTcdImage( String urlCloudflare, Integer idPersona) {
+		   try {
+			   Tdc saveTcd = new Tdc();
+			   java.sql.Date sqlDate = java.sql.Date.valueOf(utilDate.cargarFechaBogotaConParametro("yyyy-MM-dd"));
+			   saveTcd.setFechaCreacion(sqlDate);
+			   saveTcd.setIdPersona(idPersona);
+			   saveTcd.setUrlImage(urlCloudflare);
+
+			   return TdcRepository.save(saveTcd);
+
+		   } catch (Exception e) {
+			   e.printStackTrace();
+			   throw new RuntimeException(e);
+		   }
 	}
 
 	@Override
@@ -107,7 +126,7 @@ public class TdcServiceImpl implements ITdcService {
 	}
 
 	@Override
-	public List<TdcReporteDto> findAllBetweenDates(Date fechaStart, Date fechaEnd) {
+	public List<TdcReporteDto> findAllBetweenDates(Date fechaStart, Date fechaEnd) throws ParseException {
 		List<TdcReporteDto> listareporte = new ArrayList<>();
 
 
@@ -118,11 +137,65 @@ public class TdcServiceImpl implements ITdcService {
 			dto.setNombre(object[0].toString());
 			dto.setCantidadEntregados( Integer.parseInt( object[1].toString()));
 			dto.setIdPersona( Integer.parseInt( object[2].toString()));
+			dto.setPorcentajeCumplimiento(calcularPorcentajeCumplimiento( Integer.parseInt( object[1].toString())));
 			listareporte.add(dto);
 		}
 
 		return listareporte;
 	}
+
+	@Override
+	public TdcReporteDto findAllBetweenDatesAndPerson( Integer idPersona) throws ParseException {
+		TdcReporteDto dto = new TdcReporteDto();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateBog = utilDate.cargarFechaBogotaConParametro("yyyy-MM-dd");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate ld = LocalDate.parse(dateBog, dtf);
+
+		int monthDays = ld.lengthOfMonth();
+		int year = ld.getYear();
+		int month = ld.getMonthValue();
+
+		String fechainicial = year + "-" + month + "-1";
+		String fechaFinal = year + "-" + month + "-" + monthDays;
+
+		Date date1 = sdf.parse(fechainicial);
+		Date date2 = sdf.parse(fechaFinal);
+
+		Optional<Object> objects = TdcRepository.findAllBetweenDatesAndPerson(date1,date2,idPersona);
+
+		Object[] object = (Object[]) objects.get();
+				if(object[0] != null) {
+
+				dto.setNombre(object[0].toString());
+				dto.setCantidadEntregados(Integer.parseInt(object[1].toString()));
+				dto.setIdPersona(Integer.parseInt(object[2].toString()));
+				dto.setPorcentajeCumplimiento(calcularPorcentajeCumplimiento(Integer.parseInt(object[1].toString())));
+			}
+
+		return dto;
+	}
+
+	private Double calcularPorcentajeCumplimiento(int cantidadRegistros) throws ParseException {
+		// 1. Obtener la fecha del primer registro
+
+		String dateBog = utilDate.cargarFechaBogotaConParametro("yyyy-MM-dd");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate ld = LocalDate.parse(dateBog, dtf);
+
+		int diaDelMes = ld.getDayOfMonth();
+
+
+		// 3. Contar cuántos registros reales existen en ese rango
+		//long registrosRealizados = repository.countByUsuarioId(usuarioId);
+
+		// 4. Calcular porcentaje
+		return (double) cantidadRegistros / diaDelMes * 100;
+	}
+
+
+
 
 	private TdcDto mapTdcDto(Tdc tdc){
 
@@ -131,6 +204,7 @@ public class TdcServiceImpl implements ITdcService {
 		dto.setTdc(tdc.getTdc());
 		dto.setFechaCreacion(tdc.getFechaCreacion());
 		dto.setNombredocumento(tdc.getNombredocumento());
+		dto.setUrlImage(tdc.getUrlImage());
 		try {
 			dto.setPersona(personaRepository.findById(tdc.getIdPersona()).get());
 		}catch (Exception e){
@@ -147,6 +221,33 @@ public class TdcServiceImpl implements ITdcService {
 
 
 		List<Tdc> listaTdcPersona = TdcRepository.findAllBetweenDatesByPersona(fechaStart,fechaEnd,idPersona);
+		listaTdcPersona.forEach(tdc -> listaDto.add(mapTdcDto(tdc)));
+		return listaDto;
+	}
+
+	@Override
+	public List<TdcDto> findAlltcdByPersona(int idPersona) throws ParseException {
+		List<TdcDto> listaDto = new ArrayList<>();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateBog = utilDate.cargarFechaBogotaConParametro("yyyy-MM-dd");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate ld = LocalDate.parse(dateBog, dtf);
+
+		int monthDays = ld.lengthOfMonth();
+		int year = ld.getYear();
+		int month = ld.getMonthValue();
+
+		String fechainicial = year + "-" + month + "-1";
+		String fechaFinal = year + "-" + month + "-" + monthDays;
+
+		Date date1 = sdf.parse(fechainicial);
+		Date date2 = sdf.parse(fechaFinal);
+
+
+
+
+		List<Tdc> listaTdcPersona = TdcRepository.findAllBetweenDatesByPersona(date1,date2,idPersona);
 		listaTdcPersona.forEach(tdc -> listaDto.add(mapTdcDto(tdc)));
 		return listaDto;
 	}
@@ -176,5 +277,7 @@ public class TdcServiceImpl implements ITdcService {
 			}
 		}
 	}
+
+
 
 }

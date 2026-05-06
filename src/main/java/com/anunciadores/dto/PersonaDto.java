@@ -46,6 +46,7 @@ public class PersonaDto implements Serializable {
     private List<Rol> roles;
 	private List<PermisosMenu> permisosMenu;
 	private List<MensajesDTO> mensajes;
+	private List<AsignacionServicioDTO> asignacion;
 
 
 	private Rol rolUnico;
@@ -257,5 +258,13 @@ public class PersonaDto implements Serializable {
 
 	public void setMensajes(List<MensajesDTO> mensajes) {
 		this.mensajes = mensajes;
+	}
+
+	public List<AsignacionServicioDTO> getAsignacion() {
+		return asignacion;
+	}
+
+	public void setAsignacion(List<AsignacionServicioDTO> asignacion) {
+		this.asignacion = asignacion;
 	}
 }

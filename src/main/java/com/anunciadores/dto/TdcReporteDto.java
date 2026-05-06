@@ -23,6 +23,7 @@ public class TdcReporteDto implements Serializable {
 	private int idPersona;
 	private int cantidadEntregados;
 	private String nombre;
+	private Double porcentajeCumplimiento;
 
 	public int getCantidadEntregados() {
 		return cantidadEntregados;
@@ -46,6 +47,14 @@ public class TdcReporteDto implements Serializable {
 
 	public void setIdPersona(int idPersona) {
 		this.idPersona = idPersona;
+	}
+
+	public Double getPorcentajeCumplimiento() {
+		return porcentajeCumplimiento;
+	}
+
+	public void setPorcentajeCumplimiento(Double porcentajeCumplimiento) {
+		this.porcentajeCumplimiento = porcentajeCumplimiento;
 	}
 }
 
