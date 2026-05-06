@@ -1,62 +1,77 @@
-package com.anunciadores.service.interfaces;
-
-import java.util.List;
-import java.util.Optional;
+package  com.anunciadores.service.interfaces;
 
 import com.anunciadores.dto.PersonaDto;
+import com.anunciadores.dto.PersonaReactDto;
+import com.anunciadores.dto.UserResponseDto;
 import com.anunciadores.model.Consolidacion;
 import com.anunciadores.model.EstudioPersona;
-import com.anunciadores.model.Pago;
 import com.anunciadores.model.Persona;
-
+import java.util.List;
 
 public interface IPersonaService {
-	public List<Persona> findAllUsuarios();
-
-	public Persona save(Persona persona);
-	public Persona update(Persona persona);
-	
-	public Persona saveAsistente(Persona persona);
-	public Persona saveAsistenteConsolidacion(Persona persona, Consolidacion consolidacion);
-
-	public Persona findPersonaById(Integer id);
-	public Persona findPersonaByNombre(String nombre);
-
-	public String delete(Persona persona);
-
-	public PersonaDto buscarByDocumento(Integer doc);
-	
-	public PersonaDto buscarEmail(String email);
-
-	public List<Persona> findAllByCurso(int idCurso);
-
-	public List<Persona> buscarTodosSinCurso(int idCurso);
-
-	void agregarPersonaCurso(int idPersona, int idCurso);
-
-	void eliminarPersonaCurso(int idPersona, int idCurso);
-	void eliminarPersonaMinisterio(int idPersona, int idMinisterio);
-
-	void agregarPersonaActividad(int idPersona, int idActividad);
-	
-	public List<PersonaDto> buscarConsolidacion(List<Persona> listaPersonas,int idCUerso);
-	
-	public String encriptar(String Pass);
-
-	public Persona personaDtoToEntity(PersonaDto dto);
-
-	public Persona savePassword(Persona persona);
-
-	//List<PersonaDto> findCursoValorByPersona(List<Persona> personas);
-
-	public List<PersonaDto> findAllUsuariosRol();
-	public List<PersonaDto> findBirthdayByMonth();
-
-	public void findUsuariosRol(int idPersona,int idRolNuevo);
-
-	List<EstudioPersona> findEstudiosPersona (int idPersona);
-
-	public EstudioPersona saveEstudio(EstudioPersona estudio);
-
-	public List<PersonaDto> getBirthDay (List<PersonaDto> listDto);
+  List<Persona> findAllUsuarios();
+  
+  Persona save(Persona paramPersona);
+  
+  Persona update(Persona paramPersona);
+  
+  Persona saveAsistente(Persona paramPersona);
+  
+  Persona saveAsistenteConsolidacion(Persona paramPersona, Consolidacion paramConsolidacion);
+  
+  Persona findPersonaById(Integer paramInteger);
+  
+  Persona findPersonaByNombre(String paramString);
+  
+  String delete(Persona paramPersona);
+  
+  Persona toggleActive(Integer paramInteger, Boolean paramBoolean);
+  
+  String habilitar(Persona paramPersona);
+  
+  PersonaDto buscarByDocumento(Integer paramInteger);
+  
+  PersonaDto buscarEmail(String paramString);
+  
+  List<Persona> findAllByCurso(int paramInt);
+  
+  List<Persona> buscarTodosSinCurso(int paramInt);
+  
+  void agregarPersonaCurso(int paramInt1, int paramInt2);
+  
+  void eliminarPersonaCurso(int paramInt1, int paramInt2);
+  
+  void eliminarPersonaMinisterio(int paramInt1, int paramInt2);
+  
+  void agregarPersonaActividad(int paramInt1, int paramInt2);
+  
+  List<PersonaDto> buscarConsolidacion(List<Persona> paramList, int paramInt);
+  
+  String encriptar(String paramString);
+  
+  Persona personaDtoToEntity(PersonaDto paramPersonaDto);
+  
+  Persona savePassword(Persona paramPersona);
+  
+  List<PersonaDto> findAllUsuariosRol();
+  
+  List<PersonaDto> findBirthdayByMonth();
+  
+  void findUsuariosRol(int paramInt1, int paramInt2);
+  
+  List<EstudioPersona> findEstudiosPersona(int paramInt);
+  
+  EstudioPersona saveEstudio(EstudioPersona paramEstudioPersona);
+  
+  List<PersonaDto> getBirthDay(List<PersonaDto> paramList);
+  
+  List<PersonaReactDto> findAllUsers();
+  
+  UserResponseDto getUsuarioDesdeToken(String paramString);
 }
+
+
+/* Location:              C:\Users\Asus VivoBook\.m2\repository\com\anunciadores\anunciadores\0.0.1-SNAPSHOT\ROOT.war!\WEB-INF\classes\com\anunciadores\service\interfaces\IPersonaService.class
+ * Java compiler version: 11 (55.0)
+ * JD-Core Version:       1.1.3
+ */

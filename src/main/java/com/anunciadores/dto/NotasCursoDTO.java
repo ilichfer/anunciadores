@@ -1,100 +1,106 @@
-package com.anunciadores.dto;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*    */ package  com.anunciadores.dto;
+/*    */ 
+/*    */ import com.anunciadores.model.Curso;
+/*    */ import java.io.Serializable;
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ public class NotasCursoDTO
+/*    */   implements Serializable
+/*    */ {
+/*    */   private static final long serialVersionUID = 1L;
+/*    */   private double id;
+/*    */   private Curso curso;
+/*    */   private double notaMaestro;
+/*    */   private double notaAsistencia;
+/*    */   private double notaPractica;
+/*    */   private double notaExamenFinal;
+/*    */   private double notaFinal;
+/*    */   private int colorCelda;
+/*    */   
+/*    */   public double getId() {
+/* 38 */     return this.id;
+/*    */   }
+/*    */   
+/*    */   public void setId(double id) {
+/* 42 */     this.id = id;
+/*    */   }
+/*    */   
+/*    */   public Curso getCurso() {
+/* 46 */     return this.curso;
+/*    */   }
+/*    */   
+/*    */   public void setCurso(Curso curso) {
+/* 50 */     this.curso = curso;
+/*    */   }
+/*    */   
+/*    */   public double getNotaMaestro() {
+/* 54 */     return this.notaMaestro;
+/*    */   }
+/*    */   
+/*    */   public void setNotaMaestro(double notaMaestro) {
+/* 58 */     this.notaMaestro = notaMaestro;
+/*    */   }
+/*    */   
+/*    */   public double getNotaAsistencia() {
+/* 62 */     return this.notaAsistencia;
+/*    */   }
+/*    */   
+/*    */   public void setNotaAsistencia(double notaAsistencia) {
+/* 66 */     this.notaAsistencia = notaAsistencia;
+/*    */   }
+/*    */   
+/*    */   public double getNotaPractica() {
+/* 70 */     return this.notaPractica;
+/*    */   }
+/*    */   
+/*    */   public void setNotaPractica(double notaPractica) {
+/* 74 */     this.notaPractica = notaPractica;
+/*    */   }
+/*    */   
+/*    */   public double getNotaExamenFinal() {
+/* 78 */     return this.notaExamenFinal;
+/*    */   }
+/*    */   
+/*    */   public void setNotaExamenFinal(double notaExamenFinal) {
+/* 82 */     this.notaExamenFinal = notaExamenFinal;
+/*    */   }
+/*    */   
+/*    */   public double getNotaFinal() {
+/* 86 */     return this.notaFinal;
+/*    */   }
+/*    */   
+/*    */   public void setNotaFinal(double notaFinal) {
+/* 90 */     this.notaFinal = notaFinal;
+/*    */   }
+/*    */   
+/*    */   public int getColorCelda() {
+/* 94 */     return this.colorCelda;
+/*    */   }
+/*    */   
+/*    */   public void setColorCelda(int colorCelda) {
+/* 98 */     this.colorCelda = colorCelda;
+/*    */   }
+/*    */ }
+
+
+/* Location:              C:\Users\Asus VivoBook\.m2\repository\com\anunciadores\anunciadores\0.0.1-SNAPSHOT\ROOT.war!\WEB-INF\classes\com\anunciadores\dto\NotasCursoDTO.class
+ * Java compiler version: 11 (55.0)
+ * JD-Core Version:       1.1.3
  */
-
-
-import com.anunciadores.model.Curso;
-import com.anunciadores.model.Persona;
-import com.sun.istack.NotNull;
-
-import javax.persistence.*;
-import java.io.Serializable;
-
-
-/**
- *
- * @author valbuena
- */
-
-
-
-public class NotasCursoDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private double id;
-	private Curso curso;
-    private double notaMaestro;
-    private double notaAsistencia;
-    private double notaPractica;
-	private double notaExamenFinal;
-
-	private double notaFinal;
-	private int colorCelda;
-
-	public double getId() {
-		return id;
-	}
-
-	public void setId(double id) {
-		this.id = id;
-	}
-
-	public Curso getCurso() {
-		return curso;
-	}
-
-	public void setCurso(Curso curso) {
-		this.curso = curso;
-	}
-
-	public double getNotaMaestro() {
-		return notaMaestro;
-	}
-
-	public void setNotaMaestro(double notaMaestro) {
-		this.notaMaestro = notaMaestro;
-	}
-
-	public double getNotaAsistencia() {
-		return notaAsistencia;
-	}
-
-	public void setNotaAsistencia(double notaAsistencia) {
-		this.notaAsistencia = notaAsistencia;
-	}
-
-	public double getNotaPractica() {
-		return notaPractica;
-	}
-
-	public void setNotaPractica(double notaPractica) {
-		this.notaPractica = notaPractica;
-	}
-
-	public double getNotaExamenFinal() {
-		return notaExamenFinal;
-	}
-
-	public void setNotaExamenFinal(double notaExamenFinal) {
-		this.notaExamenFinal = notaExamenFinal;
-	}
-
-	public double getNotaFinal() {
-		return notaFinal;
-	}
-
-	public void setNotaFinal(double notaFinal) {
-		this.notaFinal = notaFinal;
-	}
-
-	public int getColorCelda() {
-		return colorCelda;
-	}
-
-	public void setColorCelda(int colorCelda) {
-		this.colorCelda = colorCelda;
-	}
-}

@@ -1,79 +1,80 @@
-package com.anunciadores.model;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*    */ package  com.anunciadores.model;
+/*    */ 
+/*    */ import com.sun.istack.NotNull;
+/*    */ import java.io.Serializable;
+/*    */ import javax.persistence.Basic;
+/*    */ import javax.persistence.Column;
+/*    */ import javax.persistence.Entity;
+/*    */ import javax.persistence.GeneratedValue;
+/*    */ import javax.persistence.GenerationType;
+/*    */ import javax.persistence.Id;
+/*    */ import javax.persistence.Table;
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ @Entity
+/*    */ @Table(name = "mesa")
+/*    */ public class Mesa
+/*    */   implements Serializable
+/*    */ {
+/*    */   private static final long serialVersionUID = 1L;
+/*    */   @Id
+/*    */   @Basic(optional = false)
+/*    */   @GeneratedValue(strategy = GenerationType.IDENTITY)
+/*    */   @Column(name = "id")
+/*    */   @NotNull
+/*    */   private int id;
+/*    */   @Column(name = "id_actividad")
+/*    */   private int idActividad;
+/*    */   @Column(name = "nombre_mesa")
+/*    */   private String nombreMesa;
+/*    */   
+/*    */   public int getId() {
+/* 43 */     return this.id;
+/*    */   }
+/*    */   
+/*    */   public void setId(int id) {
+/* 47 */     this.id = id;
+/*    */   }
+/*    */   
+/*    */   public int getIdActividad() {
+/* 51 */     return this.idActividad;
+/*    */   }
+/*    */   
+/*    */   public void setIdActividad(int idActividad) {
+/* 55 */     this.idActividad = idActividad;
+/*    */   }
+/*    */   
+/*    */   public String getNombreMesa() {
+/* 59 */     return this.nombreMesa;
+/*    */   }
+/*    */   
+/*    */   public void setNombreMesa(String nombreMesa) {
+/* 63 */     this.nombreMesa = nombreMesa;
+/*    */   }
+/*    */ 
+/*    */   
+/*    */   public Mesa(int id, int idActividad, String nombreMesa) {
+/* 68 */     this.id = id;
+/* 69 */     this.idActividad = idActividad;
+/* 70 */     this.nombreMesa = nombreMesa;
+/*    */   }
+/*    */   
+/*    */   public Mesa() {}
+/*    */ }
+
+
+/* Location:              C:\Users\Asus VivoBook\.m2\repository\com\anunciadores\anunciadores\0.0.1-SNAPSHOT\ROOT.war!\WEB-INF\classes\com\anunciadores\model\Mesa.class
+ * Java compiler version: 11 (55.0)
+ * JD-Core Version:       1.1.3
  */
-
-
-import java.io.Serializable;
-
-import javax.persistence.*;
-
-import com.sun.istack.NotNull;
-
-
-/**
- *
- * @author valbuena
- */
-
-@Entity
-@Table(name = "mesa")
-
-public class Mesa implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
-    @Id
-	@Basic(optional = false)
-	@NotNull
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-    
-    @Column(name = "id")
-    private int id;
-    
-    @Column(name = "id_actividad")
-    private int idActividad;
-    
-    @Column(name = "nombre_mesa")
-    private String nombreMesa;
-    
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getIdActividad() {
-		return idActividad;
-	}
-
-	public void setIdActividad(int idActividad) {
-		this.idActividad = idActividad;
-	}
-
-	public String getNombreMesa() {
-		return nombreMesa;
-	}
-
-	public void setNombreMesa(String nombreMesa) {
-		this.nombreMesa = nombreMesa;
-	}
-
-	public Mesa(int id, int idActividad, String nombreMesa) {
-		super();
-		this.id = id;
-		this.idActividad = idActividad;
-		this.nombreMesa = nombreMesa;
-	}
-
-	public Mesa() {
-		super();
-	}
-	
-	
-	
-}

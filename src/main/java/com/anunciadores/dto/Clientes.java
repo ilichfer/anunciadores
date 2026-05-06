@@ -1,126 +1,128 @@
-package com.anunciadores.dto;
-///*
-// * To change this license header, choose License Headers in Project Properties.
-// * To change this template file, choose Tools | Templates
-// * and open the template in the editor.
-// */
-//
-
-import java.io.Serializable;
-
-/**
- *
- * @author valbuena
- */
-
-public class Clientes implements Serializable {
-
+  package  com.anunciadores.dto;
+  
+  import java.io.Serializable;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  public class Clientes
+    implements Serializable
+  {
     private String tipoDocumento;
-
     private int Documento;
-
     private String primerNombre;
-
     private String segundoNombre;
- 
     private String primerApellido;
-
     private String segundoApellido;
-
     private String celular;
-
     private String direccion;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-
     private String email;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientes")
-//    private Collection<Vehiculos> vehiculosCollection;
-
-    public Clientes() {
+    
+    public String getPrimerNombre() {
+/*  43 */     return this.primerNombre;
     }
-
-	public String getPrimerNombre() {
-		return primerNombre;
-	}
-
-	public void setPrimerNombre(String primerNombre) {
-		this.primerNombre = primerNombre;
-	}
-
-	public String getSegundoNombre() {
-		return segundoNombre;
-	}
-
-	public void setSegundoNombre(String segundoNombre) {
-		this.segundoNombre = segundoNombre;
-	}
-
-	public String getPrimerApellido() {
-		return primerApellido;
-	}
-
-	public void setPrimerApellido(String primerApellido) {
-		this.primerApellido = primerApellido;
-	}
-
-	public String getSegundoApellido() {
-		return segundoApellido;
-	}
-
-	public void setSegundoApellido(String segundoApellido) {
-		this.segundoApellido = segundoApellido;
-	}
-
-	public String getCelular() {
-		return celular;
-	}
-
-	public void setCelular(String celular) {
-		this.celular = celular;
-	}
-
-	public String getDireccion() {
-		return direccion;
-	}
-
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-//	public Collection<Vehiculos> getVehiculosCollection() {
-//		return vehiculosCollection;
-//	}
-//
-//	public void setVehiculosCollection(Collection<Vehiculos> vehiculosCollection) {
-//		this.vehiculosCollection = vehiculosCollection;
-//	}
-
-
-	public String getTipoDocumento() {
-		return tipoDocumento;
-	}
-
-	public void setTipoDocumento(String tipoDocumento) {
-		this.tipoDocumento = tipoDocumento;
-	}
-
-	public int getDocumento() {
-		return Documento;
-	}
-
-	public void setDocumento(int documento) {
-		Documento = documento;
-	}
     
+    public void setPrimerNombre(String primerNombre) {
+/*  47 */     this.primerNombre = primerNombre;
+    }
     
+    public String getSegundoNombre() {
+/*  51 */     return this.segundoNombre;
+    }
+    
+    public void setSegundoNombre(String segundoNombre) {
+/*  55 */     this.segundoNombre = segundoNombre;
+    }
+    
+    public String getPrimerApellido() {
+/*  59 */     return this.primerApellido;
+    }
+    
+    public void setPrimerApellido(String primerApellido) {
+/*  63 */     this.primerApellido = primerApellido;
+    }
+    
+    public String getSegundoApellido() {
+/*  67 */     return this.segundoApellido;
+    }
+    
+    public void setSegundoApellido(String segundoApellido) {
+/*  71 */     this.segundoApellido = segundoApellido;
+    }
+    
+    public String getCelular() {
+/*  75 */     return this.celular;
+    }
+    
+    public void setCelular(String celular) {
+/*  79 */     this.celular = celular;
+    }
+    
+    public String getDireccion() {
+/*  83 */     return this.direccion;
+    }
+    
+    public void setDireccion(String direccion) {
+/*  87 */     this.direccion = direccion;
+    }
+    
+    public String getEmail() {
+/*  91 */     return this.email;
+    }
+    
+    public void setEmail(String email) {
+/*  95 */     this.email = email;
+    }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    public String getTipoDocumento() {
+/* 108 */     return this.tipoDocumento;
+    }
+    
+    public void setTipoDocumento(String tipoDocumento) {
+/* 112 */     this.tipoDocumento = tipoDocumento;
+    }
+    
+    public int getDocumento() {
+/* 116 */     return this.Documento;
+    }
+    
+    public void setDocumento(int documento) {
+/* 120 */     this.Documento = documento;
+    }
+  }
 
-    
-}
+
+/* Location:              C:\Users\Asus VivoBook\.m2\repository\com\anunciadores\anunciadores\0.0.1-SNAPSHOT\ROOT.war!\WEB-INF\classes\com\anunciadores\dto\Clientes.class
+ * Java compiler version: 11 (55.0)
+ * JD-Core Version:       1.1.3
+ */

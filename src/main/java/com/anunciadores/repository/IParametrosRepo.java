@@ -1,19 +1,16 @@
-package com.anunciadores.repository;
+package  com.anunciadores.repository;
 
-import com.anunciadores.dto.ItemCombo;
 import com.anunciadores.model.ParametrosCombos;
-import com.anunciadores.model.Tdc;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Date;
-import java.util.List;
-
-public interface IParametrosRepo extends JpaRepository<ParametrosCombos, Integer>{
-
-
-    public List<ParametrosCombos> findByGrupo(@Param("grupo") String grupo);
-
+public interface IParametrosRepo extends JpaRepository<ParametrosCombos, Integer> {
+  List<ParametrosCombos> findByGrupo(@Param("grupo") String paramString);
 }
+
+
+/* Location:              C:\Users\Asus VivoBook\.m2\repository\com\anunciadores\anunciadores\0.0.1-SNAPSHOT\ROOT.war!\WEB-INF\classes\com\anunciadores\repository\IParametrosRepo.class
+ * Java compiler version: 11 (55.0)
+ * JD-Core Version:       1.1.3
+ */

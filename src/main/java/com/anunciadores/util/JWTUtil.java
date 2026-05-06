@@ -1,96 +1,102 @@
-package com.anunciadores.util;
+/*    */ package  com.anunciadores.util;
+/*    */ 
+/*    */ import io.jsonwebtoken.Claims;
+/*    */ import io.jsonwebtoken.JwtBuilder;
+/*    */ import io.jsonwebtoken.Jwts;
+/*    */ import io.jsonwebtoken.SignatureAlgorithm;
+/*    */ import java.security.Key;
+/*    */ import java.util.Date;
+/*    */ import javax.crypto.spec.SecretKeySpec;
+/*    */ import javax.xml.bind.DatatypeConverter;
+/*    */ import org.slf4j.Logger;
+/*    */ import org.slf4j.LoggerFactory;
+/*    */ import org.springframework.beans.factory.annotation.Value;
+/*    */ import org.springframework.stereotype.Component;
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ @Component
+/*    */ public class JWTUtil
+/*    */ {
+/*    */   @Value("${security.jwt.secret}")
+/*    */   private String key;
+/*    */   @Value("${security.jwt.issuer}")
+/*    */   private String issuer;
+/*    */   @Value("${security.jwt.ttlMillis}")
+/*    */   private long ttlMillis;
+/* 32 */   private final Logger log = LoggerFactory.getLogger(com.anunciadores.util.JWTUtil.class);
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */   
+/*    */   public String create(String id, String subject) {
+/* 44 */     SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+/*    */     
+/* 46 */     long nowMillis = System.currentTimeMillis();
+/* 47 */     Date now = new Date(nowMillis);
+/*    */ 
+/*    */     
+/* 50 */     byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(this.key);
+/* 51 */     Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+/*    */ 
+/*    */ 
+/*    */     
+/* 55 */     JwtBuilder builder = Jwts.builder().setId(id).setIssuedAt(now).setSubject(subject).setIssuer(this.issuer).signWith(signatureAlgorithm, signingKey);
+/*    */     
+/* 57 */     if (this.ttlMillis >= 0L) {
+/* 58 */       long expMillis = nowMillis + this.ttlMillis;
+/* 59 */       Date exp = new Date(expMillis);
+/* 60 */       builder.setExpiration(exp);
+/*    */     } 
+/*    */ 
+/*    */     
+/* 64 */     return builder.compact();
+/*    */   }
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */   
+/*    */   public String getValue(String jwt) {
+/* 77 */     Claims claims = (Claims)Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(this.key)).parseClaimsJws(jwt).getBody();
+/*    */     
+/* 79 */     return claims.getSubject();
+/*    */   }
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */   
+/*    */   public String getKey(String jwt) {
+/* 92 */     Claims claims = (Claims)Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(this.key)).parseClaimsJws(jwt).getBody();
+/*    */     
+/* 94 */     return claims.getId();
+/*    */   }
+/*    */ }
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
-import java.util.Date;
-
-/**
- * @author Mahesh
+/* Location:              C:\Users\Asus VivoBook\.m2\repository\com\anunciadores\anunciadores\0.0.1-SNAPSHOT\ROOT.war!\WEB-INF\classes\com\anunciadore\\util\JWTUtil.class
+ * Java compiler version: 11 (55.0)
+ * JD-Core Version:       1.1.3
  */
-@Component
-public class JWTUtil {
-    @Value("${security.jwt.secret}")
-    private String key;
-
-    @Value("${security.jwt.issuer}")
-    private String issuer;
-
-    @Value("${security.jwt.ttlMillis}")
-    private long ttlMillis;
-
-    private final Logger log = LoggerFactory
-            .getLogger(JWTUtil.class);
-
-    /**
-     * Create a new token.
-     *
-     * @param id
-     * @param subject
-     * @return
-     */
-    public String create(String id, String subject) {
-
-        // The JWT signature algorithm used to sign the token
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-        long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
-
-        //  sign JWT with our ApiKey secret
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(key);
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-
-        //  set the JWT Claims
-        JwtBuilder builder = Jwts.builder().setId(id).setIssuedAt(now).setSubject(subject).setIssuer(issuer)
-                .signWith(signatureAlgorithm, signingKey);
-
-        if (ttlMillis >= 0) {
-            long expMillis = nowMillis + ttlMillis;
-            Date exp = new Date(expMillis);
-            builder.setExpiration(exp);
-        }
-
-        // Builds the JWT and serializes it to a compact, URL-safe string
-        return builder.compact();
-    }
-
-    /**
-     * Method to validate and read the JWT
-     *
-     * @param jwt
-     * @return
-     */
-    public String getValue(String jwt) {
-        // This line will throw an exception if it is not a signed JWS (as
-        // expected)
-        Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(key))
-                .parseClaimsJws(jwt).getBody();
-
-        return claims.getSubject();
-    }
-
-    /**
-     * Method to validate and read the JWT
-     *
-     * @param jwt
-     * @return
-     */
-    public String getKey(String jwt) {
-        // This line will throw an exception if it is not a signed JWS (as
-        // expected)
-        Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(key))
-                .parseClaimsJws(jwt).getBody();
-
-        return claims.getId();
-    }
-}

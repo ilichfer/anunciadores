@@ -1,40 +1,45 @@
-package com.anunciadores.dto;
+/*    */ package  com.anunciadores.dto;
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ public class MesaDto
+/*    */ {
+/*    */   private int id;
+/*    */   private String numeroMesa;
+/*    */   
+/*    */   public int getId() {
+/* 25 */     return this.id;
+/*    */   }
+/*    */   
+/*    */   public void setId(int id) {
+/* 29 */     this.id = id;
+/*    */   }
+/*    */   
+/*    */   public String getNumeroMesa() {
+/* 33 */     return this.numeroMesa;
+/*    */   }
+/*    */   
+/*    */   public void setNumeroMesa(String numeroMesa) {
+/* 37 */     this.numeroMesa = numeroMesa;
+/*    */   }
+/*    */ }
 
-import java.util.List;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* Location:              C:\Users\Asus VivoBook\.m2\repository\com\anunciadores\anunciadores\0.0.1-SNAPSHOT\ROOT.war!\WEB-INF\classes\com\anunciadores\dto\MesaDto.class
+ * Java compiler version: 11 (55.0)
+ * JD-Core Version:       1.1.3
  */
-
-/**
- *
- * @author valbuena
- */
-
-
-public class MesaDto {
-    
-    private int id;
-    
-    private String numeroMesa;
-
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getNumeroMesa() {
-		return numeroMesa;
-	}
-
-	public void setNumeroMesa(String numeroMesa) {
-		this.numeroMesa = numeroMesa;
-	}
-    
-}
